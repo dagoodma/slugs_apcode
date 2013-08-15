@@ -98,27 +98,25 @@ end
 axis equal;
 idx = 1:25:i;
 
-for j=1:length(x)%:i-1
+for j=1:50:i-1
     plot(y(j),x(j) ,'-s','MarkerSize',3);
 %     if (mod(j-1,20) == 0)
-%         plot(BP(j,2), BP(j,1), 'rs','MarkerSize',3);
+%         %plot(BP(j,2), BP(j,1), 'rs','MarkerSize',3);
 %         if (AimPt(j,3) ~= -999)
 %             plot(AimPt(j,2), AimPt(j,1),'gs','MarkerSize',3);
 %         end
 %     end
-     %plot the velocity vector
+%      plot the velocity vector
 %      plot ([y(j) y(j)+ve(j)], [x(j) x(j)+vn(j)], 'r');
-     
-     %plot the L2 vector
+%      
+%     %plot the L2 vector
 %      if j > 10 % REN 05/24/10 && L2Enabled(j) == 1
-         %plot ([y(j) y(j)+L1(j,2)], [x(j) x(j)+L1(j,1)], 'm-');         
-         
-        plot ([y(j) P_L2(j,2)], [x(j) P_L2(j,1)], 'm-');         
-         %plot ([y(j) y(j)+AimPointVect(j,2)], [x(j) x(j)+AimPointVect(j,1)], 'm-');
+%          plot ([y(j) y(j)+L1(j,2)], [x(j) x(j)+L1(j,1)], 'm-');         
+%          plot ([y(j) y(j)+AimPointVect(j,2)], [x(j) x(j)+AimPointVect(j,1)], 'm-');
 %      end
-%      plot N exagerated (multiplied by 20)
-%       plot ([y(j) y(j)+20*N(j,2)], [x(j) x(j)+20*N(j,1)], 'c-');
-      
+%     % plot N exagerated (multiplied by 20)
+%      % plot ([y(j) y(j)+20*N(j,2)], [x(j) x(j)+20*N(j,1)], 'c-');
+%       
 % %       %pause the animation
      if pauseOn == 1
         if (mod(j-1,1000)==0)

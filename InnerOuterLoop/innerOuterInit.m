@@ -1,5 +1,6 @@
 %% General Values
 %path(path,'C:\Documents and Settings\Administrator\My Documents\apcode');
+
 derivativesConstant = 5;
 
 apSampleTime = 0.01;
@@ -28,3 +29,4 @@ run ..\apConfiguration\L2Plus_IP_RTB.m  %constants for tracking and homing logic
 
 %% Random Initialization
 %run .\batchTests\randomInit.m
+
