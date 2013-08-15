@@ -1,0 +1,10 @@
+# MPLABX project related
+*.map
+*.hex
+build
+dist
+nbproject/private
+nbproject/*.properties
+*.bash
+nbproject/Makefile-local-default.mk
+nbproject/Makefile-default.mk
