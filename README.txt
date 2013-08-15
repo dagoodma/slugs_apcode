@@ -1,0 +1,1 @@
+This folder holds changes to the clib/ code to make SLUGS work with mavlink 1.0 on ET. Changes here should be synched with apcode_2011b_qgc.
