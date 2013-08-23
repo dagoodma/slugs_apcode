@@ -90,7 +90,12 @@ void loadEEPData(void){
 	}
 }
 
-
+/**
+ * @brief Stores a waypoint item to EEPROM.
+ * @param mlSingleWp Pointer to mission
+ * @return Zero on success, or an error code.
+ * @todo Check if all mission parameters are recorded.
+ */
 uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp){
 	
 	uint8_t indexOffset = 0, indx= 0, writeSuccess = 0;
@@ -122,11 +127,15 @@ uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp){
 	return writeSuccess;
 }
 
-
+/**
+ * @brief Writes a parameter to EEPROM.
+ * @param parameter Value of parameter.
+ * @param pmIndex Index of paramter.
+ * @return Zero on success, and non-zero on failure
+ */
 uint8_t storeParameterInEeprom (float parameter, uint8_t pmIndex){
 	uint8_t indexOffset = 0,/* indx= 0 ,*/ writeSuccess = 0;
 	tFloatToChar tempFloat;
-		
 	// Save the data to the EEPROM
 	indexOffset = pmIndex*2;
 	
@@ -138,6 +147,10 @@ uint8_t storeParameterInEeprom (float parameter, uint8_t pmIndex){
 	return writeSuccess;
 }
 
+/**
+ * @brief Saves all parameters to EEPROM.
+ * @return Zero for success, or non-zero error code.
+ */
 uint8_t storeAllParamsInEeprom(void){
 	uint8_t  indx= 0, writeSuccess = 0;
 	
@@ -148,15 +161,26 @@ uint8_t storeAllParamsInEeprom(void){
 	return writeSuccess;
 }
 
-void readParamsInEeprom (void){
+/**
+ * @brief Reads all paramters from EEPROM to RAM.
+ * @return Zero on success, or non-zero error code.
+ */
+uint8_t readParamsInEeprom (void){
 	uint8_t indx= 0, i=0;
 	tFloatToChar tempFloat;
+        uint8_t readSuccess = SUCCESS;
 		
 	for(indx = 0; indx < (PAR_PARAM_COUNT*2); indx+=2 ){
 		tempFloat.shData[0]= DataEERead(PARAM_OFFSET+indx);
 		tempFloat.shData[1]= DataEERead(PARAM_OFFSET+indx+1);
+
+                // This doesn't seem to indicate success or failure.
+                //if (tempFloat.shData[0] == 0xFFFF || tempFloat.shData[1] == 0xFFFF)
+                //    readSuccess = FAILURE;
 		
 		// If the value read from memory is finite assign it, else assign 0
 		mlParamInterface.param[i++]	= isFinite(tempFloat.flData)? tempFloat.flData : 0.0;
 	}
+
+        return readSuccess; 
 }

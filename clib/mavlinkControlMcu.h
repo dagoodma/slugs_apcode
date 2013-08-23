@@ -66,7 +66,7 @@ extern "C" {
     };
 
 
-#define SLUGS_PARAM_NAME_LENGTH	14
+#define SLUGS_PARAM_NAME_LENGTH	16
 
     struct pi_struct {
         float param[PAR_PARAM_COUNT];

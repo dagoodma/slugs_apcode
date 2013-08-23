@@ -51,7 +51,7 @@ void loadEEPData (void);
 uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp);
 uint8_t storeParameterInEeprom (float parameter, uint8_t pmIndex);
 uint8_t storeAllParamsInEeprom (void);
-void readParamsInEeprom (void);
+uint8_t readParamsInEeprom (void);
 
 #ifdef __cplusplus
       }

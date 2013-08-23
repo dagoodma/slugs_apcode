@@ -154,47 +154,47 @@ void mavlinkInit(void)
 
 void populateParameterInterface(void)
 {
-    memcpy(mlParamInterface.param_name[PAR_PID_AIRSPEED_P], "PID_AIRSPD_P", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_AIRSPEED_I], "PID_AIRSPD_I", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_AIRSPEED_D], "PID_AIRSPD_D", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_AIRSPEED_P], "PID_AIRSPD_P");
+    strcpy(mlParamInterface.param_name[PAR_PID_AIRSPEED_I], "PID_AIRSPD_I");
+    strcpy(mlParamInterface.param_name[PAR_PID_AIRSPEED_D], "PID_AIRSPD_D");
 
-    memcpy(mlParamInterface.param_name[PAR_PID_PITCH_FO_P], "PID_PIT_FO_P", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_PITCH_FO_I], "PID_PIT_FO_I", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_PITCH_FO_D], "PID_PIT_FO_D", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_PITCH_FO_P], "PID_PIT_FO_P");
+    strcpy(mlParamInterface.param_name[PAR_PID_PITCH_FO_I], "PID_PIT_FO_I");
+    strcpy(mlParamInterface.param_name[PAR_PID_PITCH_FO_D], "PID_PIT_FO_D");
 
-    memcpy(mlParamInterface.param_name[PAR_PID_ROLL_CON_P], "PID_ROLL_CO_P", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_ROLL_CON_I], "PID_ROLL_CO_I", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_ROLL_CON_D], "PID_ROLL_CO_D", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_ROLL_CON_P], "PID_ROLL_CO_P");
+    strcpy(mlParamInterface.param_name[PAR_PID_ROLL_CON_I], "PID_ROLL_CO_I");
+    strcpy(mlParamInterface.param_name[PAR_PID_ROLL_CON_D], "PID_ROLL_CO_D");
 
-    memcpy(mlParamInterface.param_name[PAR_PID_HE_TO_PI_P], "PID_HE2PITC_P", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_HE_TO_PI_I], "PID_HE2PITC_I", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_HE_TO_PI_P], "PID_HE2PITC_P");
+    strcpy(mlParamInterface.param_name[PAR_PID_HE_TO_PI_I], "PID_HE2PITC_I");
 
-    memcpy(mlParamInterface.param_name[PAR_PID_HEI_ERR_FF], "PID_HERR_FF", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_HEI_ERR_FF], "PID_HERR_FF");
 
-    memcpy(mlParamInterface.param_name[PAR_PID_YAW_DAMP_P], "PID_YAW_DA_P", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_YAW_DAMP_I], "PID_YAW_DA_I", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_YAW_DAMP_D], "PID_YAW_DA_D", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_YAW_DAMP_P], "PID_YAW_DA_P");
+    strcpy(mlParamInterface.param_name[PAR_PID_YAW_DAMP_I], "PID_YAW_DA_I");
+    strcpy(mlParamInterface.param_name[PAR_PID_YAW_DAMP_D], "PID_YAW_DA_D");
 
-    memcpy(mlParamInterface.param_name[PAR_PID_PITC_DT_FF], "PID_PIT_DT_FF", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_PID_PITC_DT_FF], "PID_PIT_DT_FF");
 
-    memcpy(mlParamInterface.param_name[PAR_CONFIG_ROLL_R ], "CONFIG_ROLL_R ", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_CONFIG_PITCH_R], "CONFIG_PITCH_R", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_CONFIG_YAW_R ], "CONFIG_YAW_R  ", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_CONFIG_ROLL_R ], "CONFIG_ROLL_R");
+    strcpy(mlParamInterface.param_name[PAR_CONFIG_PITCH_R], "CONFIG_PITCH_R");
+    strcpy(mlParamInterface.param_name[PAR_CONFIG_YAW_R ], "CONFIG_YAW_R");
 
-    memcpy(mlParamInterface.param_name[PAR_NAV_L2_BASE ], "NAV_L2_BASE", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_NAV_PRETURN_K], "NAV_PRETURN_K", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_NAV_SSCOMP_ON], "NAV_SSCOMP_ON", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_NAV_L2_BASE ], "NAV_L2_BASE");
+    strcpy(mlParamInterface.param_name[PAR_NAV_PRETURN_K], "NAV_PRETURN_K");
+    strcpy(mlParamInterface.param_name[PAR_NAV_SSCOMP_ON], "NAV_SSCOMP_ON");
 
-    memcpy(mlParamInterface.param_name[PAR_L1_OMEGA ], "L1_OMEGA", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_L1_M ], "L1_M", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_L1_GAMMA ], "L1_GAMMA", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_L1_ON_OFF], "L1_ON_OFF", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_L1_OMEGA ], "L1_OMEGA");
+    strcpy(mlParamInterface.param_name[PAR_L1_M ], "L1_M")  ;
+    strcpy(mlParamInterface.param_name[PAR_L1_GAMMA ], "L1_GAMMA");
+    strcpy(mlParamInterface.param_name[PAR_L1_ON_OFF], "L1_ON_OFF");
 
-     memcpy(mlParamInterface.param_name[PAR_NAV_ISR_FAC ], "NAV_ISR_FACT", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_RMIX_ON ], "PID_RMIX_ON", SLUGS_PARAM_NAME_LENGTH);
-    memcpy(mlParamInterface.param_name[PAR_PID_RMIX_P], "PID_RMIX_P", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_NAV_ISR_FAC ], "NAV_ISR_FACT");
+    strcpy(mlParamInterface.param_name[PAR_PID_RMIX_ON ], "PID_RMIX_ON");
+    strcpy(mlParamInterface.param_name[PAR_PID_RMIX_P], "PID_RMIX_P");
     
-       memcpy(mlParamInterface.param_name[PAR_CAM_X], "CAM_LOC_X", SLUGS_PARAM_NAME_LENGTH);
-       memcpy(mlParamInterface.param_name[PAR_CAM_Z], "CAM_LOC_Z", SLUGS_PARAM_NAME_LENGTH);
+    strcpy(mlParamInterface.param_name[PAR_CAM_X], "CAM_LOC_X");
+    strcpy(mlParamInterface.param_name[PAR_CAM_Z], "CAM_LOC_Z");
 }
 

@@ -354,7 +354,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                             &msg,
                             mlParamInterface.param_name[mlPending.piCurrentParamInTransaction],
                             mlParamInterface.param[mlPending.piCurrentParamInTransaction],
-                            MAV_PARAM_TYPE_INT32, // TODO: make sure this is correct later on
+                            MAV_PARAM_TYPE_REAL32, // TODO: make sure this is correct later on
                             PAR_PARAM_COUNT,
                             mlPending.piCurrentParamInTransaction);
 
@@ -385,7 +385,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                             &msg,
                             mlParamInterface.param_name[mlPending.piCurrentParamInTransaction],
                             mlParamInterface.param[mlPending.piCurrentParamInTransaction],
-                            MAV_PARAM_TYPE_INT32, // TODO: make sure this is correct later
+                            MAV_PARAM_TYPE_REAL32,
                             PAR_PARAM_COUNT,
                             mlPending.piCurrentParamInTransaction);
 
@@ -408,7 +408,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                                 &msg,
                                 mlParamInterface.param_name[mlPending.piQueue[mlPending.piQIdx]],
                                 mlParamInterface.param[mlPending.piQueue[mlPending.piQIdx]],
-                                MAV_PARAM_TYPE_INT32, // TODO: make sure this is correct later
+                                MAV_PARAM_TYPE_REAL32,
                                 PAR_PARAM_COUNT,
                                 mlPending.piQueue[mlPending.piQIdx]);
 
@@ -1336,49 +1336,53 @@ void protDecodeMavlink(uint8_t* dataIn) {
                 // Action stuff was here
 
                 case MAVLINK_MSG_ID_COMMAND_LONG:
-                    temp = (uint32_t) mavlink_msg_command_long_get_command(&msg);
+                    mavlink_msg_command_long_decode(&msg, &mlCommand);
 
-                    switch (temp) {
-                        case MAV_CMD_WRITE_STORAGE:
-                            writeSuccess = storeAllParamsInEeprom();
+                    switch (mlCommand.command) {
+                        // TODO: Only handle this in PREFLIGHT mode
+                        case MAV_CMD_PREFLIGHT_STORAGE:
+                            writeSuccess = FAILURE;
+                            // Parameter storage
+                            if (mlCommand.param1 == 0.0f) { // read
+                                memset(&(mlParamInterface.param[0]), 0, sizeof (float) *PAR_PARAM_COUNT);
+                                writeSuccess = readParamsInEeprom();
+                            }
+                            else if (mlCommand.param1 == 1.0f) { // write
+
+                                writeSuccess = storeAllParamsInEeprom();
+                            }
+                            // Waypoint storage (only handle either params or waypoints)
+                            else if (mlCommand.param2 == 0.0f) { // read
+                            }
+                            else if (mlCommand.param2 == 1.0f) { // write
+                            }
 
                             mlPending.commandAck = TRUE;
 
-                            mlCommandAck.command = MAV_CMD_WRITE_STORAGE;
+                            mlCommandAck.command = MAV_CMD_PREFLIGHT_STORAGE;
                             mlCommandAck.result = (writeSuccess == SUCCESS)?
                                 MAV_RESULT_ACCEPTED : MAV_RESULT_FAILED;
 
                             break;
 
-                        case MAV_CMD_READ_STORAGE:
-                            memset(&(mlParamInterface.param[0]), 0, sizeof (float) *PAR_PARAM_COUNT);
-
-                            readParamsInEeprom();
-
-                            mlPending.commandAck = TRUE;
-
-                            mlCommandAck.command = MAV_CMD_READ_STORAGE;
-                            mlCommandAck.result = MAV_RESULT_ACCEPTED;
-                                // should result be MAV_RESULT_TEMPORARILY REJECTED? was result=1
-                            break;
                         // HIL Stuff Moved to set_mode
                         case MAV_CMD_RETURN_TO_BASE:
                             mlRTB.rtb = TRUE;
-                            mlRTB.track_mobile = mavlink_msg_command_long_get_param1(&msg);
-
+                            mlRTB.track_mobile = mlCommand.param1;
                             mlPending.commandAck = TRUE;
                             mlCommandAck.command = MAV_CMD_RETURN_TO_BASE;
                             mlCommandAck.result = MAV_RESULT_ACCEPTED;
                             break;
                         case MAV_CMD_TURN_LIGHT:
-                            mlLights.state = mavlink_msg_command_long_get_param2(&msg);
-                            mlLights.type = mavlink_msg_command_long_get_param1(&msg);
+                            mlLights.state = mlCommand.param2;
+                            mlLights.type = mlCommand.param1;
 
                             mlPending.commandAck = TRUE;
                             mlCommandAck.command = MAV_CMD_TURN_LIGHT;
                             mlCommandAck.result = MAV_RESULT_ACCEPTED;
                             break;
-                    }
+
+                    } // switch COMMAND_LONG
 
                     break;
 
