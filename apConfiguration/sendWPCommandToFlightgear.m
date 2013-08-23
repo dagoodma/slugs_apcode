@@ -1,5 +1,5 @@
 function [ output_args ] = sendWPCommandToFlightgear( u, cmd_str )
-%sendWPCommandToFlightgear Sends a command to a flightgear via udp
+%SENDWPCOMMANDTOFLIGHTGEAR Sends a waypoint command to flightgear via udp
 %   Sends the given command to flightgear via the udp stream u.
 %   Valid commands are either route-manager commands, or update commands.
 %   Route manager commands can be:

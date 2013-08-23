@@ -1,5 +1,5 @@
 function sendWPToFlightgear(u, lat,lon,alt, command)
-%SENDWPTOFLIGHTGEAR
+%SENDWPTOFLIGHTGEAR Sends a waypoint to flightgear
 %   Sends a waypoint with the given lat, lon, and altitude in meters to a
 %   flightgear UDP stream u.
 
