@@ -1,6 +1,7 @@
 .DS_Store
 *.o
 *.o.d
+.*.swp
 slprj/*
 */slprj/*
 *.mexw*

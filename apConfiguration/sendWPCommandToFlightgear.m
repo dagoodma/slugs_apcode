@@ -7,7 +7,11 @@ function [ output_args ] = sendWPCommandToFlightgear( u, cmd_str )
 %       @DELETE# - deletes the waypoint with the given index from the list
 %   Update commands can be:
 %       waypoint - draws all listed waypoint and legs between
-%       aimpoint - draws an aim point at the listed waypoints
+%       initialpoint - draws the most recently added waypoint as an initial point
+%
+%   udp packets are in the following format:
+%       waypoint, update_waypoints, l2_vecx, l2_vecy, l2_vecz, l2_veclen, l2_draw
+%   except fields are separated by the tab character '\t' instead of commas
 %
 k = findstr(cmd_str, '@');
 if length(k) > 1
