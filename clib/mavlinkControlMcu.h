@@ -222,6 +222,8 @@ extern "C" {
 
     //extern gps_float_struct mlGpsFloat;
 
+    extern uint32_t lastNavigationMode;
+
 
     //
     void mavlinkInit(void);

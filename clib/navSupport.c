@@ -234,9 +234,8 @@ void getAccBias(float * bias) {
 }
 
 void getRTB(uint8_t* rtb) {
-    // TODO: determine if this function is unused
     rtb[0] = (mlRTB.rtb || (mlPending.heartbeatAge > HEARTBEAT_LIMIT));
-    rtb[1] = mlRTB.track_mobile; // not used: remove?
+    rtb[1] = mlRTB.track_mobile; 
 
     // No RTB in HIL simulation
     if (hasMode(mlHeartbeatLocal.base_mode,MAV_MODE_FLAG_HIL_ENABLED)) {
@@ -244,9 +243,19 @@ void getRTB(uint8_t* rtb) {
     }
     
     if (rtb[0]) {
+        if (mlHeartbeatLocal.custom_mode != SLUGS_MODE_RETURNING) {
+            lastNavigationMode = mlHeartbeatLocal.custom_mode;
+
+            mlPending.statustext++;
+
+            mlStatustext.severity = MAV_SEVERITY_INFO;
+            strncpy(mlStatustext.text, "Lost groundstation heartbeat. Returning to base.", 49);
+        }
+
         mlHeartbeatLocal.custom_mode = SLUGS_MODE_RETURNING; //MAV_STATE_RETURNING;
     } else {
-        mlHeartbeatLocal.system_status = MAV_STATE_ACTIVE;
+        if (mlHeartbeatLocal.custom_mode == SLUGS_MODE_RETURNING)
+            mlHeartbeatLocal.custom_mode = lastNavigationMode;
     }
 }
 

@@ -59,6 +59,8 @@ struct pi_struct mlParamInterface;
 // via SPI
 mavlink_set_gps_global_origin_t mlGSLocation;
 
+uint32_t lastNavigationMode;
+
 
 /**********************************************************************
  * Function: mavlinkInit
@@ -135,6 +137,7 @@ void mavlinkInit(void)
     mlHeartbeatLocal.base_mode = MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
     mlHeartbeatLocal.custom_mode = SLUGS_MODE_WAYPOINT;
     mlHeartbeatLocal.system_status = MAV_STATE_ACTIVE;
+    //lastNavigationMode = mlHeartbeatLocal.custom_mode;
     //mlSystemStatus.mode = MAV_MODE_MANUAL;
     //mlSystemStatus.nav_mode = MAV_NAV_WAYPOINT;
     //mlSystemStatus.status = MAV_STATE_ACTIVE;

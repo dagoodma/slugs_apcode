@@ -1039,7 +1039,8 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         // Set new slugs mode if valid
                         if (!badMode)
                         */
-                            mlHeartbeatLocal.custom_mode = mlSetMode.custom_mode;
+                        //lastNavigationMode = mlHeartbeatLocal.custom_mode;
+                        mlHeartbeatLocal.custom_mode = mlSetMode.custom_mode;
                     }
 
                     break;
