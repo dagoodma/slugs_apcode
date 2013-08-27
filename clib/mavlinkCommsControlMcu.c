@@ -1382,6 +1382,13 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             mlCommandAck.command = MAV_CMD_TURN_LIGHT;
                             mlCommandAck.result = MAV_RESULT_ACCEPTED;
                             break;
+                        case MAV_CMD_GET_MID_LEVEL_COMMANDS:
+                            mlPending.midLvlCmds = 1;
+
+                            mlPending.commandAck = TRUE;
+                            mlCommandAck.command = MAV_CMD_GET_MID_LEVEL_COMMANDS;
+                            mlCommandAck.result = MAV_RESULT_ACCEPTED;
+                            break;
 
                     } // switch COMMAND_LONG
 
