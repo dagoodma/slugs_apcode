@@ -254,8 +254,8 @@ void getRTB(uint8_t* rtb) {
 
         mlHeartbeatLocal.custom_mode = SLUGS_MODE_RETURNING; //MAV_STATE_RETURNING;
     } else {
-        if (mlHeartbeatLocal.custom_mode == SLUGS_MODE_RETURNING)
-            mlHeartbeatLocal.custom_mode = lastNavigationMode;
+        //if (mlHeartbeatLocal.custom_mode == SLUGS_MODE_RETURNING)
+        //    mlHeartbeatLocal.custom_mode = lastNavigationMode;
     }
 }
 
