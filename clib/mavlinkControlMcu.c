@@ -142,7 +142,7 @@ void mavlinkInit(void)
     //mlSystemStatus.nav_mode = MAV_NAV_WAYPOINT;
     //mlSystemStatus.status = MAV_STATE_ACTIVE;
     mlSystemStatus.load = 500;
-    mlSystemStatus.voltage_battery = 12000;
+    mlSystemStatus.voltage_battery = 0;
     
     mlCameraOrder.zoom = 1;
     

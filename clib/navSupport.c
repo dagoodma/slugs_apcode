@@ -218,6 +218,8 @@ void setNavNav(float* values) {
     mlNavigation.totalDist = values[0];
     mlNavigation.dist2Go = values[1];
     mlNavigation.fromWP = (uint8_t) values[2];
+
+    if (mlNavigation.toWP != (uint8_t)values[3]) mlPending.wpSendCurrent = TRUE;
     mlNavigation.toWP = (uint8_t) values[3];
 }
 

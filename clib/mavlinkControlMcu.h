@@ -128,6 +128,7 @@ extern "C" {
         uint8_t wpCurrentWpInTransaction;
         uint8_t wpTimeOut;
         uint8_t wpTotalWps;
+        uint8_t wpSendCurrent; // send current mission item
 
         // Info
         uint8_t pidIdx;

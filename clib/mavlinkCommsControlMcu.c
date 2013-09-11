@@ -1,5 +1,7 @@
 #include "mavlinkCommsControlMcu.h"
 
+#define M_PI (float)(asin(1)*2.0f)
+
 /*
 
 MAVLink supports the following UAV Modes:
@@ -272,7 +274,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
             break; // case 2
 
-        case 3: // data log, ping
+        case 3: // data log, ping, vfr_hud
             mavlink_msg_data_log_encode(SLUGS_SYSTEMID,
                 SLUGS_COMPID,
                 &msg,
@@ -296,6 +298,24 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 // Copy the message to the send buffer
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
             }
+
+
+            memset(&msg, 0, sizeof (mavlink_message_t));
+            // Hud data for primary flight display
+            mavlink_msg_vfr_hud_pack(SLUGS_SYSTEMID,
+                SLUGS_COMPID,
+                &msg,
+                mlNavigation.u_m,               // air speed (m/s)
+                (float)mlGpsData.vel * 0.01f,   // ground speed (m/s)
+                //(float)(mlAttitudeData.yaw + M_PI)*(180.0f/M_PI), // heading from 0 to 360 (deg)
+                0.0f,
+                0,                              // throttle from 0 to 100 (percent)
+                mlLocalPositionData.z,          // altitude (m)
+                mlLocalPositionData.vz         // climb rate (m/s)
+                );
+
+            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
 
             break; // case 3
 
@@ -572,6 +592,19 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
             }
 
+            // Current mission item (1 off indexing issue in qgc vs et)
+            if (mlPending.wpSendCurrent) {
+                memset(&msg, 0, sizeof (mavlink_message_t));
+                mavlink_msg_mission_current_pack(SLUGS_SYSTEMID,
+                    SLUGS_COMPID,
+                    &msg, ((uint16_t)mlNavigation.toWP) - 1);
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                mlPending.wpSendCurrent = FALSE;
+            }
+
+
+            // Raw pressure
+            memset(&msg, 0, sizeof (mavlink_message_t));
             mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
                 SLUGS_COMPID,
                 &msg,
@@ -587,9 +620,9 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                     // clear the msg
                     memset(&msg, 0, sizeof (mavlink_message_t));
 
-                    mlPending.statustext++;
-                    mlStatustext.severity = MAV_SEVERITY_INFO;
-                    strncpy(mlStatustext.text, "Got mission list request. Sending count...", 49);
+                    //mlPending.statustext++;
+                    //mlStatustext.severity = MAV_SEVERITY_INFO;
+                    //strncpy(mlStatustext.text, "Got mission list request. Sending count...", 49);
 
                     mavlink_msg_mission_count_pack(SLUGS_SYSTEMID,
                         MAV_COMP_ID_MISSIONPLANNER,
@@ -649,6 +682,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                         mlPending.wpProtState = WP_PROT_IDLE;
                         mlPending.wpCurrentWpInTransaction = 0;
                         mlPending.wpTotalWps = 0;
+                        mlPending.wpSendCurrent = TRUE; // send current waypoint index
 
                         // put zeros in the rest of the waypoints;
                         clearWaypointsFrom(mlWpValues.wpCount);
@@ -900,6 +934,8 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
                 case MAVLINK_MSG_ID_CPU_LOAD:
                     mavlink_msg_cpu_load_decode(&msg, &mlCpuLoadData);
+                    // Copy battery voltage to system status message
+                    mlSystemStatus.voltage_battery = mlCpuLoadData.batVolt;
                     break;
 
                 case MAVLINK_MSG_ID_LOCAL_POSITION_NED:
@@ -1153,6 +1189,9 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         // reset the rest of the state machine
                         mlPending.wpCurrentWpInTransaction = 0;
                         mlPending.wpTimeOut = 0;
+
+                        // send current waypoint index
+                        mlPending.wpSendCurrent = TRUE;
                     }
 
                     break;
