@@ -161,6 +161,37 @@ uint8_t storeAllParamsInEeprom(void){
 	return writeSuccess;
 }
 
+
+/**
+ * @brief Stores the specified mid-level command values to EEPROM.
+ * @note Mid-level commands are read from the mlMidLevelCommands struct.
+ * @return SUCCESS or FAILURE.
+ */
+uint8_t storeMidLevelCommandsInEeprom (void) {
+	uint8_t indexOffset = 0,/* indx= 0 ,*/ writeSuccess = 0;
+	tFloatToChar tempFloat;
+        uint8_t pmIndex = 0;
+
+	// Save the data to the EEPROM
+	indexOffset = pmIndex++*2;
+	tempFloat.flData = mlMidLevelCommands.hCommand;
+	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET+indexOffset);
+	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET+indexOffset+1);
+
+	indexOffset = pmIndex++*2;
+	tempFloat.flData = mlMidLevelCommands.uCommand;
+	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET+indexOffset);
+	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET+indexOffset+1);
+
+
+	indexOffset = pmIndex++*2;
+	tempFloat.flData = mlMidLevelCommands.rCommand;
+	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET+indexOffset);
+	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET+indexOffset+1);
+
+	return writeSuccess;
+}
+
 /**
  * @brief Reads all paramters from EEPROM to RAM.
  * @return Zero on success, or non-zero error code.
@@ -184,3 +215,32 @@ uint8_t readParamsInEeprom (void){
 
         return readSuccess; 
 }
+
+
+/**
+ * @brief Reads mid-level command values from EEPROM and loads into
+ *  mlMidLevelCommand struct.
+ */
+uint8_t readMidLevelCommandsInEeprom (void) {
+    uint8_t indx= 0, i=0;
+    tFloatToChar tempFloat;
+    uint8_t readSuccess = SUCCESS;
+
+    tempFloat.shData[0]= DataEERead(MIDLEVEL_OFFSET + indx++);
+    tempFloat.shData[1]= DataEERead(MIDLEVEL_OFFSET + indx++);
+    // If the value read from memory is finite assign it, else assign 0
+    mlMidLevelCommands.hCommand = isFinite(tempFloat.flData)? tempFloat.flData : 0.0f;
+
+    tempFloat.shData[0]= DataEERead(MIDLEVEL_OFFSET + indx++);
+    tempFloat.shData[1]= DataEERead(MIDLEVEL_OFFSET + indx++);
+    // If the value read from memory is finite assign it, else assign 0
+    mlMidLevelCommands.uCommand = isFinite(tempFloat.flData)? tempFloat.flData : 0.0f;
+
+    tempFloat.shData[0]= DataEERead(MIDLEVEL_OFFSET + indx++);
+    tempFloat.shData[1]= DataEERead(MIDLEVEL_OFFSET + indx);
+    // If the value read from memory is finite assign it, else assign 0
+    mlMidLevelCommands.rCommand = isFinite(tempFloat.flData)? tempFloat.flData : 0.0f;
+
+    return readSuccess;
+}
+

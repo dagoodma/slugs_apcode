@@ -148,6 +148,11 @@ void mavlinkInit(void)
     
     mlBoot.version = 1;
 
+    // Populate default mid-level commands
+    mlMidLevelCommands.hCommand = 120.0f; // altitude (m)
+    mlMidLevelCommands.uCommand = 16.0f; // airspeed (m/s)
+    mlMidLevelCommands.rCommand = 0.0f; // turn rate (radians/s)
+
 
     populateParameterInterface();
 

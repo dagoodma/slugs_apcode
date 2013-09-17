@@ -42,7 +42,8 @@ THE SOFTWARE.
 // EEPROM Emulation Values
 // =======================
 #define PARAM_OFFSET            0
-#define WPS_OFFSET              80
+#define MIDLEVEL_OFFSET         80 // 80 + 4*3 (floatsize * mid-level_cmds)
+#define WPS_OFFSET              92
 #define WP_SIZE_IN_EEPROM 	8
 
 
@@ -51,7 +52,9 @@ void loadEEPData (void);
 uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp);
 uint8_t storeParameterInEeprom (float parameter, uint8_t pmIndex);
 uint8_t storeAllParamsInEeprom (void);
+uint8_t storeMidLevelCommandsInEeprom (void);
 uint8_t readParamsInEeprom (void);
+uint8_t readMidLevelCommandsInEeprom (void);
 
 #ifdef __cplusplus
       }

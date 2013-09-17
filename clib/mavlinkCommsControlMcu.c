@@ -1392,6 +1392,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                                 writeSuccess = storeAllParamsInEeprom();
                             }
                             // Waypoint storage (only handle either params or waypoints)
+                            // TODO look into implementing this (again?)
                             else if (mlCommand.param2 == 0.0f) { // read
                             }
                             else if (mlCommand.param2 == 1.0f) { // write
@@ -1404,7 +1405,25 @@ void protDecodeMavlink(uint8_t* dataIn) {
                                 MAV_RESULT_ACCEPTED : MAV_RESULT_FAILED;
 
                             break;
+                        // Store or read mid-level commands to/from eeprom
+                        case MAV_CMD_MIDLEVEL_STORAGE:
+                            writeSuccess = FAILURE;
+                            if (mlCommand.param1 == 0.0f) { // read
+                                mlMidLevelCommands.hCommand = 0.0f;
+                                mlMidLevelCommands.rCommand = 0.0f;
+                                mlMidLevelCommands.uCommand = 0.0f;
+                                writeSuccess = readMidLevelCommandsInEeprom();
+                            }
+                            else if (mlCommand.param1 == 1.0f) { // write
+                                writeSuccess = storeMidLevelCommandsInEeprom();
+                            }
 
+                            mlPending.commandAck = TRUE;
+                            mlCommandAck.command = MAV_CMD_MIDLEVEL_STORAGE;
+                            mlCommandAck.result = (writeSuccess == SUCCESS)?
+                                MAV_RESULT_ACCEPTED : MAV_RESULT_FAILED;
+
+                            break;
                         // HIL Stuff Moved to set_mode
                         case MAV_CMD_RETURN_TO_BASE:
                             mlRTB.rtb = TRUE;
