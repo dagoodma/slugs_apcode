@@ -170,24 +170,19 @@ uint8_t storeAllParamsInEeprom(void){
 uint8_t storeMidLevelCommandsInEeprom (void) {
 	uint8_t indexOffset = 0,/* indx= 0 ,*/ writeSuccess = 0;
 	tFloatToChar tempFloat;
-        uint8_t pmIndex = 0;
 
 	// Save the data to the EEPROM
-	indexOffset = pmIndex++*2;
 	tempFloat.flData = mlMidLevelCommands.hCommand;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET+indexOffset);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET+indexOffset+1);
+	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
+	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset++);
 
-	indexOffset = pmIndex++*2;
 	tempFloat.flData = mlMidLevelCommands.uCommand;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET+indexOffset);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET+indexOffset+1);
+	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
+	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset++);
 
-
-	indexOffset = pmIndex++*2;
 	tempFloat.flData = mlMidLevelCommands.rCommand;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET+indexOffset);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET+indexOffset+1);
+	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
+	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset);
 
 	return writeSuccess;
 }

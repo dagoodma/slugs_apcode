@@ -55,6 +55,16 @@ THE SOFTWARE.
 #define INT32_1E3_TO_FLOAT(x)  ((float)x * 0.001f)
 #define FLOAT_TO_INT32_1E3(x) ((int32_t)(x * 1000.0f))
 
+
+#ifndef M_PI_2
+#define M_PI_2 (float)(asin(1))
+#endif
+
+#ifndef M_PI
+#define M_PI (float)(M_PI_2*2.0f)
+#endif
+
+
 // Trig and Math Functions
 float myAtan2 (float num, float denom);
 float myPow (float x, float toTheN);

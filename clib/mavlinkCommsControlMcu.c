@@ -1,7 +1,5 @@
 #include "mavlinkCommsControlMcu.h"
 
-#define M_PI (float)(asin(1)*2.0f)
-
 /*
 
 MAVLink supports the following UAV Modes:
@@ -1416,6 +1414,10 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             }
                             else if (mlCommand.param1 == 1.0f) { // write
                                 writeSuccess = storeMidLevelCommandsInEeprom();
+                                mlPending.statustext++;
+
+                                mlStatustext.severity = MAV_SEVERITY_INFO;
+                                strncpy(mlStatustext.text, "Wrote mid-level commands to EEPROM.", 49);
                             }
 
                             mlPending.commandAck = TRUE;
