@@ -42,9 +42,15 @@ THE SOFTWARE.
 // EEPROM Emulation Values
 // =======================
 #define PARAM_OFFSET            0
-#define MIDLEVEL_OFFSET         80 // 80 + 4*3 (floatsize * mid-level_cmds)
-#define WPS_OFFSET              92
+#define MIDLEVEL_OFFSET         160
+#define WPS_OFFSET              172  // = 160 + 4*3 = start + floatsize * #mid-level_cmds
 #define WP_SIZE_IN_EEPROM 	8
+
+/* Note: With 2 EEPROM banks, we have 510 16-bit EEPROM addresses available.
+ *       This means that there is space for roughly 79 parameters, 3 mid-level
+ *       commands, and 42 waypoints in EEPROM.
+ */
+
 
 
 unsigned char EEPInit (void);
