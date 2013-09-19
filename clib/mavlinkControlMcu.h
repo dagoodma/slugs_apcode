@@ -11,11 +11,14 @@ extern "C" {
 
     // ======== PARAMETER INTERFACE DATA ========
 
-    // NOTE: The EEPROM can hold a Maximum of 39 floats
+    // NOTE: The EEPROM can hold a Maximum of 79 floats
     //       DO NOT EXCEED THAT NUMBER!
 
     // If you add a new parameter remember to update the 
     // apConfiguration/parameterEnums.m file to reflect that
+
+    // NOTE: EEPROM storage space was effectively doubled for the dsPIC33F by
+    // modifications made to the EEPROM emulation library, DEE.c, made in 2011.
 
     enum SLUGS_PARAM_INTERFACE_IDX {
         PAR_PID_AIRSPEED_P = 0,
@@ -60,7 +63,6 @@ extern "C" {
         
         PAR_CAM_X = 29,
         PAR_CAM_Z = 30,
-
 
         PAR_PARAM_COUNT // Always at the end, do not assign value
     };
