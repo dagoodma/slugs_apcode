@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "updateSensorMcuState.h"
 
 void updateRawADCData(int16_t* adcData) {
-    mlRawPressureData.time_usec = mlAttitudeData.time_boot_ms;
+    //mlRawPressureData.time_usec = mlAttitudeData.time_boot_ms; // set by updateTimestamp()
     mlRawPressureData.press_abs = (int16_t) adcData[0]; // Baro
     mlRawPressureData.press_diff1 = (int16_t) adcData[1]; // Pito
     mlRawPressureData.press_diff2 = (int16_t) adcData[2]; // Power
@@ -35,7 +35,7 @@ void updateRawADCData(int16_t* adcData) {
 }
 
 void updateAirData(float* airData) {
-    mlAirData.time_boot_ms = mlAttitudeData.time_boot_ms;
+    //mlAirData.time_boot_ms = mlAttitudeData.time_boot_ms; // set by updateTimestamp()
     mlAirData.press_diff = airData[0]; //dynamic
     mlAirData.press_abs = airData[1]; //static
     mlAirData.temperature = (int16_t) (airData[2]*10.0); // temp 0.01
@@ -64,8 +64,21 @@ void getGSLocation(float* altLatLon) {
     altLatLon[2] = mlGSLocationFloat.lon * 0.0000001;
 }
 
+/* Simulink sends usec since boot. */
 void updateTimeStamp(uint32_t timeSt) {
-    mlAttitudeData.time_boot_ms = (uint32_t) (timeSt/1000); // Note: simulink sends usec
+    // Messages with time stamps in microseconds
+    mlGpsData.time_usec = timeSt;
+    mlRawImuData.time_usec = timeSt;
+    mlRawPressureData.time_usec = timeSt;
+    //mlPwmCommands.time_usec = timeSt; // this one is handled by control dsc
+
+    // Messages with time stamps in milliseconds
+    uint32_t timeMs = timeSt/1000;
+    mlAirData.time_boot_ms = (uint64_t) timeMs;
+    mlAttitudeData.time_boot_ms = timeMs;
+    mlFilteredData.time_boot_ms = timeMs;
+    mlLocalPositionData.time_boot_ms = timeMs;
+    mlPilotConsoleData.time_boot_ms = timeMs;
 }
 
 void updatePosition(float * posData) {

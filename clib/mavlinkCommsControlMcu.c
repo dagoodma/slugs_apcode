@@ -189,7 +189,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
             mavlink_msg_gps_raw_int_pack(SLUGS_SYSTEMID,
                 SLUGS_COMPID,
                 &msg,
-                0,
+                mlGpsData.time_usec,
                 mlGpsData.fix_type,
                 mlGpsData.lat,
                 mlGpsData.lon,
@@ -291,7 +291,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                     mlPing.seq,
                     SLUGS_SYSTEMID,
                     SLUGS_COMPID,
-                    mlAttitudeData.time_boot_ms * 1000);
+                    mlRawImuData.time_usec);
 
                 // Copy the message to the send buffer
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);

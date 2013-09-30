@@ -8,6 +8,7 @@ void updatePWM(unsigned short * PWMData){
 	mlPwmCommands.servo2_raw = PWMData[1];
 	mlPwmCommands.servo3_raw = PWMData[2];
 	mlPwmCommands.servo4_raw = PWMData[3];
+        mlPwmCommands.time_usec = mlRawImuData.time_usec; // Is this okay?
 }
 
 void updatePWMTrim(unsigned short PWMData, unsigned char channel ){
