@@ -71,11 +71,11 @@ void loadEEPData(void){
 		
 		tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+2);      
 		tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+3);      
-		mlWpValues.lon[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;;      
+		mlWpValues.lon[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;      
 		
 		tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+4);      
 		tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+5);      
-		mlWpValues.alt[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;;      
+		mlWpValues.alt[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;     
 		
 		mlWpValues.type[i]	= (uint8_t)DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+6);
 		

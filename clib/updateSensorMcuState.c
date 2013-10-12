@@ -64,21 +64,22 @@ void getGSLocation(float* altLatLon) {
     altLatLon[2] = mlGSLocationFloat.lon * 0.0000001;
 }
 
-/* Simulink sends usec since boot. */
+/* Simulink sends 10's of milliseconds since boot. */
 void updateTimeStamp(uint32_t timeSt) {
-    // Messages with time stamps in microseconds
-    mlGpsData.time_usec = timeSt;
-    mlRawImuData.time_usec = timeSt;
-    mlRawPressureData.time_usec = timeSt;
-    //mlPwmCommands.time_usec = timeSt; // this one is handled by control dsc
-
     // Messages with time stamps in milliseconds
-    uint32_t timeMs = timeSt/1000;
+    uint32_t timeMs = timeSt*10;
     mlAirData.time_boot_ms = (uint64_t) timeMs;
     mlAttitudeData.time_boot_ms = timeMs;
     mlFilteredData.time_boot_ms = timeMs;
     mlLocalPositionData.time_boot_ms = timeMs;
     mlPilotConsoleData.time_boot_ms = timeMs;
+
+    // Messages with time stamps in microseconds
+    uint64_t timeUsec = timeSt*10000;
+    mlGpsData.time_usec = timeUsec;
+    mlRawImuData.time_usec = timeUsec;
+    mlRawPressureData.time_usec = timeUsec;
+    //mlPwmCommands.time_usec = timeSt; // this one is handled by control dsc
 }
 
 void updatePosition(float * posData) {

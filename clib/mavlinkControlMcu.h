@@ -64,6 +64,8 @@ extern "C" {
         PAR_CAM_X = 29,
         PAR_CAM_Z = 30,
 
+        PAR_RATE_TELEMETRY = 31, // attitude sent at this rate, others 1/10th
+
         PAR_PARAM_COUNT // Always at the end, do not assign value
     };
 

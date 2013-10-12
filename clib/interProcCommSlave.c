@@ -66,6 +66,17 @@ void controlMCUInit(void) {
         loadEEPData();
     }
 
+    // Initialize default parameters
+
+    // Comment out MAVLINK_TELEMETRY_RATE in apDefinitions.h to disable this feature
+#ifdef MAVLINK_TELEMETRY_RATE
+    // Default parameter
+    if (mlParamInterface.param[PAR_RATE_TELEMETRY] >= MAVLINK_TELEMETRY_RATE
+            || mlParamInterface.param[PAR_RATE_TELEMETRY] <= 0.0f
+            || !isFinite(mlParamInterface.param[PAR_RATE_TELEMETRY]))
+        mlParamInterface.param[PAR_RATE_TELEMETRY] = MAVLINK_TELEMETRY_RATE; // (Hz)
+#endif
+
     // Turn the reboot flag on
     mlBoot.version = 1;
 }

@@ -204,5 +204,9 @@ void populateParameterInterface(void)
     
     strcpy(mlParamInterface.param_name[PAR_CAM_X], "CAM_LOC_X");
     strcpy(mlParamInterface.param_name[PAR_CAM_Z], "CAM_LOC_Z");
+
+    strcpy(mlParamInterface.param_name[PAR_RATE_TELEMETRY], "RATE_TELEMETRY");
+
+
 }
 

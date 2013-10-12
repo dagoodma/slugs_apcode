@@ -1,3 +1,5 @@
+
+#include <math.h>
 #include "mavlinkCommsControlMcu.h"
 
 /*
@@ -47,6 +49,8 @@ MAV_STATE_HILSIM: The autopilot is in HIL mode and thus reading data from the
                                     HIL sim serial port in the sensor MCU.
 
  */
+
+void sendTelemetryMavlink(unsigned char* dataOut);
 
 
 struct CircBuffer com2BufferIn;
@@ -163,7 +167,35 @@ void gsRead(unsigned char* gsChunk) {
     gsChunk[MAXSPI + 1] = 1;
 }
 
+/* Called at 50 Hz by Simulink, and called sendTelemtry dependent on rate parameter. */
+#ifdef MAVLINK_TELEMETRY_RATE
 void prepareTelemetryMavlink(unsigned char* dataOut) {
+
+    static uint32_t ticks = 0;
+    float telemetryRate = mlParamInterface.param[PAR_RATE_TELEMETRY];
+    uint32_t ticksBeforeSend = (telemetryRate >= MAVLINK_TELEMETRY_RATE || telemetryRate < 1.0f)?
+            0
+            :
+            (uint32_t)(MAVLINK_TELEMETRY_RATE - telemetryRate + 1);
+
+    // Send telemetry if we've waited enough ticks or if desired rate is invalid
+
+    if (ticks >= ticksBeforeSend) {
+        sendTelemetryMavlink(dataOut);
+        ticks = 0;
+    }
+    else {
+        ticks++;
+    }
+}
+#else
+void prepareTelemetryMavlink(unsigned char* dataOut) {
+    sendTelemetryMavlink(dataOut);
+}
+#endif
+
+/* Called by Simulink at 50 Hz. */
+void sendTelemetryMavlink(unsigned char* dataOut) {
 
     // Generic message container used to pack the messages
     mavlink_message_t msg;
@@ -1383,6 +1415,13 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             // Parameter storage
                             if (mlCommand.param1 == 0.0f) { // read
                                 memset(&(mlParamInterface.param[0]), 0, sizeof (float) *PAR_PARAM_COUNT);
+
+                                // Comment out MAVLINK_TELEMETRY_RATE in apDefinitions.h to disable this feature
+#ifdef MAVLINK_TELEMETRY_RATE
+    // Default parameter
+    mlParamInterface.param[PAR_RATE_TELEMETRY] = MAVLINK_TELEMETRY_RATE; // (Hz)
+#endif
+
                                 writeSuccess = readParamsInEeprom();
                             }
                             else if (mlCommand.param1 == 1.0f) { // write
