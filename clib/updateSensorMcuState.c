@@ -66,6 +66,13 @@ void getGSLocation(float* altLatLon) {
 
 /* Simulink sends 10's of milliseconds since boot. */
 void updateTimeStamp(uint32_t timeSt) {
+
+    // Todo fix units later
+    mlAirData.time_boot_ms = timeSt;
+    mlAttitudeData.time_boot_ms = timeSt;
+    mlRawPressureData.time_usec = timeSt;
+
+    /* Doesn't work:
     // Messages with time stamps in milliseconds
     uint32_t timeMs = timeSt*10;
     mlAirData.time_boot_ms = (uint64_t) timeMs;
@@ -80,6 +87,7 @@ void updateTimeStamp(uint32_t timeSt) {
     mlRawImuData.time_usec = timeUsec;
     mlRawPressureData.time_usec = timeUsec;
     //mlPwmCommands.time_usec = timeSt; // this one is handled by control dsc
+     * */
 }
 
 void updatePosition(float * posData) {

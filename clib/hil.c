@@ -58,7 +58,7 @@ void hil_getXYZ(float* xyz) {
 }
 
 unsigned int hil_getTs(void) {
-    return (uint32_t) mlRawImuData.time_usec;
+    return mlAttitudeData.time_boot_ms;
 }
 
 void protDecodeHil(uint8_t* dataIn) {
