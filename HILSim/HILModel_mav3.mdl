@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.735"
+    ComputedModelVersion    "1.736"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -29,9 +29,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Aug 06 15:21:05 2013"
-  RTWModifiedTimeStamp	  297703253
-  ModelVersionFormat	  "1.%<AutoIncrement:735>"
+  LastModifiedDate	  "Thu Oct 24 14:24:01 2013"
+  RTWModifiedTimeStamp	  304525351
+  ModelVersionFormat	  "1.%<AutoIncrement:736>"
   ConfigurationManager	  "None"
   SampleTimeColors	  on
   SampleTimeAnnotations	  off
@@ -1069,7 +1069,7 @@ Model {
     Location		    [63, 97, 1082, 707]
     Open		    on
     ModelBrowserVisibility  off
-    ModelBrowserWidth	    200
+    ModelBrowserWidth	    212
     ScreenColor		    "white"
     PaperOrientation	    "landscape"
     PaperPositionMode	    "auto"
@@ -1080,7 +1080,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "1165"
+    SIDHighWatermark	    "1167"
     Block {
       BlockType		      SubSystem
       Name		      "6DOF Model"
@@ -1096,7 +1096,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"6DOF Model"
-	Location		[258, 82, 1182, 854]
+	Location		[200, 173, 1124, 845]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -20920,7 +20920,7 @@ Model {
 	Location		[2, 82, 1245, 675]
 	Open			on
 	ModelBrowserVisibility	off
-	ModelBrowserWidth	200
+	ModelBrowserWidth	212
 	ScreenColor		"white"
 	PaperOrientation	"landscape"
 	PaperPositionMode	"auto"
@@ -21008,10 +21008,19 @@ Model {
 	  byteAlign		  "1"
 	}
 	Block {
+	  BlockType		  Constant
+	  Name			  "Constant"
+	  SID			  "1167"
+	  Position		  [245, 154, 270, 176]
+	  ZOrder		  -4
+	  ShowName		  off
+	  Value			  "3"
+	}
+	Block {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion1"
 	  SID			  "1095"
-	  Position		  [320, 63, 385, 77]
+	  Position		  [320, 53, 385, 67]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21027,7 +21036,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion10"
 	  SID			  "1096"
-	  Position		  [320, 203, 385, 217]
+	  Position		  [320, 213, 385, 227]
 	  ShowName		  off
 	  OutDataTypeStr	  "int32"
 	  RndMeth		  "Floor"
@@ -21043,7 +21052,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion11"
 	  SID			  "1097"
-	  Position		  [320, 223, 385, 237]
+	  Position		  [320, 233, 385, 247]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint16"
 	  RndMeth		  "Floor"
@@ -21059,7 +21068,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion12"
 	  SID			  "1098"
-	  Position		  [320, 263, 385, 277]
+	  Position		  [320, 273, 385, 287]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint16"
 	  RndMeth		  "Floor"
@@ -21085,7 +21094,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion14"
 	  SID			  "1100"
-	  Position		  [320, 283, 385, 297]
+	  Position		  [320, 293, 385, 307]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21101,7 +21110,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion15"
 	  SID			  "1101"
-	  Position		  [320, 303, 385, 317]
+	  Position		  [320, 313, 385, 327]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21111,7 +21120,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion16"
 	  SID			  "1102"
-	  Position		  [320, 323, 385, 337]
+	  Position		  [320, 333, 385, 347]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21151,7 +21160,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion2"
 	  SID			  "1106"
-	  Position		  [320, 43, 385, 57]
+	  Position		  [320, 33, 385, 47]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21267,7 +21276,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion3"
 	  SID			  "1117"
-	  Position		  [320, 83, 385, 97]
+	  Position		  [320, 73, 385, 87]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21383,7 +21392,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion4"
 	  SID			  "1128"
-	  Position		  [320, 103, 385, 117]
+	  Position		  [320, 93, 385, 107]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21437,9 +21446,25 @@ Model {
 	}
 	Block {
 	  BlockType		  DataTypeConversion
+	  Name			  "Data Type Conversion44"
+	  SID			  "1166"
+	  Position		  [320, 153, 385, 167]
+	  ShowName		  off
+	  OutDataTypeStr	  "uint8"
+	  RndMeth		  "Floor"
+	  SaturateOnIntegerOverflow off
+	  Port {
+	    PortNumber		    1
+	    Name		    "fixType"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion5"
 	  SID			  "1133"
-	  Position		  [320, 123, 385, 137]
+	  Position		  [320, 113, 385, 127]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21455,7 +21480,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion6"
 	  SID			  "1134"
-	  Position		  [320, 143, 385, 157]
+	  Position		  [320, 133, 385, 147]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint8"
 	  RndMeth		  "Floor"
@@ -21471,7 +21496,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion7"
 	  SID			  "1135"
-	  Position		  [320, 243, 385, 257]
+	  Position		  [320, 253, 385, 267]
 	  ShowName		  off
 	  OutDataTypeStr	  "uint16"
 	  RndMeth		  "Floor"
@@ -21487,7 +21512,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion8"
 	  SID			  "1136"
-	  Position		  [320, 163, 385, 177]
+	  Position		  [320, 173, 385, 187]
 	  ShowName		  off
 	  OutDataTypeStr	  "int32"
 	  RndMeth		  "Floor"
@@ -21503,7 +21528,7 @@ Model {
 	  BlockType		  DataTypeConversion
 	  Name			  "Data Type Conversion9"
 	  SID			  "1137"
-	  Position		  [320, 183, 385, 197]
+	  Position		  [320, 193, 385, 207]
 	  ShowName		  off
 	  OutDataTypeStr	  "int32"
 	  RndMeth		  "Floor"
@@ -21624,20 +21649,20 @@ Model {
 	  BlockType		  Reference
 	  Name			  "GPS Pack"
 	  SID			  "1148"
-	  Ports			  [15, 1]
+	  Ports			  [16, 1]
 	  Position		  [645, 32, 680, 348]
 	  LibraryVersion	  "1.1706"
 	  SourceBlock		  "xpclib/UDP/Pack"
 	  SourceType		  "xpcany2byte"
-	  datatypes		  "{'uint8','uint8','uint8','uint8','uint8','uint8', 'int32', 'int32', 'int32', 'uint16', 'uint16', 'uin"
-	  "t16', 'uint8', 'uint8', 'uint8'}"
+	  datatypes		  "{'uint8','uint8','uint8','uint8','uint8','uint8','uint8', 'int32', 'int32', 'int32', 'uint16', 'uint1"
+	  "6', 'uint16', 'uint8', 'uint8', 'uint8'}"
 	  byteAlign		  "1"
 	}
 	Block {
 	  BlockType		  Gain
 	  Name			  "Gain"
 	  SID			  "1160"
-	  Position		  [195, 160, 220, 180]
+	  Position		  [195, 170, 220, 190]
 	  ZOrder		  -8
 	  ShowName		  off
 	  Gain			  "1e7"
@@ -21649,7 +21674,7 @@ Model {
 	  BlockType		  Gain
 	  Name			  "Gain1"
 	  SID			  "1161"
-	  Position		  [230, 182, 250, 198]
+	  Position		  [230, 192, 250, 208]
 	  ZOrder		  -8
 	  ShowName		  off
 	  Gain			  "1e7"
@@ -21661,7 +21686,7 @@ Model {
 	  BlockType		  Gain
 	  Name			  "Gain2"
 	  SID			  "1162"
-	  Position		  [265, 202, 285, 218]
+	  Position		  [265, 212, 285, 228]
 	  ZOrder		  -8
 	  ShowName		  off
 	  Gain			  "1e3"
@@ -21673,7 +21698,7 @@ Model {
 	  BlockType		  Gain
 	  Name			  "Gain3"
 	  SID			  "1163"
-	  Position		  [200, 222, 220, 238]
+	  Position		  [200, 232, 220, 248]
 	  ZOrder		  -8
 	  ShowName		  off
 	  Gain			  "1e2"
@@ -21685,7 +21710,7 @@ Model {
 	  BlockType		  Gain
 	  Name			  "Gain4"
 	  SID			  "1164"
-	  Position		  [230, 242, 250, 258]
+	  Position		  [230, 252, 250, 268]
 	  ZOrder		  -8
 	  ShowName		  off
 	  Gain			  "1e2"
@@ -21697,7 +21722,7 @@ Model {
 	  BlockType		  Gain
 	  Name			  "Gain5"
 	  SID			  "1165"
-	  Position		  [265, 262, 285, 278]
+	  Position		  [265, 272, 285, 288]
 	  ZOrder		  -8
 	  ShowName		  off
 	  Gain			  "1e2"
@@ -21807,54 +21832,63 @@ Model {
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  1
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion2"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  2
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion1"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  3
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion3"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  4
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion4"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  5
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion5"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  6
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion6"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  13
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion14"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  14
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion15"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  15
+	  Points		  [140, 0]
 	  DstBlock		  "Data Type Conversion16"
 	  DstPort		  1
 	}
@@ -22184,50 +22218,6 @@ Model {
 	  DstPort		  6
 	}
 	Line {
-	  Name			  "cog [1e2*deg]"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion11"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  10
-	}
-	Line {
-	  Name			  "vel [1e2* m/s]"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion7"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  11
-	}
-	Line {
-	  Name			  "eph [1e2*m]"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion12"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  12
-	}
-	Line {
-	  Name			  "visSat"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion14"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  13
-	}
-	Line {
-	  SrcBlock		  "Data Type Conversion15"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  14
-	}
-	Line {
-	  SrcBlock		  "Data Type Conversion16"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  15
-	}
-	Line {
 	  SrcBlock		  "Data Type Conversion17"
 	  SrcPort		  1
 	  DstBlock		  "Air Data Pack"
@@ -22446,60 +22436,42 @@ Model {
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  7
+	  Points		  [15, 0]
 	  DstBlock		  "Gain"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  8
+	  Points		  [50, 0]
 	  DstBlock		  "Gain1"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  9
+	  Points		  [85, 0]
 	  DstBlock		  "Gain2"
 	  DstPort		  1
 	}
 	Line {
-	  Name			  "lat [1e7*m]"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion8"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  7
-	}
-	Line {
-	  Name			  "lon [1e7*m]"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion9"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  8
-	}
-	Line {
-	  Name			  "alt [1e3*m]"
-	  Labels		  [0, 0]
-	  SrcBlock		  "Data Type Conversion10"
-	  SrcPort		  1
-	  DstBlock		  "GPS Pack"
-	  DstPort		  9
-	}
-	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  10
+	  Points		  [20, 0]
 	  DstBlock		  "Gain3"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  11
+	  Points		  [50, 0]
 	  DstBlock		  "Gain4"
 	  DstPort		  1
 	}
 	Line {
 	  SrcBlock		  "Demux"
 	  SrcPort		  12
+	  Points		  [85, 0]
 	  DstBlock		  "Gain5"
 	  DstPort		  1
 	}
@@ -22519,6 +22491,89 @@ Model {
 	  SrcBlock		  "Gain5"
 	  SrcPort		  1
 	  DstBlock		  "Data Type Conversion12"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "cog [1e2*deg]"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion11"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  11
+	}
+	Line {
+	  Name			  "vel [1e2* m/s]"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion7"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  12
+	}
+	Line {
+	  Name			  "eph [1e2*m]"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion12"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  13
+	}
+	Line {
+	  Name			  "visSat"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion14"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  14
+	}
+	Line {
+	  SrcBlock		  "Data Type Conversion15"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  15
+	}
+	Line {
+	  SrcBlock		  "Data Type Conversion16"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  16
+	}
+	Line {
+	  Name			  "alt [1e3*m]"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion10"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  10
+	}
+	Line {
+	  Name			  "lon [1e7*m]"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion9"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  9
+	}
+	Line {
+	  Name			  "lat [1e7*m]"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion8"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  8
+	}
+	Line {
+	  Name			  "fixType"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Data Type Conversion44"
+	  SrcPort		  1
+	  DstBlock		  "GPS Pack"
+	  DstPort		  7
+	}
+	Line {
+	  SrcBlock		  "Constant"
+	  SrcPort		  1
+	  Points		  [15, 0; 0, -5]
+	  DstBlock		  "Data Type Conversion44"
 	  DstPort		  1
 	}
       }
