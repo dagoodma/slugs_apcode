@@ -46,7 +46,7 @@ THE SOFTWARE.
 
 // Scaling functions for GPS data message
 #define INT32_1E7_TO_FLOAT(x)  ((float)x * 0.0000001f)
-#define FLOAT_TO_INT32_1E7(x) ((int32_t)(x * 1000000.0f))
+#define FLOAT_TO_INT32_1E7(x) ((int32_t)(x * 10000000.0f))
 
 // Used for eph, epv, vel, and cog
 #define UINT16_1E2_TO_FLOAT(x)  ((float)x * 0.01f)
