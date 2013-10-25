@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.285"
+    ComputedModelVersion    "1.319"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,9 +39,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "User"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Jun 21 14:16:43 2013"
-  RTWModifiedTimeStamp	  293724929
-  ModelVersionFormat	  "1.%<AutoIncrement:285>"
+  LastModifiedDate	  "Sun Oct 13 01:55:37 2013"
+  RTWModifiedTimeStamp	  303529429
+  ModelVersionFormat	  "1.%<AutoIncrement:319>"
   ConfigurationManager	  "None"
   SampleTimeColors	  on
   SampleTimeAnnotations	  off
@@ -1128,7 +1128,7 @@ Model {
   }
   System {
     Name		    "controlMCUSlugsMKIINewNav"
-    Location		    [2, 82, 1405, 847]
+    Location		    [192, 121, 1201, 475]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -1142,7 +1142,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "24504"
+    SIDHighWatermark	    "24507"
     Block {
       BlockType		      Reference
       Name		      "C Function Call"
@@ -2380,7 +2380,7 @@ Model {
       BlockType		      Goto
       Name		      "Goto3"
       SID		      "22175"
-      Position		      [265, 931, 320, 949]
+      Position		      [265, 941, 320, 959]
       BackgroundColor	      "magenta"
       ShowName		      off
       GotoTag		      "Euler_rot"
@@ -2390,7 +2390,7 @@ Model {
       BlockType		      Goto
       Name		      "Goto4"
       SID		      "22176"
-      Position		      [265, 956, 320, 974]
+      Position		      [265, 966, 320, 984]
       BackgroundColor	      "magenta"
       ShowName		      off
       GotoTag		      "PQR_rot"
@@ -3018,7 +3018,7 @@ Model {
 	      Position		      [140, 50, 200, 80]
 	      ForegroundColor	      "red"
 	      ShowName		      off
-	      LibraryVersion	      "1.162"
+	      LibraryVersion	      "1.168"
 	      SourceBlock	      "SLUGS_Library/dsPIC_cos"
 	      SourceType	      "SubSystem"
 	    }
@@ -3030,7 +3030,7 @@ Model {
 	      Position		      [140, 124, 200, 166]
 	      ForegroundColor	      "red"
 	      ShowName		      off
-	      LibraryVersion	      "1.162"
+	      LibraryVersion	      "1.168"
 	      SourceBlock	      "SLUGS_Library/dsPIC_sin"
 	      SourceType	      "SubSystem"
 	    }
@@ -3385,7 +3385,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [190, 29, 250, 71]
 		    ForegroundColor	    "red"
-		    LibraryVersion	    "1.162"
+		    LibraryVersion	    "1.168"
 		    SourceBlock		    "SLUGS_Library/dsPIC_exp"
 		    SourceType		    "SubSystem"
 		    Port {
@@ -5000,7 +5000,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [190, 29, 250, 71]
 		    ForegroundColor	    "red"
-		    LibraryVersion	    "1.162"
+		    LibraryVersion	    "1.168"
 		    SourceBlock		    "SLUGS_Library/dsPIC_exp"
 		    SourceType		    "SubSystem"
 		    Port {
@@ -6343,7 +6343,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "psi_dot_c_noNav"
 	      SID		      "24337"
-	      Position		      [265, 648, 295, 662]
+	      Position		      [265, 643, 295, 657]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "5"
 	      IconDisplay	      "Port number"
@@ -6388,7 +6388,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "nav_phi_c"
 	      SID		      "24342"
-	      Position		      [265, 698, 295, 712]
+	      Position		      [265, 693, 295, 707]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "10"
 	      IconDisplay	      "Port number"
@@ -6397,7 +6397,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "psi_dot_ad"
 	      SID		      "24343"
-	      Position		      [265, 598, 295, 612]
+	      Position		      [265, 593, 295, 607]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "11"
 	      IconDisplay	      "Port number"
@@ -6407,7 +6407,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "L1OnOff"
 	      SID		      "24344"
-	      Position		      [325, 623, 355, 637]
+	      Position		      [325, 618, 355, 632]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "12"
 	      IconDisplay	      "Port number"
@@ -6452,7 +6452,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "isPassthrough"
 	      SID		      "24501"
-	      Position		      [325, 673, 355, 687]
+	      Position		      [325, 668, 355, 682]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "17"
 	      IconDisplay	      "Port number"
@@ -6483,7 +6483,7 @@ Model {
 	      Ports		      [13, 5]
 	      Position		      [360, 30, 525, 500]
 	      ForegroundColor	      "red"
-	      LibraryVersion	      "1.162"
+	      LibraryVersion	      "1.168"
 	      SourceBlock	      "SLUGS_Library/Control Blocks/Lateral Channel"
 	      SourceType	      "SubSystem"
 	    }
@@ -6491,7 +6491,7 @@ Model {
 	      BlockType		      InportShadow
 	      Name		      "U_m1"
 	      SID		      "24487"
-	      Position		      [325, 723, 355, 737]
+	      Position		      [325, 718, 355, 732]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "6"
 	      IconDisplay	      "Port number"
@@ -6649,8 +6649,8 @@ Model {
 	      Name		      "psi_dot_c Select logic1"
 	      SID		      "24504"
 	      Ports		      [6, 2]
-	      Position		      [400, 597, 535, 738]
-	      LibraryVersion	      "1.162"
+	      Position		      [400, 592, 535, 733]
+	      LibraryVersion	      "1.168"
 	      SourceBlock	      "SLUGS_Library/Control Blocks/psi_dot_c Select logic"
 	      SourceType	      "SubSystem"
 	    }
@@ -6933,7 +6933,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "U_c"
 	      SID		      "24308"
-	      Position		      [205, 38, 235, 52]
+	      Position		      [205, 53, 235, 67]
 	      BackgroundColor	      "darkGreen"
 	      IconDisplay	      "Port number"
 	    }
@@ -6941,7 +6941,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "dyn P"
 	      SID		      "24309"
-	      Position		      [95, 73, 125, 87]
+	      Position		      [95, 88, 125, 102]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "2"
 	      IconDisplay	      "Port number"
@@ -6950,7 +6950,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "U_hold PID\n Gains"
 	      SID		      "24310"
-	      Position		      [205, 108, 235, 122]
+	      Position		      [205, 123, 235, 137]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "3"
 	      IconDisplay	      "Port number"
@@ -6959,7 +6959,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "dT_trim"
 	      SID		      "24311"
-	      Position		      [95, 143, 125, 157]
+	      Position		      [95, 158, 125, 172]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "4"
 	      IconDisplay	      "Port number"
@@ -6968,7 +6968,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "h_c"
 	      SID		      "24312"
-	      Position		      [205, 178, 235, 192]
+	      Position		      [205, 193, 235, 207]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "5"
 	      IconDisplay	      "Port number"
@@ -6977,7 +6977,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "h_m"
 	      SID		      "24313"
-	      Position		      [95, 213, 125, 227]
+	      Position		      [95, 228, 125, 242]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "6"
 	      IconDisplay	      "Port number"
@@ -6986,7 +6986,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "he2th PI Gains"
 	      SID		      "24314"
-	      Position		      [205, 248, 235, 262]
+	      Position		      [205, 263, 235, 277]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "7"
 	      IconDisplay	      "Port number"
@@ -6995,7 +6995,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "Roll to Height FF"
 	      SID		      "24315"
-	      Position		      [95, 283, 125, 297]
+	      Position		      [95, 298, 125, 312]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "8"
 	      IconDisplay	      "Port number"
@@ -7004,7 +7004,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "theta_m"
 	      SID		      "24316"
-	      Position		      [205, 318, 235, 332]
+	      Position		      [205, 333, 235, 347]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "9"
 	      IconDisplay	      "Port number"
@@ -7013,7 +7013,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "th2dE PID Gains"
 	      SID		      "24317"
-	      Position		      [95, 353, 125, 367]
+	      Position		      [95, 368, 125, 382]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "10"
 	      IconDisplay	      "Port number"
@@ -7022,7 +7022,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "dE_trim"
 	      SID		      "24318"
-	      Position		      [205, 388, 235, 402]
+	      Position		      [205, 403, 235, 417]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "11"
 	      IconDisplay	      "Port number"
@@ -7031,7 +7031,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "Manual?"
 	      SID		      "24319"
-	      Position		      [95, 423, 125, 437]
+	      Position		      [95, 438, 125, 452]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "12"
 	      IconDisplay	      "Port number"
@@ -7040,7 +7040,7 @@ Model {
 	      BlockType		      Inport
 	      Name		      "phi_m"
 	      SID		      "24321"
-	      Position		      [95, 458, 125, 472]
+	      Position		      [205, 473, 235, 487]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "13"
 	      IconDisplay	      "Port number"
@@ -7049,56 +7049,28 @@ Model {
 	      BlockType		      Inport
 	      Name		      "dt FF\nGain"
 	      SID		      "24322"
-	      Position		      [205, 493, 235, 507]
+	      Position		      [95, 508, 125, 522]
 	      BackgroundColor	      "darkGreen"
 	      Port		      "14"
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
-	      BlockType		      Reference
-	      Name		      "Get the GS Location\n[updateControlMCUState.c]"
-	      SID		      "24323"
-	      Tag		      "dsPIC_dsPIC_CFunctionCall"
-	      Ports		      [0, 1]
-	      Position		      [80, 517, 185, 553]
-	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
-	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
-	      SourceType	      "C Function Call"
-	      FctUpdate		      "Output Function"
-	      fctName		      "'getGSLocation'"
-	      INPUT_SIZE	      "1"
-	      INPUT1		      "--"
-	      INPUT2		      "--"
-	      INPUT3		      "--"
-	      OUTPUT_SIZE	      "3"
-	      OUTPUT1		      "real32"
-	      SampleTime	      "0.01"
-	      InputType		      "[ ]"
-	      OutputType	      "[ 7 ]"
-	      FctDeclaration	      "extern void getGSLocation(real32_T* y1);"
-	      FctCall		      "getGSLocation(*%y1);"
-	      OrderingInOutPopup      "None"
-	      FctStart		      "None"
-	      FctStart_Name	      "Init_onlyOnce"
-	      FctStart_Declaration    "inline extern void Init_onlyOnce();"
-	      FctStart_Call	      "Init_onlyOnce();"
-	      FctInit		      "None"
-	      FctInit_Name	      "Init_Reset"
-	      FctInit_Declaration     "inline extern void Init_Reset();"
-	      FctInit_Call	      "Init_Reset();"
-	      PinDigitalInput	      "[]"
-	      PinDigitalOutput	      "[]"
-	      AnalogueInput	      "[]"
+	      BlockType		      Constant
+	      Name		      "Constant3"
+	      SID		      "24507"
+	      Position		      [95, 577, 225, 603]
+	      ShowName		      off
+	      Value		      "[100 100 100]"
+	      OutDataTypeStr	      "single"
 	    }
 	    Block {
 	      BlockType		      Reference
 	      Name		      "Longitudinal Channel"
 	      SID		      "24324"
 	      Ports		      [15, 5]
-	      Position		      [390, 22, 565, 558]
+	      Position		      [390, 37, 565, 573]
 	      ForegroundColor	      "red"
-	      LibraryVersion	      "1.162"
+	      LibraryVersion	      "1.168"
 	      SourceBlock	      "SLUGS_Library/Control Blocks/Longitudinal Channel"
 	      SourceType	      "SubSystem"
 	      Port {
@@ -7295,7 +7267,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "dE"
 	      SID		      "24328"
-	      Position		      [760, 73, 790, 87]
+	      Position		      [760, 88, 790, 102]
 	      BackgroundColor	      "yellow"
 	      IconDisplay	      "Port number"
 	    }
@@ -7303,7 +7275,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "dT"
 	      SID		      "24329"
-	      Position		      [760, 178, 790, 192]
+	      Position		      [760, 193, 790, 207]
 	      BackgroundColor	      "yellow"
 	      Port		      "2"
 	      IconDisplay	      "Port number"
@@ -7312,7 +7284,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "theta_C"
 	      SID		      "24330"
-	      Position		      [760, 498, 790, 512]
+	      Position		      [760, 508, 790, 522]
 	      BackgroundColor	      "yellow"
 	      Port		      "3"
 	      IconDisplay	      "Port number"
@@ -7321,7 +7293,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "h_c_in"
 	      SID		      "24331"
-	      Position		      [760, 288, 790, 302]
+	      Position		      [760, 298, 790, 312]
 	      BackgroundColor	      "yellow"
 	      Port		      "4"
 	      IconDisplay	      "Port number"
@@ -7330,7 +7302,7 @@ Model {
 	      BlockType		      Outport
 	      Name		      "U_m"
 	      SID		      "24332"
-	      Position		      [760, 393, 790, 407]
+	      Position		      [760, 403, 790, 417]
 	      BackgroundColor	      "yellow"
 	      Port		      "5"
 	      IconDisplay	      "Port number"
@@ -7426,12 +7398,6 @@ Model {
 	      DstPort		      13
 	    }
 	    Line {
-	      SrcBlock		      "Get the GS Location\n[updateControlMCUState.c]"
-	      SrcPort		      1
-	      DstBlock		      "Longitudinal Channel"
-	      DstPort		      15
-	    }
-	    Line {
 	      Name		      "U"
 	      Labels		      [0, 0]
 	      SrcBlock		      "Longitudinal Channel"
@@ -7448,13 +7414,13 @@ Model {
 	    Line {
 	      SrcBlock		      "Longitudinal Channel"
 	      SrcPort		      3
-	      Points		      [0, 5; 15, 0]
+	      Points		      [15, 0]
 	      Branch {
 		DstBlock		"h_c_in"
 		DstPort			1
 	      }
 	      Branch {
-		Points			[0, 285]
+		Points			[0, 275]
 		DstBlock		"myMux Fun1"
 		DstPort			3
 	      }
@@ -7462,7 +7428,7 @@ Model {
 	    Line {
 	      SrcBlock		      "Longitudinal Channel"
 	      SrcPort		      4
-	      Points		      [0, 5; 55, 0]
+	      Points		      [55, 0]
 	      Branch {
 		DstBlock		"U_m"
 		DstPort			1
@@ -7475,16 +7441,23 @@ Model {
 	    Line {
 	      SrcBlock		      "Longitudinal Channel"
 	      SrcPort		      5
-	      Points		      [0, 5; 35, 0]
+	      Points		      [35, 0]
 	      Branch {
 		DstBlock		"theta_C"
 		DstPort			1
 	      }
 	      Branch {
-		Points			[0, 65]
+		Points			[0, 55]
 		DstBlock		"myMux Fun1"
 		DstPort			2
 	      }
+	    }
+	    Line {
+	      SrcBlock		      "Constant3"
+	      SrcPort		      1
+	      Points		      [20, 0; 0, -40]
+	      DstBlock		      "Longitudinal Channel"
+	      DstPort		      15
 	    }
 	  }
 	}
@@ -7702,7 +7675,7 @@ Model {
 	      Ports		      [15, 4]
 	      Position		      [500, 38, 635, 432]
 	      ForegroundColor	      "red"
-	      LibraryVersion	      "1.162"
+	      LibraryVersion	      "1.168"
 	      SourceBlock	      "SLUGS_Library/Navigation/Navigation"
 	      SourceType	      "SubSystem"
 	    }
@@ -13944,7 +13917,7 @@ Model {
 	  INPUT3		  "--"
 	  OUTPUT_SIZE		  "120"
 	  OUTPUT1		  "uint8"
-	  SampleTime		  ".02"
+	  SampleTime		  ".04"
 	  InputType		  "[ ]"
 	  OutputType		  "[ 2 ]"
 	  FctDeclaration	  "extern void prepareTelemetryMavlink(uint8_T* y1);"
@@ -17587,7 +17560,7 @@ Model {
 		    ForegroundColor	    "red"
 		    NamePlacement	    "alternate"
 		    ShowName		    off
-		    LibraryVersion	    "1.162"
+		    LibraryVersion	    "1.168"
 		    SourceBlock		    "SLUGS_Library/dsPIC_ABS"
 		    SourceType		    "SubSystem"
 		    }
@@ -19828,7 +19801,7 @@ Model {
 		  Position		  [470, 305, 555, 345]
 		  ForegroundColor	  "red"
 		  ShowName		  off
-		  LibraryVersion	  "1.162"
+		  LibraryVersion	  "1.168"
 		  SourceBlock		  "SLUGS_Library/Vector Norm"
 		  SourceType		  "SubSystem"
 		}
@@ -19858,7 +19831,7 @@ Model {
 		  Position		  [810, 464, 870, 506]
 		  ForegroundColor	  "red"
 		  ShowName		  off
-		  LibraryVersion	  "1.162"
+		  LibraryVersion	  "1.168"
 		  SourceBlock		  "SLUGS_Library/dsPIC_asin"
 		  SourceType		  "SubSystem"
 		}
@@ -19870,7 +19843,7 @@ Model {
 		  Position		  [830, 219, 890, 261]
 		  ForegroundColor	  "red"
 		  ShowName		  off
-		  LibraryVersion	  "1.162"
+		  LibraryVersion	  "1.168"
 		  SourceBlock		  "SLUGS_Library/dsPIC_atan2"
 		  SourceType		  "SubSystem"
 		}
@@ -21443,7 +21416,7 @@ Model {
 	  INPUT3		  "--"
 	  OUTPUT_SIZE		  "1"
 	  OUTPUT1		  "--"
-	  SampleTime		  "0.02"
+	  SampleTime		  "0.04"
 	  InputType		  "[ 2 ]"
 	  OutputType		  "[ ]"
 	  FctDeclaration	  "extern void send2GS(uint8_T* u1);"
@@ -22048,7 +22021,7 @@ Model {
       Name		      "get Nav Vars"
       SID		      "24157"
       Ports		      [0, 4]
-      Position		      [140, 898, 235, 1007]
+      Position		      [140, 908, 235, 1017]
       MinAlgLoopOccurrences   off
       PropExecContextOutsideSubsystem off
       RTWSystemCode	      "Auto"
@@ -23445,6 +23418,7 @@ Model {
     Line {
       SrcBlock		      "get Nav Vars"
       SrcPort		      1
+      Points		      [0, -5]
       DstBlock		      "Demux1"
       DstPort		      1
     }
@@ -23581,7 +23555,7 @@ Model {
     Line {
       SrcBlock		      "get Nav Vars"
       SrcPort		      4
-      Points		      [115, 0; 0, 40]
+      Points		      [115, 0; 0, 30]
       DstBlock		      "Inner Loop/ Navigation"
       DstPort		      20
     }
