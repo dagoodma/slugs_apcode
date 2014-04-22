@@ -173,12 +173,6 @@ typedef char BOOL;
 #define LF                   10
 #define AT		64
 
-
-    // Telemetry rates
-    // ===============
-//#define MAVLINK_TELEMETRY_RATE      50.0f // comment this out to disable parameter
-
-
     // Standard Units
     // ==============
 #define KTS2MPS 		0.514444444

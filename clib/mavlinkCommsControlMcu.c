@@ -74,8 +74,6 @@ enum PARAM_TRANSACTION {
 // Specify how long between transmitting parameters in a parameter transmission stream.
 #define INTRA_PARAM_DELAY 1
 
-
-void sendTelemetryMavlink(unsigned char* dataOut);
 void _prepareTransmitParameter(uint16_t id);
 
 struct CircBuffer com2BufferIn;
@@ -192,35 +190,8 @@ void gsRead(unsigned char* gsChunk) {
     gsChunk[MAXSPI + 1] = 1;
 }
 
-/* Called at 50 Hz by Simulink, and called sendTelemtry dependent on rate parameter. */
-#ifdef MAVLINK_TELEMETRY_RATE
+/* Called at 50 Hz by Simulink. */
 void prepareTelemetryMavlink(unsigned char* dataOut) {
-
-    static uint32_t ticks = 0;
-    float telemetryRate = mlParamInterface.param[PAR_RATE_TELEMETRY];
-    uint32_t ticksBeforeSend = (telemetryRate >= MAVLINK_TELEMETRY_RATE || telemetryRate < 1.0f)?
-            0
-            :
-            (uint32_t)(MAVLINK_TELEMETRY_RATE - telemetryRate + 1);
-
-    // Send telemetry if we've waited enough ticks or if desired rate is invalid
-
-    if (ticks >= ticksBeforeSend) {
-        sendTelemetryMavlink(dataOut);
-        ticks = 0;
-    }
-    else {
-        ticks++;
-    }
-}
-#else
-void prepareTelemetryMavlink(unsigned char* dataOut) {
-    sendTelemetryMavlink(dataOut);
-}
-#endif
-
-/* Called by Simulink at 50 Hz. */
-void sendTelemetryMavlink(unsigned char* dataOut) {
 
     // Generic message container used to pack the messages
     mavlink_message_t msg;
