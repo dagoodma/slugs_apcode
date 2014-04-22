@@ -33,7 +33,6 @@ mavlink_pending_requests_t mlPending;
 mavlink_rtb_t mlRTB;
 mavlink_statustext_t mlStatustext;
 mavlink_ping_t mlPing;
-// mavlink_slugs_action_t mlAction; 
 mavlink_command_long_t mlCommand;
 mavlink_mission_request_t mlWpRequest;
 mavlink_mission_ack_t mlWpAck;
@@ -102,7 +101,6 @@ void mavlinkInit(void)
     memset(&mlCommandAck, 0, sizeof (mavlink_command_ack_t));
     memset(&mlPending, 0, sizeof (mavlink_pending_requests_t));
     memset(&mlPing, 0, sizeof (mavlink_ping_t));
-    //memset(&mlAction, 0, sizeof (mavlink_slugs_action_t));
     memset(&mlWpRequest, 0, sizeof (mavlink_mission_request_t));
     memset(&mlWpAck, 0, sizeof (mavlink_mission_ack_t));
     memset(&mlWpCount, 0, sizeof (mavlink_mission_count_t));
@@ -126,8 +124,6 @@ void mavlinkInit(void)
 #endif
     memset(&mlSensorDiag, 0, sizeof(mavlink_sensor_diag_t));
     
-    //mlCommandAck.command = SLUGS_ACTION_NONE; // Note: ensure flags are added instead
-
     mlPending.wpTransaction = 0;
     mlPending.wpProtState = WP_PROT_IDLE;
     mlPending.wpTimeOut = 0;

@@ -1160,10 +1160,6 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
                     mlStatustext.severity = MAV_SEVERITY_INFO;
                     strncpy(mlStatustext.text, "Mid level flight parameters received.", 49);
-                    /*
-                    mlAction.actionId = SLUGS_ACTION_MLC_CHANGE;
-                    mlAction.actionVal = SLUGS_ACTION_SUCCESS;
-                     */
 
                     mlPending.midLvlCmds = 1;
 

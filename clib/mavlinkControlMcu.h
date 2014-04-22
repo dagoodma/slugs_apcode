@@ -125,9 +125,6 @@ extern "C" {
         uint8_t statustext;
         uint8_t command;
 
-        // slugs Acknowledge
-        // uint8_t slugsAction; // Note: migrate slugs actions into commands, acks, and text
-
         // WP Protocol states
         uint8_t wpTransaction;
         uint8_t wpProtState;
@@ -202,7 +199,6 @@ extern "C" {
     extern mavlink_command_ack_t mlCommandAck; // 	-- 	==
     extern mavlink_pending_requests_t mlPending; //	--	**
     extern mavlink_ping_t mlPing; // 	..	**
-    //extern mavlink_slugs_action_t mlAction; // 	..	**
     extern mavlink_mission_request_t mlWpRequest; // 	..	**
     extern mavlink_mission_ack_t mlWpAck; // 	..	**
     extern mavlink_mission_count_t mlWpCount; // 	..	**
