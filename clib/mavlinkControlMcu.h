@@ -144,11 +144,11 @@ extern "C" {
 
         // Parameter Interface
         uint8_t piTransaction;
-        uint8_t piProtState;
-        uint8_t piCurrentParamInTransaction;
-        uint8_t piBackToList;
-        uint8_t piQueue[5];
-        int8_t piQIdx;
+        //uint8_t piProtState;
+        uint8_t piCurrentParameter;
+        //uint8_t piBackToList;
+        //uint8_t piQueue[5];
+        //int8_t piQIdx;
 
         // spi
         uint8_t spiToSensor[MAXSEND];
@@ -235,6 +235,7 @@ extern "C" {
     //
     void mavlinkInit(void);
     void populateParameterInterface(void);
+    int16_t setParameterByName(const char *name, float value);
 
 
 #ifdef __cplusplus

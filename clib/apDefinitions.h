@@ -157,6 +157,7 @@ typedef char BOOL;
         WP_PROT_GETTING_WP_IDLE
     };
 
+    // TODO remove this
     enum PARAM_INTERFACE {
         PI_IDLE,
         PI_SEND_ALL_PARAM,

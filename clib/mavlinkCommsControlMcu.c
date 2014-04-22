@@ -50,8 +50,33 @@ MAV_STATE_HILSIM: The autopilot is in HIL mode and thus reading data from the
 
  */
 
-void sendTelemetryMavlink(unsigned char* dataOut);
+// Parameter state machine states
+enum PARAM_STATE {
+    PARAM_STATE_INACTIVE = 0,
 
+    PARAM_STATE_SINGLETON_SEND_VALUE,
+
+    PARAM_STATE_STREAM_SEND_VALUE,
+    PARAM_STATE_STREAM_DELAY
+};
+
+// Parameter transaction states
+enum PARAM_TRANSACTION {
+    PARAM_TRANSACTION_NONE = 0,
+    PARAM_TRANSACTION_SEND
+};
+
+// Define a timeout (in units of main timesteps of MavlinkReceive()) for transmitting
+// MAVLink messages as part of the PARAMETER and MISSION protocols. Messages will be retransmit
+// twice before it's considered hopeless.
+#define MAVLINK_RESEND_TIMEOUT 300
+
+// Specify how long between transmitting parameters in a parameter transmission stream.
+#define INTRA_PARAM_DELAY 1
+
+
+void sendTelemetryMavlink(unsigned char* dataOut);
+void _prepareTransmitParameter(uint16_t id);
 
 struct CircBuffer com2BufferIn;
 CBRef uartBufferIn;
@@ -388,34 +413,64 @@ void sendTelemetryMavlink(unsigned char* dataOut) {
             // Copy the message to the send buffer
             bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
 
+
+            evaluateParameterState(PARAM_EVENT_NONE, NULL);
+
+            /* Set by evaluateParameterState() via _prepareTransmitParameter()
+               when we're ready to transmit. */
+            if (mlPending.piTransaction == PARAM_TRANSACTION_SEND) {
+                mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
+                    mlParamInterface.param_name[mlPending.piCurrentParameter],
+                    mlParamInterface.param[mlPending.piCurrentParameter],
+                    MAV_PARAM_TYPE_REAL32, // NOTE we only use floats for now
+                    PAR_PARAM_COUNT,
+                    mlPending.piCurrentParameter);
+
+                mlPending.piTransaction = PARAM_TRANSACTION_NONE;
+                if (++mlPending.piCurrentParameter >= PAR_PARAM_COUNT)
+                    mlPending.piCurrentParameter = 0;
+
+
+                // Copy the message to the send buffer
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+/*
+                memset(vr_message,0,sizeof(vr_message));
+             	sprintf(vr_message, "P = %d, V=%f ", mlPending.piCurrentParameter,
+                    (float)mlParamInterface.param[mlPending.piCurrentParameter]);
+             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+   */
+            }
+
+
+            /*
             if (!mlPending.piTransaction) break;
 
             // memset(vr_message,0,sizeof(vr_message));
-            // 	sprintf(vr_message, "P = %d, S=%d ", mlPending.piCurrentParamInTransaction, mlPending.piProtState);	
+            // 	sprintf(vr_message, "P = %d, S=%d ", mlPending.piCurrentParameter, mlPending.piProtState);
             // 	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
             // 				
             switch (mlPending.piProtState) {
 
                 case PI_SEND_ALL_PARAM:
-                    if (mlPending.piCurrentParamInTransaction < PAR_PARAM_COUNT) {
+                    if (mlPending.piCurrentParameter < PAR_PARAM_COUNT) {
 
                         mavlink_msg_param_value_pack(SLUGS_SYSTEMID,
                             SLUGS_COMPID,
                             &msg,
-                            mlParamInterface.param_name[mlPending.piCurrentParamInTransaction],
-                            mlParamInterface.param[mlPending.piCurrentParamInTransaction],
+                            mlParamInterface.param_name[mlPending.piCurrentParameter],
+                            mlParamInterface.param[mlPending.piCurrentParameter],
                             MAV_PARAM_TYPE_REAL32, // TODO: make sure this is correct later on
                             PAR_PARAM_COUNT,
-                            mlPending.piCurrentParamInTransaction);
+                            mlPending.piCurrentParameter);
 
-                        mlPending.piCurrentParamInTransaction++;
+                        mlPending.piCurrentParameter++;
 
                         // Copy the message to the send buffer
                         bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
 
                     } else {
                         mlPending.piProtState = PI_IDLE;
-                        mlPending.piCurrentParamInTransaction = PAR_PARAM_COUNT;
+                        mlPending.piCurrentParameter = PAR_PARAM_COUNT;
                         mlPending.piTransaction = 0;
                         mlPending.piBackToList = 0;
                         mlPending.piQIdx = -1;
@@ -433,17 +488,17 @@ void sendTelemetryMavlink(unsigned char* dataOut) {
                         mavlink_msg_param_value_pack(SLUGS_SYSTEMID,
                             SLUGS_COMPID,
                             &msg,
-                            mlParamInterface.param_name[mlPending.piCurrentParamInTransaction],
-                            mlParamInterface.param[mlPending.piCurrentParamInTransaction],
+                            mlParamInterface.param_name[mlPending.piCurrentParameter],
+                            mlParamInterface.param[mlPending.piCurrentParameter],
                             MAV_PARAM_TYPE_REAL32,
                             PAR_PARAM_COUNT,
-                            mlPending.piCurrentParamInTransaction);
+                            mlPending.piCurrentParameter);
 
                         // Copy the message to the send buffer
                         bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
 
 
-                        mlPending.piCurrentParamInTransaction = PAR_PARAM_COUNT;
+                        mlPending.piCurrentParameter = PAR_PARAM_COUNT;
                         mlPending.piProtState = PI_IDLE;
                         mlPending.piTransaction = 0;
                     } else { // you will need to go back to send all
@@ -474,6 +529,7 @@ void sendTelemetryMavlink(unsigned char* dataOut) {
                     break;
 
             }// switch PI state machine
+            */
 
 
             break; // case 5
@@ -932,8 +988,20 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
     uint8_t i, indx, writeSuccess, commChannel = dataIn[MAXSPI + 1];
     uint32_t temp;
-    mavlink_param_set_t set;
+    //mavlink_param_set_t set;
     //mavlink_set_nav_mode_t mode;
+
+
+    // TODO implement new mission state machine
+    // Track if a mission message was processed in this call. This is used to determine if a
+    // NONE_EVENT should be sent to the mission manager. The manager needs to be called every
+    // timestep such that its internal state machine works properly.
+    //BOOL processedMissionMessage = FALSE;
+
+    // Track if a parameter message was processed in this call. This is used to determine if a
+    // NONE_EVENT should be sent to the parameter manager. The manager needs to be called every
+    // timestep such that its internal state machine works properly.
+    BOOL processedParameterMessage = FALSE;
 
 
 
@@ -1256,10 +1324,6 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         //mlWpAck.target_system =
                         mlWpAck.target_component = MAV_COMP_ID_MISSIONPLANNER;
                         mlWpAck.type = MAV_MISSION_ERROR;
-                        /*
-                        mlAction.actionId = SLUGS_ACTION_EEPROM;
-                        mlAction.actionVal = SLUGS_ACTION_FAIL;
-                        */
                     }
 
                     break;
@@ -1282,15 +1346,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         strncpy(mlStatustext.text, "Failed to clear waypoints from EEPROM.", 49);
 
                     }
-                    /*
-                        mlCommandAck.command = MAVLINK_MSG_ID_MISSION_CLEAR_ALL;
-                        mlCommandAck.result = MAV_RESULT_FAILED;
-                        
-                        mlAction.actionId = SLUGS_ACTION_EEPROM;
-                        mlAction.actionVal = SLUGS_ACTION_FAIL;
-                         
-                    }
-                     * */
+
 
                     // Update the waypoint count
                     mlWpValues.wpCount = 0;
@@ -1342,27 +1398,10 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         strncpy(mlStatustext.text, "Control DSC GPS origin set.", 49);
                     }
 
-                    // Set the flag of Aknowledge for the AKN Message
-                    // if the write was not successful
-                    /*
-                    if (writeSuccess != SUCCESS) {
-                        
-                        mlAction.actionId = SLUGS_ACTION_EEPROM;
-                        mlAction.actionVal = SLUGS_ACTION_FAIL;
-                         
-                    }
-                    */
                     break;
 
                 case MAVLINK_MSG_ID_CTRL_SRFC_PT:
                     mavlink_msg_ctrl_srfc_pt_decode(&msg, &mlPassthrough);
-
-                    // Report the Change // NOTE: look into this
-                    /*
-                    mlPending.slugsAction++;
-                    mlAction.actionId = SLUGS_ACTION_PT_CHANGE;
-                    mlAction.actionVal = SLUGS_ACTION_SUCCESS;
-                    */
 
                     mlPending.statustext++;
 
@@ -1401,9 +1440,6 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     }
 
                     break;
-
-                // Replaced by COMMAND_ACK above
-                // Action stuff was here
 
                 case MAVLINK_MSG_ID_COMMAND_LONG:
                     mavlink_msg_command_long_decode(&msg, &mlCommand);
@@ -1493,20 +1529,32 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
                     break;
 
-                case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
+                case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: {
+                    evaluateParameterState(PARAM_EVENT_REQUEST_LIST_RECEIVED, NULL);
+                    processedParameterMessage = TRUE;
+
+                    // Replaced parameter state machine
+                    /*
                     mlPending.piTransaction = 1;
                     mlPending.piProtState = PI_SEND_ALL_PARAM;
-                    mlPending.piCurrentParamInTransaction = 0;
-                    break;
+                    mlPending.piCurrentParameter = 0;
+                    */
+                } break;
 
-                case MAVLINK_MSG_ID_PARAM_REQUEST_READ:
+                case MAVLINK_MSG_ID_PARAM_REQUEST_READ: {
+                    uint16_t currentParameter = mavlink_msg_param_request_read_get_param_index(&msg);
+                    evaluateParameterState(PARAM_EVENT_REQUEST_READ_RECEIVED, &currentParameter);
+                    processedParameterMessage = TRUE;
+
+                    // Replaced parameter state machine
+                    /*
                     // If it was in the middle of a list transmission or there is already a param enqueued
                     mlPending.piTransaction = 1;
                     switch (mlPending.piProtState) {
                         case PI_IDLE:
                             mlPending.piBackToList = 0; // no need to go back
                             mlPending.piQIdx = -1; // no Index
-                            mlPending.piCurrentParamInTransaction = mavlink_msg_param_request_read_get_param_index(&msg); // assign directly
+                            mlPending.piCurrentParameter = mavlink_msg_param_request_read_get_param_index(&msg); // assign directly
                             mlPending.piProtState = PI_SEND_ONE_PARAM;
                             break;
 
@@ -1525,9 +1573,17 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             mlPending.piProtState = PI_SEND_ONE_PARAM;
                             break;
                     }
-                    break;
+                     **/
+                } break;
 
-                case MAVLINK_MSG_ID_PARAM_SET:
+                case MAVLINK_MSG_ID_PARAM_SET: {
+                    mavlink_param_set_t p;
+                    mavlink_msg_param_set_decode(&msg, &p);
+                    evaluateParameterState(PARAM_EVENT_SET_RECEIVED, &p);
+                    processedParameterMessage = TRUE;
+                } break;
+                // Replaced parameter state machine
+                    /*
                     mavlink_msg_param_set_decode(&msg, &set);
 
                     if ((uint8_t) set.target_system == (uint8_t) SLUGS_SYSTEMID &&
@@ -1566,7 +1622,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                                     // Report back new value
                                     mlPending.piBackToList = 0; // no need to go back
                                     mlPending.piQIdx = -1; // no Index
-                                    mlPending.piCurrentParamInTransaction = i; // assign directly
+                                    mlPending.piCurrentParameter = i; // assign directly
                                     mlPending.piProtState = PI_SEND_ONE_PARAM;
                                     mlPending.piTransaction = 1;
 
@@ -1575,38 +1631,8 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         }// for i
                     } // if addressed to this
                     break;
-
-                    // case MAVLINK_MSG_ID_SLUGS_CAMERA_ORDER:
-                    // 	mavlink_msg_slugs_camera_order_decode(&msg, &mlCameraOrder); 
-                    // break;
-                // mav_mode moved into custom_mode of set_mode 
-                /*
-                case MAVLINK_MSG_ID_SET_NAV_MODE:
-                    mavlink_msg_set_nav_mode_decode(&msg, &mode);
-
-                    mlSystemStatus.nav_mode = mode.nav_mode;
-                    break;
-                */
-                // moved to MAV_CMD_RETURN_TO_BASE
-                    /*
-                case MAVLINK_MSG_ID_SLUGS_RTB:
-                    mavlink_msg_slugs_rtb_decode(&msg, &mlRTB);
-
-                    // Report the Change
-                    //mlPending.
-                    //mlPending.slugsAction++;
-
-                    if (!mlRTB.rtb) {
-                        mlAction.actionId = SLUGS_ACTION_RTB_OFF;
-                    } else if (!mlRTB.track_mobile) {
-                        mlAction.actionId = SLUGS_ACTION_RTB_ON_NO_MOBILE;
-                    } else {
-                        mlAction.actionId = SLUGS_ACTION_RTB_ON_MOBILE;
-                    }
-                    mlAction.actionVal = SLUGS_ACTION_SUCCESS;
-                     
-                    break;
                     */
+                   
                 case MAVLINK_MSG_ID_SLUGS_MOBILE_LOCATION:
                     mavlink_msg_slugs_mobile_location_decode(&msg, &mlMobileLocation);
                     break;
@@ -1615,14 +1641,6 @@ void protDecodeMavlink(uint8_t* dataIn) {
                 case MAVLINK_MSG_ID_ISR_LOCATION:
                     mavlink_msg_isr_location_decode(&msg, &mlISR);
 
-                    // Report the Change
-                    // Actions removed. TODO: determine reporting for ISR_LOC set
-                    /*
-                    mlPending.slugsAction++;
-                    mlAction.actionId = SLUGS_ACTION_ISR_LOCATION;
-                    mlAction.actionVal = SLUGS_ACTION_SUCCESS;
-                    */
-
                     mlPending.statustext++;
 
                     mlStatustext.severity = MAV_SEVERITY_INFO;
@@ -1630,18 +1648,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
                     mlPending.isrLoc = 1;
                     break;
-                // Moved to MAV_CMD_TURN_LIGHT
-                    /*
-                case MAVLINK_MSG_ID_TURN_LIGHT:
-                    mavlink_msg_turn_light_decode(&msg, &mlLights);
-
-
-                    mlPending.slugsAction++;
-                    mlAction.actionId = SLUGS_ACTION_LIGHTS;
-                    mlAction.actionVal = SLUGS_ACTION_SUCCESS;
-
-                    break;
-                    */
+     
             } // switch	
         } // if
 
@@ -1651,7 +1658,149 @@ void protDecodeMavlink(uint8_t* dataIn) {
         }
 
 
-    }// for  
+    }// for
+
+
+    // Now if no parameter messages were received, trigger the Parameter Manager anyways with a NONE
+	// event.
+    if (!processedParameterMessage) {
+            evaluateParameterState(PARAM_EVENT_NONE, NULL);
+    }
+}
+
+
+
+
+/**
+ * The following functions are helper functions for reading the various parameters aboard the boat.
+ * @param id The ID of this parameter.
+ */
+void _prepareTransmitParameter(uint16_t id)
+{
+    if (id < PAR_PARAM_COUNT) {
+        mlPending.piCurrentParameter = id;
+        mlPending.piTransaction = PARAM_TRANSACTION_SEND;
+    }
+    else {
+        mlPending.piTransaction = PARAM_TRANSACTION_NONE;
+    }
+
+
+
+        /*
+            float param_value = mlParamInterface.param[id];
+
+            // encode the message and transmit.
+            mavlink_message_t msg;
+            mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
+                    mlParamInterface.param_name[id], param_value, MAV_PARAM_TYPE_REAL32,
+                    PAR_PARAM_COUNT, id);
+            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+
+            mavlink_msg_param_value_pack(SLUGS_SYSTEMID,
+                        SLUGS_COMPID,
+                        &msg,
+                        mlParamInterface.param_name[mlPending.piCurrentParameter],
+                        mlParamInterface.param[mlPending.piCurrentParameter],
+                        MAV_PARAM_TYPE_REAL32, // TODO: make sure this is correct later on
+                        PAR_PARAM_COUNT,
+                        mlPending.piCurrentParameter);
+
+                    mlPending.piCurrentParameter++;
+
+                    // Copy the message to the send buffer
+                    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+         */
+}
+
+
+/**
+ *
+ * @param event An event from PARAM_EVENT.
+ * @param data A pointer to data, its meaning depends on the current state of the parameter protocol.
+ * @note Adapted from bwmairs param state machine code for autoboat:
+ *  https://github.com/Susurrus/Autoboat/blob/master/Code/Primary_node/MavlinkGlue.c
+ */
+void evaluateParameterState(enum PARAM_EVENT event, const void *data)
+{
+    // Track the parameter protocol state
+    static uint8_t state = PARAM_STATE_INACTIVE;
+
+    // Keep a record of the current parameter being used
+    //static uint16_t currentParameter;
+
+    // Used for the delaying parameter transmission
+    static uint8_t delayCountdown = 0;
+
+    // Store the state to change into
+    uint8_t nextState = state;
+
+    // First check the parameter protocol state
+    switch (state) {
+        case PARAM_STATE_INACTIVE:
+            if (event == PARAM_EVENT_REQUEST_LIST_RECEIVED) {
+                mlPending.piCurrentParameter = 0;
+                nextState = PARAM_STATE_STREAM_SEND_VALUE;
+            }
+            else if (event == PARAM_EVENT_SET_RECEIVED) {
+                mavlink_param_set_t x = *(mavlink_param_set_t*)data;
+                mlPending.piCurrentParameter = setParameterByName(x.param_id, x.param_value);
+                // If there was an error, just reset.
+                if (mlPending.piCurrentParameter == FAILURE) {
+                    mlPending.piCurrentParameter = 0;
+                }
+                nextState = PARAM_STATE_SINGLETON_SEND_VALUE;
+            }
+            else if (event == PARAM_EVENT_REQUEST_READ_RECEIVED) {
+                mlPending.piCurrentParameter = *(uint16_t*)data;
+                nextState = PARAM_STATE_SINGLETON_SEND_VALUE;
+            }
+            break;
+
+        case PARAM_STATE_SINGLETON_SEND_VALUE: {
+            if (event == PARAM_EVENT_NONE) {
+                _prepareTransmitParameter(mlPending.piCurrentParameter);
+                nextState = PARAM_STATE_INACTIVE;
+            }
+        } break;
+
+        case PARAM_STATE_STREAM_SEND_VALUE: {
+            if (event == PARAM_EVENT_NONE) {
+                _prepareTransmitParameter(mlPending.piCurrentParameter);
+
+                // And increment the current parameter index for the next iteration and
+                // we finish if we've hit the limit of parameters.
+                if ((mlPending.piCurrentParameter) == (PAR_PARAM_COUNT - 1)) {
+                    nextState = PARAM_STATE_INACTIVE;
+                }
+                else {
+                    nextState = PARAM_STATE_STREAM_DELAY;
+                }
+            }
+        } break;
+
+            // Add a delay of INTRA_PARAM_DELAY timesteps before attempting to schedule another one
+        case PARAM_STATE_STREAM_DELAY: {
+            if (event == PARAM_EVENT_ENTER_STATE) {
+                delayCountdown = INTRA_PARAM_DELAY;
+            }
+            else if (event == PARAM_EVENT_NONE) {
+                if (delayCountdown-- == 0) {
+                    nextState = PARAM_STATE_STREAM_SEND_VALUE;
+                }
+            }
+        } break;
+
+        default: break;
+    }
+
+    // Here is when we actually transition between states, calling init/exit code as necessary
+    if (nextState != state) {
+        evaluateParameterState(PARAM_EVENT_EXIT_STATE, NULL);
+        state = nextState;
+        evaluateParameterState(PARAM_EVENT_ENTER_STATE, NULL);
+    }
 }
 
 void copyBufferToDMA1(unsigned char size) {

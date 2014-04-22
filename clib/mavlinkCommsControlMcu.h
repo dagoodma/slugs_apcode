@@ -18,6 +18,19 @@ extern "C" {
 
 #define PROTOCOL_TIMEOUT_TICKS 20    ///< maximum time to wait for pending messages until timeout
 
+// Events that trigger changes in the parameter protocol state machine.
+enum PARAM_EVENT {
+	PARAM_EVENT_NONE,
+	PARAM_EVENT_ENTER_STATE,
+	PARAM_EVENT_EXIT_STATE,
+
+	PARAM_EVENT_REQUEST_LIST_RECEIVED,
+	PARAM_EVENT_REQUEST_READ_RECEIVED,
+	PARAM_EVENT_SET_RECEIVED
+};
+
+
+    void evaluateParameterState(enum PARAM_EVENT event, const void *data);
 
 
     void uart2Init(void);

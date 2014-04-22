@@ -1,4 +1,7 @@
+
+#include <string.h>
 #include "mavlinkControlMcu.h"
+#include "apUtils.h"
 
 mavlink_raw_imu_t mlRawImuData;
 mavlink_gps_raw_int_t mlGpsData;
@@ -210,5 +213,26 @@ void populateParameterInterface(void)
      */
 
 
+}
+
+/**
+ * Sets the on-board parameter with the given name.
+ * @param name of the parameter to set
+ * @param value to set paramter to
+ * @return Index of parameter set or FAILURE.
+ */
+int16_t setParameterByName(const char *name, float value) {
+
+    uint16_t i;
+    for (i = 0; i < PAR_PARAM_COUNT; i++) {
+        if (strcmp(name, mlParamInterface.param_name[i]) == 0) {
+            if (isFinite(value)) {
+                mlParamInterface.param[i] = value;
+                return i;
+            }
+        }
+    }
+
+    return FAILURE;
 }
 
