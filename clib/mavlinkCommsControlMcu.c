@@ -1304,9 +1304,6 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
                     switch (mlCommandAck.command) {
                         case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:
-                            // since this case has no specific action required on this end
-                            // then just increment slugs action and report it
-                            //mlPending.slugsAction++;
                             mlPending.statustext++;
 
                             mlStatustext.severity = MAV_SEVERITY_INFO;
