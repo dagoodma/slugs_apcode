@@ -219,7 +219,9 @@ void setNavNav(float* values) {
     mlNavigation.dist2Go = values[1];
     mlNavigation.fromWP = (uint8_t) values[2];
 
-    if (mlNavigation.toWP != (uint8_t)values[3]) mlPending.wpSendCurrent = TRUE;
+    if (mlNavigation.toWP != (uint8_t)values[3]) {
+        mlPending.miTransaction = MISSION_TRANSACTION_SEND_CURRENT;
+    }
     mlNavigation.toWP = (uint8_t) values[3];
 }
 

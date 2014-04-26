@@ -18,6 +18,7 @@ extern "C" {
 
 #define PROTOCOL_TIMEOUT_TICKS 20    ///< maximum time to wait for pending messages until timeout
 
+/* Parameter event enums */
 // Events that trigger changes in the parameter protocol state machine.
 enum PARAM_EVENT {
 	PARAM_EVENT_NONE,
@@ -29,8 +30,26 @@ enum PARAM_EVENT {
 	PARAM_EVENT_SET_RECEIVED
 };
 
+/* Mission event enums */
+// Set up the events necessary for the mission protocol state machine.
+enum MISSION_EVENT {
+    MISSION_EVENT_NONE = 0,
+    MISSION_EVENT_ENTER_STATE,
+    MISSION_EVENT_EXIT_STATE,
+
+    // Message reception events
+    MISSION_EVENT_COUNT_RECEIVED,
+    MISSION_EVENT_ACK_RECEIVED,
+    MISSION_EVENT_REQUEST_RECEIVED,
+    MISSION_EVENT_REQUEST_LIST_RECEIVED,
+    MISSION_EVENT_CLEAR_ALL_RECEIVED,
+    MISSION_EVENT_SET_CURRENT_RECEIVED,
+    MISSION_EVENT_ITEM_RECEIVED
+};
+
 
     void evaluateParameterState(enum PARAM_EVENT event, const void *data);
+    void evaluateMissionState(enum MISSION_EVENT event, const void *data);
 
 
     void uart2Init(void);
@@ -41,7 +60,6 @@ enum PARAM_EVENT {
     void protDecodeMavlink(uint8_t* dataIn);
     void lowRateTelemetryMavlink(unsigned char* dataOut);
     char sendQGCDebugMessage(const char * dbgMessage, char severity, unsigned char* bytesToAdd, char positionStart);
-    uint8_t clearWaypointsFrom(uint8_t startingWp);
     void addMessageToSpiOut(mavlink_message_t* msg);
 
 #ifdef __cplusplus

@@ -70,6 +70,24 @@ extern "C" {
 
 #define SLUGS_PARAM_NAME_LENGTH	16
 
+    
+//Mission transaction states
+enum MISSION_TRANSACTION {
+    MISSION_TRANSACTION_NONE = 0,
+    MISSION_TRANSACTION_SEND_CURRENT,
+    MISSION_TRANSACTION_SEND_ACK,
+    MISSION_TRANSACTION_SEND_COUNT,
+    MISSION_TRANSACTION_SEND_ITEM,
+    MISSION_TRANSACTION_SEND_REQUEST
+};
+
+
+// Parameter transaction states
+enum PARAM_TRANSACTION {
+    PARAM_TRANSACTION_NONE = 0,
+    PARAM_TRANSACTION_SEND
+};
+
     struct pi_struct {
         float param[PAR_PARAM_COUNT];
         char param_name[PAR_PARAM_COUNT][SLUGS_PARAM_NAME_LENGTH];
@@ -121,13 +139,14 @@ extern "C" {
         uint8_t statustext;
         uint8_t command;
 
-        // WP Protocol states
-        uint8_t wpTransaction;
-        uint8_t wpProtState;
-        uint8_t wpCurrentWpInTransaction;
-        uint8_t wpTimeOut;
-        uint8_t wpTotalWps;
-        uint8_t wpSendCurrent; // send current mission item
+        // Mission interface
+        uint8_t miTransaction;
+        //uint8_t wpProtState;
+        uint8_t miCurrentMission;
+        //uint8_t wpTimeOut;
+        uint8_t miTotalMissions;
+        uint8_t miAckType;
+        //uint8_t wpSendCurrent; // send current mission item
 
         // Info
         uint8_t pidIdx;
@@ -224,10 +243,19 @@ extern "C" {
     extern uint32_t lastNavigationMode;
 
 
-    //
+// ====================== Function Prototypes ===================
+
     void mavlinkInit(void);
+
+    // Parameter interface related
     void populateParameterInterface(void);
-    int16_t setParameterByName(const char *name, float value);
+    int8_t  setParameterByName(const char *name, float value);
+
+    // Mission interface related
+    int8_t addMission(mavlink_mission_item_t *mission);
+    int8_t  clearMissionList(void);
+    int8_t  clearWaypointsFrom(uint8_t startingWp);
+
 
 
 #ifdef __cplusplus

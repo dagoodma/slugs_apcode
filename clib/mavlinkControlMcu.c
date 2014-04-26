@@ -2,6 +2,7 @@
 #include <string.h>
 #include "mavlinkControlMcu.h"
 #include "apUtils.h"
+#include "eepLoader.h"
 
 mavlink_raw_imu_t mlRawImuData;
 mavlink_gps_raw_int_t mlGpsData;
@@ -123,10 +124,8 @@ void mavlinkInit(void)
     memset(&mlNovatelStatus, 0, sizeof(mavlink_novatel_diag_t));
 #endif
     memset(&mlSensorDiag, 0, sizeof(mavlink_sensor_diag_t));
-    
-    mlPending.wpTransaction = 0;
-    mlPending.wpProtState = WP_PROT_IDLE;
-    mlPending.wpTimeOut = 0;
+
+    mlPending.miTransaction = MISSION_TRANSACTION_NONE;
     
     mlPending.heartbeatAge = 0;
 
@@ -212,9 +211,9 @@ void populateParameterInterface(void)
  * @param value to set paramter to
  * @return Index of parameter set or FAILURE.
  */
-int16_t setParameterByName(const char *name, float value) {
+int8_t setParameterByName(const char *name, float value) {
 
-    uint16_t i;
+    int8_t i;
     for (i = 0; i < PAR_PARAM_COUNT; i++) {
         if (strcmp(name, mlParamInterface.param_name[i]) == 0) {
             if (isFinite(value)) {
@@ -227,3 +226,93 @@ int16_t setParameterByName(const char *name, float value) {
     return FAILURE;
 }
 
+/**
+ * Clear missions (waypoints) from memory
+ * @return SUCCESS or FAILURE of EEPROM write.
+ */
+int8_t clearMissionList(void) {
+    int8_t writeResult = SUCCESS;
+    memset(&mlWpValues, 0, sizeof (mavlink_mission_item_values_t));
+
+    writeResult = clearWaypointsFrom(0);
+
+    mlWpValues.wpCount = 0;
+    mlPending.miCurrentMission = 0;
+    mlPending.miTotalMissions = 0;
+
+    return writeResult;
+}
+
+
+/**
+ * Clear waypoints (missions) from EEPROM starting from the given waypoint index.
+ * @param Index of waypoint to start clearing from inclusively.
+ * @return SUCCESS or FAILURE of EEPROM write.
+ */
+int8_t  clearWaypointsFrom(uint8_t startingWp) {
+
+    int8_t  writeSuccess = 0;
+    uint8_t indx, indexOffset;
+    tFloatToChar tempFloat;
+
+    // erase the flash values in EEPROM emulation
+    for (indx = startingWp; indx < MAX_NUM_WPS - 1; indx++) {
+        // Compute the adecuate index offset
+        indexOffset = indx * 8;
+
+        // Clear the data from the EEPROM
+        tempFloat.flData = 0.0;
+        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset);
+        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 1);
+
+        tempFloat.flData = 0.0;
+        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 2);
+        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 3);
+
+        tempFloat.flData = 0.0;
+        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 4);
+        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 5);
+
+
+        writeSuccess += DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 6);
+
+        writeSuccess += DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 7);
+    }
+
+    return writeSuccess;
+}
+
+/**
+ * Add a mission item to the list.
+ * @return SUCCESS or FAILURE whether mission was added to the list.
+ */
+int8_t addMission(mavlink_mission_item_t *mission)
+{
+    int8_t  writeSuccess = SUCCESS;
+    uint8_t index = (uint8_t) mission->seq;
+
+    mlWpValues.lat[index] = mission->x;
+    mlWpValues.lon[index] = mission->y;
+    mlWpValues.alt[index] = mission->z;
+
+    mlWpValues.type[index] = mission->command;
+
+    mlWpValues.orbit[index] = (uint16_t) mission->param3;
+
+    // Record the data in EEPROM
+    writeSuccess = storeWaypointInEeprom(mission);
+
+    return writeSuccess;
+
+}
+
+/**
+ * Add a mission item to the list.
+ * @return SUCCESS or FAILURE whether mission was added to the list.
+ */
+
+/*
+void setCurrentMission(uint8_t idx) {
+
+}
+*/

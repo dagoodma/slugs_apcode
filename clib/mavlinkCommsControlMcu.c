@@ -49,6 +49,40 @@ MAV_STATE_HILSIM: The autopilot is in HIL mode and thus reading data from the
                                     HIL sim serial port in the sensor MCU.
 
  */
+// Set up state machine variables for the mission protocol
+enum MISSION_STATE {
+    MISSION_STATE_INACTIVE = 0,
+
+    // States handling transmitting the mission count. It needs to be retransmit twice.
+    MISSION_STATE_SEND_MISSION_COUNT,
+    MISSION_STATE_MISSION_COUNT_TIMEOUT,
+    MISSION_STATE_SEND_MISSION_COUNT2,
+    MISSION_STATE_MISSION_COUNT_TIMEOUT2,
+    MISSION_STATE_SEND_MISSION_COUNT3,
+    MISSION_STATE_MISSION_COUNT_TIMEOUT3,
+
+    // States handling transmitting a mission item. It needs to be retransmit twice.
+    MISSION_STATE_SEND_MISSION_ITEM,
+    MISSION_STATE_MISSION_ITEM_TIMEOUT,
+    MISSION_STATE_SEND_MISSION_ITEM2,
+    MISSION_STATE_MISSION_ITEM_TIMEOUT2,
+    MISSION_STATE_SEND_MISSION_ITEM3,
+    MISSION_STATE_MISSION_ITEM_TIMEOUT3,
+
+    // States handling transmission of the current mission
+    MISSION_STATE_SEND_CURRENT,
+    MISSION_STATE_CURRENT_TIMEOUT,
+    MISSION_STATE_SEND_CURRENT2,
+    MISSION_STATE_CURRENT_TIMEOUT2,
+
+    // States handling sending a mission request
+    MISSION_STATE_SEND_MISSION_REQUEST,
+    MISSION_STATE_MISSION_REQUEST_TIMEOUT,
+    MISSION_STATE_SEND_MISSION_REQUEST2,
+    MISSION_STATE_MISSION_REQUEST_TIMEOUT2,
+    MISSION_STATE_SEND_MISSION_REQUEST3,
+    MISSION_STATE_MISSION_REQUEST_TIMEOUT3
+};
 
 // Parameter state machine states
 enum PARAM_STATE {
@@ -60,11 +94,6 @@ enum PARAM_STATE {
     PARAM_STATE_STREAM_DELAY
 };
 
-// Parameter transaction states
-enum PARAM_TRANSACTION {
-    PARAM_TRANSACTION_NONE = 0,
-    PARAM_TRANSACTION_SEND
-};
 
 // Define a timeout (in units of main timesteps of MavlinkReceive()) for transmitting
 // MAVLink messages as part of the PARAMETER and MISSION protocols. Messages will be retransmit
@@ -75,6 +104,11 @@ enum PARAM_TRANSACTION {
 #define INTRA_PARAM_DELAY 1
 
 void _prepareTransmitParameter(uint16_t id);
+void _prepareTransmitCurrentMission(void);
+void _prepareTransmitMissionAck(uint8_t type);
+void _prepareTransmitMissionCount(void);
+void _prepareTransmitMissionItem(uint8_t currentMissionIndex);
+void _prepareTransmitMissionRequest(uint8_t currentMissionIndex);
 
 struct CircBuffer com2BufferIn;
 CBRef uartBufferIn;
@@ -492,7 +526,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
             break; // case 7
 
-        case 8:// Wp Protocol state machine, raw Pressure
+        case 8:// mission Protocol state machine, raw Pressure
             // This block goes via SPI to the sensor DSC so it does not count
             // towards the Bandwith budget
             if (mlPending.spiSendGSLocation) {
@@ -538,6 +572,114 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
             // 				sw_debug = 0;		
             // 			}
 
+             // Raw pressure
+            memset(&msg, 0, sizeof (mavlink_message_t));
+            mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
+                SLUGS_COMPID,
+                &msg,
+                &mlRawPressureData);
+            // Copy the message to the send buffer
+            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+
+            /****  New mission state machine code ******/
+
+            evaluateMissionState(MISSION_EVENT_NONE, NULL);
+
+            // TODO determine if we need this
+            // clear the msg
+            // if (mlPending.miTransaction != MISSION_TRANSACTION_NONE)
+            //    memset(&msg, 0, sizeof (mavlink_message_t));
+
+            /* Set by evaluateMissionState() when we're ready to transmit. */
+            // Send current mission item number
+            if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_CURRENT) {
+                mavlink_msg_mission_current_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
+                         ((uint16_t)mlNavigation.toWP) - 1);
+
+                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+
+                // Copy the message to the send buffer
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            }
+            // Send mission acknowledgement
+            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ACK) {
+                mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
+                    GS_SYSTEMID, GS_COMPID, mlPending.miAckType);
+
+                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+
+                // Copy the message to the send buffer
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            }
+            // Send mission count
+            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_COUNT) {
+                mavlink_msg_mission_count_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
+                    GS_SYSTEMID, GS_COMPID, mlPending.miTotalMissions);
+
+                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+
+                // Copy the message to the send buffer
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            }
+            // Send mission item
+            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ITEM) {
+                mavlink_msg_mission_item_pack(SLUGS_SYSTEMID,
+                    MAV_COMP_ID_MISSIONPLANNER,
+                    &msg,
+                    GS_SYSTEMID,
+                    GS_COMPID,
+                    mlPending.miCurrentMission,
+                    MAV_FRAME_GLOBAL,
+                    mlWpValues.type[mlPending.miCurrentMission],
+                    0, // not current
+                    1, // autocontinue
+                    0.0, // Param 1 not used
+                    0.0, // Param 2 not used
+                    (float) mlWpValues.orbit[mlPending.miCurrentMission],
+                    0.0, // Param 4 not used
+                    mlWpValues.lat[mlPending.miCurrentMission],
+                    mlWpValues.lon[mlPending.miCurrentMission],
+                    mlWpValues.alt[mlPending.miCurrentMission]); // always autocontinue
+
+                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+
+                // Copy the message to the send buffer
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            }
+             // Send mission request
+            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_REQUEST
+                    && mlPending.miCurrentMission < mlPending.miTotalMissions) {
+                mavlink_msg_mission_request_pack(SLUGS_SYSTEMID,
+                    MAV_COMP_ID_MISSIONPLANNER,
+                    &msg,
+                    GS_SYSTEMID,
+                    GS_COMPID,
+                    mlPending.miCurrentMission);
+
+                    mlPending.miTransaction = PARAM_TRANSACTION_NONE;
+                    // Increment pending
+                    // TODO remove this or not
+                    /*
+                    if (++mlPending.miCurrentMission >= mlPending.miTotalMissions)
+                        mlPending.miCurrentMission = 0;
+                     */
+            }
+
+/*
+                mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
+                    mlParamInterface.param_name[mlPending.piCurrentParameter],
+                    mlParamInterface.param[mlPending.piCurrentParameter],
+                    MAV_PARAM_TYPE_REAL32, // NOTE we only use floats for now
+                    PAR_PARAM_COUNT,
+                    mlPending.piCurrentParameter);
+
+                mlPending.piTransaction = PARAM_TRANSACTION_NONE;
+                if (++mlPending.piCurrentParameter >= PAR_PARAM_COUNT)
+                    mlPending.piCurrentParameter = 0;
+*/
+
+            /*
 
             if (mlPending.wpProtState == WP_PROT_TX_WP) {
                 memset(vr_message, 0, sizeof (vr_message));
@@ -568,15 +710,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
             }
 
 
-            // Raw pressure
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawPressureData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
+          
             if (!mlPending.wpTransaction) break;
 
             switch (mlPending.wpProtState) {
@@ -721,7 +855,8 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 mlPending.wpTimeOut = 0;
                 mlPending.wpTotalWps = 0;
             }
-
+             *
+             **/
             break; // case 8
 
         case 9: // Action Ack, Pilot Console, Mid Level Commands, boot
@@ -881,6 +1016,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
     // NONE_EVENT should be sent to the parameter manager. The manager needs to be called every
     // timestep such that its internal state machine works properly.
     BOOL processedParameterMessage = FALSE;
+    BOOL processedMissionMessage = FALSE;
 
 
 
@@ -1095,6 +1231,62 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
                     break;
                 */
+                /********** New mission state machine code. ***********/
+
+                // If we are not doing any mission protocol operations, record the size of the incoming mission
+                // list and transition into the write missions state machine loop.
+                case MAVLINK_MSG_ID_MISSION_COUNT: {
+                    uint8_t mavlinkNewMissionListSize = mavlink_msg_mission_count_get_count(&msg);
+                    evaluateMissionState(MISSION_EVENT_COUNT_RECEIVED, &mavlinkNewMissionListSize);
+                    processedMissionMessage = TRUE;
+                } break;
+
+                // Handle receiving a mission.
+                case MAVLINK_MSG_ID_MISSION_ITEM: {
+                    mavlink_mission_item_t currentMission;
+                    mavlink_msg_mission_item_decode(&msg, &currentMission);
+                    evaluateMissionState(MISSION_EVENT_ITEM_RECEIVED, &currentMission);
+                    processedMissionMessage = TRUE;
+                } break;
+
+                // Responding to a mission request entails moving into the first active state and scheduling a MISSION_COUNT message.
+                // Will also schedule a transmission of a GPS_ORIGIN message. This is used for translating global to local coordinates
+                // in QGC.
+                case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: {
+                    //MavLinkSendGpsGlobalOrigin();  // TODO determine if we need this
+                    evaluateMissionState(MISSION_EVENT_REQUEST_LIST_RECEIVED, NULL);
+                    processedMissionMessage = TRUE;
+                } break;
+
+                // When a mission request message is received, respond with that mission information from the MissionManager
+                case MAVLINK_MSG_ID_MISSION_REQUEST: {
+                    uint8_t receivedMissionIndex = mavlink_msg_mission_request_get_seq(&msg);
+                    evaluateMissionState(MISSION_EVENT_REQUEST_RECEIVED, &receivedMissionIndex);
+                    processedMissionMessage = TRUE;
+                } break;
+
+                // Allow for clearing waypoints. Here we respond simply with an ACK message if we successfully
+                // cleared the mission list.
+                case MAVLINK_MSG_ID_MISSION_CLEAR_ALL:
+                    evaluateMissionState(MISSION_EVENT_CLEAR_ALL_RECEIVED, NULL);
+                    processedMissionMessage = TRUE;
+                break;
+
+                // Allow for the groundstation to set the current mission. This requires a WAYPOINT_CURRENT response message agreeing with the received current message index.
+                case MAVLINK_MSG_ID_MISSION_SET_CURRENT: {
+                    uint8_t newCurrentMission = mavlink_msg_mission_set_current_get_seq(&msg);
+                    evaluateMissionState(MISSION_EVENT_SET_CURRENT_RECEIVED, &newCurrentMission);
+                    processedMissionMessage = TRUE;
+                } break;
+
+                case MAVLINK_MSG_ID_MISSION_ACK: {
+                    uint8_t type = mavlink_msg_mission_ack_get_type(&msg);
+                    evaluateMissionState(MISSION_EVENT_ACK_RECEIVED, &type);
+                    processedMissionMessage = TRUE;
+                } break;
+                /*
+                 * Replaced mission state machine code.
+                 *
                 case MAVLINK_MSG_ID_MISSION_COUNT:
 
                     if (!mlPending.wpTransaction && (mlPending.wpProtState == WP_PROT_IDLE)) {
@@ -1233,6 +1425,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     mlPending.wpProtState = WP_PROT_GETTING_WP_IDLE;
 
                     break;
+                    */
 
                 case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:
                     writeSuccess = SUCCESS;
@@ -1443,10 +1636,16 @@ void protDecodeMavlink(uint8_t* dataIn) {
     }// for
 
 
+    // Now if no mission messages were received, trigger the Mission Manager anyways with a NONE
+    // event.
+    if (!processedMissionMessage) {
+        evaluateMissionState(MISSION_EVENT_NONE, NULL);
+    }
+
     // Now if no parameter messages were received, trigger the Parameter Manager anyways with a NONE
-	// event.
+    // event.
     if (!processedParameterMessage) {
-            evaluateParameterState(PARAM_EVENT_NONE, NULL);
+        evaluateParameterState(PARAM_EVENT_NONE, NULL);
     }
 }
 
@@ -1454,7 +1653,8 @@ void protDecodeMavlink(uint8_t* dataIn) {
 
 
 /**
- * The following functions are helper functions for reading the various parameters aboard the boat.
+ * The following is an internal helper function for the parameter state machine
+ * that queues a parameter to be transmitted.
  * @param id The ID of this parameter.
  */
 void _prepareTransmitParameter(uint16_t id)
@@ -1469,6 +1669,530 @@ void _prepareTransmitParameter(uint16_t id)
 
 }
 
+
+/**
+ * The following is an internal helper function for the mission state machine
+ * that queues the current mission number to be sent.
+ */
+void _prepareTransmitCurrentMission(void)
+{
+    mlPending.miTransaction = MISSION_TRANSACTION_SEND_CURRENT;
+}
+
+/**
+* Transmit a mission acknowledgement message. The type of message is the sole argument to this
+* function (see enum MAV_MISSIONRESULT).
+*/
+void _prepareTransmitMissionAck(uint8_t type)
+{
+    mlPending.miTransaction = MISSION_TRANSACTION_SEND_ACK;
+    mlPending.miAckType = type;
+}
+
+void _prepareTransmitMissionCount(void) {
+    mlPending.miTransaction = MISSION_TRANSACTION_SEND_COUNT;
+}
+
+void _prepareTransmitMissionItem(uint8_t currentMissionIndex)
+{
+    if (currentMissionIndex < mlPending.miTotalMissions) {
+        mlPending.miTransaction = MISSION_TRANSACTION_SEND_ITEM;
+        mlPending.miCurrentMission = currentMissionIndex;
+    }
+}
+
+void _prepareTransmitMissionRequest(uint8_t currentMissionIndex) {
+    if (currentMissionIndex < mlPending.miTotalMissions) {
+        mlPending.miTransaction = MISSION_TRANSACTION_SEND_REQUEST;
+        mlPending.miCurrentMission = currentMissionIndex;
+    }
+}
+
+
+
+/**
+ * @param event An event from MISSION_EVENT.
+ * @param data A pointer to data, its meaning depends on the current state of the mission protocol.
+ * @remark This function implements the mission protocol state machine for the MAVLink protocol.
+ * events can be passed as the first argument, or NO_EVENT if desired. data is a pointer
+ * to data if there is any to be passed to the state logic. data is not guaranteed to persist
+ * beyond the single call to this function.
+ *
+ * @note Adapted from bwmairs mission state machine code for autoboat:
+ *  https://github.com/Susurrus/Autoboat/blob/master/Code/Primary_node/MavlinkGlue.c
+ */
+void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
+    // Internal counter variable for use with the COUNTDOWN state
+    static uint16_t counter = 0;
+
+    // Keep track of the expected length of the incoming mission list
+    static uint16_t mavlinkNewMissionListSize;
+
+    // Track a mission index for some multi-state loops.
+    //static uint8_t currentMissionIndex;
+
+    // Track the state
+    static uint8_t state = MISSION_STATE_INACTIVE;
+
+    // Keep track of the next state to transition into
+    uint8_t nextState = state;
+
+    // Then check the mission protocol state
+    switch (state) {
+        case MISSION_STATE_INACTIVE:
+            // If a REQUEST_LIST is received, reset the current mission and move into the receive
+            // missions mode.
+            if (event == MISSION_EVENT_REQUEST_LIST_RECEIVED) {
+                mlPending.miCurrentMission = 0;
+                nextState = MISSION_STATE_SEND_MISSION_COUNT;
+            }                // Otherwise if a mission count was received, prepare to receive new missions.
+            else if (event == MISSION_EVENT_COUNT_RECEIVED) {
+                // Don't allow for writing of new missions if we're in autonomous mode.
+                // TODO determine if we need this (safety feature)
+                if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)) {
+                    _prepareTransmitMissionAck(MAV_MISSION_ERROR);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+                uint8_t newListSize = *(uint8_t *) data;
+
+                // If we received a 0-length mission list, just respond with a MISSION_ACK error.
+                if (newListSize == 0) {
+                    _prepareTransmitMissionAck(MAV_MISSION_ERROR);
+                    nextState = MISSION_STATE_INACTIVE;
+                }                    // If there isn't enough room, respond with a MISSION_ACK error.
+                else if (newListSize > MAX_NUM_WPS) {
+                    _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }                    // Otherwise we're set to start retrieving a new mission list so we request the first mission.
+                else {
+                    // Update the size of the mission list to the new list size.
+                    mavlinkNewMissionListSize = newListSize;
+
+                    // Clear all the old waypoints.
+                    clearMissionList();
+
+
+                    // TODO determine if we need this
+                    // Update the starting point to the vehicle's current location
+                    /*
+                    SetStartingPointToCurrentLocation();
+                    // And wait for info on the first mission.
+                    mlPending.miTotalMissions = newListSize;
+                    mlPending.miCurrentMission = 0;
+                     */
+
+                    // And finally trigger the proper response.
+                    nextState = MISSION_STATE_SEND_MISSION_REQUEST;
+                }
+            } else if (event == MISSION_EVENT_CLEAR_ALL_RECEIVED) {
+                // If we're in autonomous mode, don't allow for clearing the mission list
+                if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)) {
+                    _prepareTransmitMissionAck(MAV_MISSION_ERROR);
+                    nextState = MISSION_STATE_INACTIVE;
+                }                    // But if we're in manual mode, go ahead and clear everything.
+                else {
+                    // Clear the old list
+                    clearMissionList();
+
+                    // TODO determine if we need this
+                    // Update the starting point to the vehicle's current location
+                    //SetStartingPointToCurrentLocation();
+
+                    // And then send our acknowledgement.
+                    _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            } else if (event == MISSION_EVENT_SET_CURRENT_RECEIVED) {
+                // TODO implement this feature
+                /*
+                    SetCurrentMission(*(uint8_t*)data);
+                    _prepareTransmitCurrentMission();
+                 **/
+                nextState = MISSION_STATE_INACTIVE;
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_COUNT:
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionCount();
+                nextState = MISSION_STATE_MISSION_COUNT_TIMEOUT;
+            }
+            break;
+
+        case MISSION_STATE_MISSION_COUNT_TIMEOUT:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_SEND_MISSION_COUNT2;
+                }
+            } else if (event == MISSION_EVENT_REQUEST_LIST_RECEIVED) {
+                nextState = MISSION_STATE_SEND_MISSION_COUNT;
+            } else if (event == MISSION_EVENT_REQUEST_RECEIVED) {
+                // If the current mission is requested, send it.
+                if (data && *(uint8_t *) data == mlPending.miCurrentMission) {
+                    _prepareTransmitMissionItem(mlPending.miCurrentMission);
+                    nextState = MISSION_STATE_MISSION_ITEM_TIMEOUT;
+                } else {
+                    _prepareTransmitMissionAck(MAV_MISSION_INVALID_SEQUENCE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_COUNT2:
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionCount();
+                nextState = MISSION_STATE_MISSION_COUNT_TIMEOUT2;
+            }
+            break;
+
+        case MISSION_STATE_MISSION_COUNT_TIMEOUT2:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_SEND_MISSION_COUNT3;
+                }
+            } else if (event == MISSION_EVENT_REQUEST_LIST_RECEIVED) {
+                nextState = MISSION_STATE_SEND_MISSION_COUNT;
+            } else if (event == MISSION_EVENT_REQUEST_RECEIVED) {
+                // If the current mission is requested, send it.
+                if (data && *(uint8_t *) data == mlPending.miCurrentMission) {
+                    _prepareTransmitMissionItem(mlPending.miCurrentMission);
+                    nextState = MISSION_STATE_MISSION_ITEM_TIMEOUT;
+                } else {
+                    _prepareTransmitMissionAck(MAV_MISSION_INVALID_SEQUENCE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_COUNT3:
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionCount();
+                nextState = MISSION_STATE_MISSION_COUNT_TIMEOUT3;
+            }
+            break;
+
+        case MISSION_STATE_MISSION_COUNT_TIMEOUT3:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            } else if (event == MISSION_EVENT_REQUEST_LIST_RECEIVED) {
+                nextState = MISSION_STATE_SEND_MISSION_COUNT;
+            } else if (event == MISSION_EVENT_REQUEST_RECEIVED) {
+                // If the current mission is requested, send it.
+                if (data && *(uint8_t *) data == mlPending.miCurrentMission) {
+                    _prepareTransmitMissionItem(mlPending.miCurrentMission);
+                    nextState = MISSION_STATE_MISSION_ITEM_TIMEOUT;
+                } else {
+                    _prepareTransmitMissionAck(MAV_MISSION_INVALID_SEQUENCE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_ITEM:
+        {
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionItem(mlPending.miCurrentMission);
+                nextState = MISSION_STATE_MISSION_ITEM_TIMEOUT2;
+            }
+        }
+        break;
+
+        case MISSION_STATE_MISSION_ITEM_TIMEOUT:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                // Keep track of how long it's taking for a request to be received so we can timeout
+                // if necessary.
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM2;
+                }
+            } else if (event == MISSION_EVENT_REQUEST_RECEIVED) {
+                // If the mission that was already sent was requested again, retransmit it.
+                if (*(uint8_t *) data == mlPending.miCurrentMission) {
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM;
+                }                    // Otherwise if the next mission was requested, move on to sending that one.
+                else if (*(uint8_t *) data == mlPending.miCurrentMission + 1) {
+                    ++(mlPending.miCurrentMission);
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM;
+                } else {
+                    _prepareTransmitMissionAck(MAV_MISSION_INVALID_SEQUENCE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            } else if (event == MISSION_EVENT_ACK_RECEIVED) {
+                nextState = MISSION_STATE_INACTIVE;
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_ITEM2:
+        {
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionItem(mlPending.miCurrentMission);
+                nextState = MISSION_STATE_MISSION_ITEM_TIMEOUT2;
+            }
+        }
+        break;
+
+        case MISSION_STATE_MISSION_ITEM_TIMEOUT2:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                // Keep track of how long it's taking for a request to be received so we can timeout
+                // if necessary.
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM3;
+                }
+            } else if (event == MISSION_EVENT_REQUEST_RECEIVED) {
+                // If the mission that was already sent was requested again, retransmit it.
+                if (*(uint8_t *) data == mlPending.miCurrentMission) {
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM;
+                }                    // Otherwise if the next mission was requested, move on to sending that one.
+                else if (*(uint8_t *) data == mlPending.miCurrentMission + 1) {
+                    ++(mlPending.miCurrentMission);
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM;
+                } else {
+                    _prepareTransmitMissionAck(MAV_MISSION_INVALID_SEQUENCE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            } else if (event == MISSION_EVENT_ACK_RECEIVED) {
+                nextState = MISSION_STATE_INACTIVE;
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_ITEM3:
+        {
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionItem(mlPending.miCurrentMission);
+                nextState = MISSION_STATE_MISSION_ITEM_TIMEOUT3;
+            }
+        }
+        break;
+
+        case MISSION_STATE_MISSION_ITEM_TIMEOUT3:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                // Keep track of how long it's taking for a request to be received so we can timeout
+                // if necessary.
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            } else if (event == MISSION_EVENT_REQUEST_RECEIVED) {
+                // If the mission that was already sent was requested again, retransmit it.
+                if (*(uint8_t *) data == mlPending.miCurrentMission) {
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM;
+                }                    // Otherwise if the next mission was requested, move on to sending that one.
+                else if (*(uint8_t *) data == mlPending.miCurrentMission + 1) {
+                    ++(mlPending.miCurrentMission);
+                    nextState = MISSION_STATE_SEND_MISSION_ITEM;
+                } else {
+                    _prepareTransmitMissionAck(MAV_MISSION_INVALID_SEQUENCE);
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            } else if (event == MISSION_EVENT_ACK_RECEIVED) {
+                nextState = MISSION_STATE_INACTIVE;
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_REQUEST:
+        {
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
+            }
+        }
+        break;
+
+            // Implement the countdown timer for receiving a mission item
+        case MISSION_STATE_MISSION_REQUEST_TIMEOUT:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                // Keep track of how long it's taking for a request to be received so we can timeout
+                // if necessary.
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_SEND_MISSION_REQUEST2;
+                }
+            }                // If an ACK was received, we just stop. One shouldn't have been received, so just stop
+                // for now.
+            else if (event == MISSION_EVENT_ACK_RECEIVED) {
+                nextState = MISSION_STATE_INACTIVE;
+            }                //
+            else if (event == MISSION_EVENT_ITEM_RECEIVED) {
+                mavlink_mission_item_t *incomingMission = (mavlink_mission_item_t *) data;
+
+                // Make sure that they're coming in in the right order, and if they don't return an error in
+                // the acknowledgment response.
+                if (mlPending.miCurrentMission == incomingMission->seq) {
+                    int missionAddStatus = addMission(incomingMission);
+                    if (missionAddStatus == SUCCESS) {
+                        // TODO decide whether to implement this
+                        // If this is going to be the new current mission, then we should set it as such.
+                        /*
+                        if (incomingMission->current) {
+                            SetCurrentMission(incomingMission->seq);
+                        }
+                        */
+
+                        // If this was the last mission we were expecting, respond with an ACK
+                        // confirming that we've successfully received the entire mission list.
+                        if (mlPending.miCurrentMission == mavlinkNewMissionListSize - 1) {
+                            _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                            nextState = MISSION_STATE_INACTIVE;
+                        }
+                        // Otherwise we just increment and request the next mission.
+                        else {
+                            ++(mlPending.miCurrentMission);
+                            _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                            nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
+                        }
+                    }                        // If we've run out of space before the last message, respond saying so.
+                    else {
+                        _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
+                        nextState = MISSION_STATE_INACTIVE;
+                    }
+                }
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_REQUEST2:
+        {
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT2;
+            }
+        }
+        break;
+
+            // Implement the countdown timer for receiving a mission item
+        case MISSION_STATE_MISSION_REQUEST_TIMEOUT2:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                // Keep track of how long it's taking for a request to be received so we can timeout
+                // if necessary.
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_SEND_MISSION_REQUEST3;
+                }
+            }                // If an ACK was received, we just stop. One shouldn't have been received, so just stop
+                // for now.
+            else if (event == MISSION_EVENT_ACK_RECEIVED) {
+                nextState = MISSION_STATE_INACTIVE;
+            }                //
+            else if (event == MISSION_EVENT_ITEM_RECEIVED) {
+                mavlink_mission_item_t *incomingMission = (mavlink_mission_item_t *) data;
+
+                // Make sure that they're coming in in the right order, and if they don't return an error in
+                // the acknowledgment response.
+                if (mlPending.miCurrentMission == incomingMission->seq) {
+                    int missionAddStatus = addMission(incomingMission);
+                    if (missionAddStatus != -1) {
+
+                        // TODO decide whether to implement this
+                        // If this is going to be the new current mission, then we should set it as such.
+                        /*
+                        if (incomingMission->current) {
+                            SetCurrentMission(incomingMission->seq);
+                        }
+                        */
+
+                        // If this was the last mission we were expecting, respond with an ACK
+                        // confirming that we've successfully received the entire mission list.
+                        if (mlPending.miCurrentMission == mavlinkNewMissionListSize - 1) {
+                            _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                            nextState = MISSION_STATE_INACTIVE;
+                        }                            // Otherwise we just increment and request the next mission.
+                        else {
+                            ++(mlPending.miCurrentMission);
+                            _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                            nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
+                        }
+                    }
+                    // If we've run out of space before the last message, respond saying so.
+                    else {
+                        _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
+                        nextState = MISSION_STATE_INACTIVE;
+                    }
+                }
+            }
+            break;
+
+        case MISSION_STATE_SEND_MISSION_REQUEST3:
+        {
+            if (event == MISSION_EVENT_NONE) {
+                _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT3;
+            }
+        }
+        break;
+
+            // Implement the countdown timer for receiving a mission item
+        case MISSION_STATE_MISSION_REQUEST_TIMEOUT3:
+            if (event == MISSION_EVENT_ENTER_STATE) {
+                counter = 0;
+            } else if (event == MISSION_EVENT_NONE) {
+                // Keep track of how long it's taking for a request to be received so we can timeout
+                // if necessary.
+                if (counter++ > MAVLINK_RESEND_TIMEOUT) {
+                    nextState = MISSION_STATE_INACTIVE;
+                }
+            }                // If an ACK was received, we just stop. One shouldn't have been received, so just stop
+                // for now.
+            else if (event == MISSION_EVENT_ACK_RECEIVED) {
+                nextState = MISSION_STATE_INACTIVE;
+            }                //
+            else if (event == MISSION_EVENT_ITEM_RECEIVED) {
+                mavlink_mission_item_t *incomingMission = (mavlink_mission_item_t *) data;
+
+                // Make sure that they're coming in in the right order, and if they don't return an error in
+                // the acknowledgment response.
+                if (mlPending.miCurrentMission == incomingMission->seq) {
+                    int missionAddStatus = addMission(incomingMission);
+                    if (missionAddStatus != -1) {
+
+                        // TODO decide whether to implement this
+                        // If this is going to be the new current mission, then we should set it as such.
+                        /*
+                        if (incomingMission->current) {
+                            SetCurrentMission(incomingMission->seq);
+                        }
+                        */
+
+                        // If this was the last mission we were expecting, respond with an ACK
+                        // confirming that we've successfully received the entire mission list.
+                        if (mlPending.miCurrentMission  == mavlinkNewMissionListSize - 1) {
+                            _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                            nextState = MISSION_STATE_INACTIVE;
+                        }                            // Otherwise we just increment and request the next mission.
+                        else {
+                            ++(mlPending.miCurrentMission);
+                            _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                            nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
+                        }
+                    }                        // If we've run out of space before the last message, respond saying so.
+                    else {
+                        _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
+                        nextState = MISSION_STATE_INACTIVE;
+                    }
+                }
+            }
+            break;
+    }
+
+    // Here is when we actually transition between states, calling init/exit code as necessary
+    if (nextState != state) {
+        evaluateMissionState(MISSION_EVENT_EXIT_STATE, NULL);
+        state = nextState;
+        evaluateMissionState(MISSION_EVENT_ENTER_STATE, NULL);
+    }
+}
 
 /**
  *
@@ -1648,9 +2372,9 @@ char sendQGCDebugMessage(const char * dbgMessage, char severity, unsigned char* 
 // TODO: This probably needs to move to another file since, strictly speaking it has nothing
 //				to do with Mavlink comms.
 
-uint8_t clearWaypointsFrom(uint8_t startingWp) {
+int8_t clearWaypointsFrom(uint8_t startingWp) {
 
-    uint8_t writeSuccess = 0;
+    int8_t writeSuccess = 0;
     uint8_t indx, indexOffset;
     tFloatToChar tempFloat;
 
