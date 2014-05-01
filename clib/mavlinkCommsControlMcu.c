@@ -2,6 +2,8 @@
 #include <math.h>
 #include "mavlinkCommsControlMcu.h"
 
+//#define DEBUG_MISSION_SM  // comment this out to disable mission SM debugging messages
+
 /*
 
 MAVLink supports the following UAV Modes:
@@ -588,8 +590,8 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
             // TODO determine if we need this
             // clear the msg
-            // if (mlPending.miTransaction != MISSION_TRANSACTION_NONE)
-            //    memset(&msg, 0, sizeof (mavlink_message_t));
+            if (mlPending.miTransaction != MISSION_TRANSACTION_NONE)
+                memset(&msg, 0, sizeof (mavlink_message_t));
 
             /* Set by evaluateMissionState() when we're ready to transmit. */
             // Send current mission item number
@@ -604,13 +606,23 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
             }
             // Send mission acknowledgement
             else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ACK) {
-                mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                    GS_SYSTEMID, GS_COMPID, mlPending.miAckType);
+                mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID,
+                        MAV_COMP_ID_MISSIONPLANNER,
+                        &msg,
+                        GS_SYSTEMID,
+                        GS_COMPID,
+                        mlPending.miAckType);
 
                 mlPending.miTransaction = MISSION_TRANSACTION_NONE;
 
                 // Copy the message to the send buffer
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+#ifdef DEBUG_MISSION_SM
+                memset(vr_message,0,sizeof(vr_message));
+             	sprintf(vr_message, "Sent ack = %d", mlPending.miAckType);
+             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+#endif
             }
             // Send mission count
             else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_COUNT) {
@@ -621,6 +633,12 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
                 // Copy the message to the send buffer
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+#ifdef DEBUG_MISSION_SM
+                memset(vr_message,0,sizeof(vr_message));
+             	sprintf(vr_message, "Sent count = %d", mlPending.miTotalMissions);
+             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+#endif
             }
             // Send mission item
             else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ITEM) {
@@ -646,10 +664,17 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
                 // Copy the message to the send buffer
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+#ifdef DEBUG_MISSION_SM
+                memset(vr_message,0,sizeof(vr_message));
+             	sprintf(vr_message, "Sent item = %d", mlPending.miCurrentMission);
+             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+#endif
             }
              // Send mission request
             else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_REQUEST
                     && mlPending.miCurrentMission < mlPending.miTotalMissions) {
+
                 mavlink_msg_mission_request_pack(SLUGS_SYSTEMID,
                     MAV_COMP_ID_MISSIONPLANNER,
                     &msg,
@@ -657,13 +682,22 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                     GS_COMPID,
                     mlPending.miCurrentMission);
 
-                    mlPending.miTransaction = PARAM_TRANSACTION_NONE;
-                    // Increment pending
-                    // TODO remove this or not
-                    /*
-                    if (++mlPending.miCurrentMission >= mlPending.miTotalMissions)
-                        mlPending.miCurrentMission = 0;
-                     */
+                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+                // Increment pending
+                // TODO remove this or not
+                /*
+                if (++mlPending.miCurrentMission >= mlPending.miTotalMissions)
+                    mlPending.miCurrentMission = 0;
+                 */
+                // Copy the message to the send buffer
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+#ifdef DEBUG_MISSION_SM
+                memset(vr_message,0,sizeof(vr_message));
+             	sprintf(vr_message, "Sent request = %d", mlPending.miCurrentMission);
+             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+#endif
+
             }
 
 /*
@@ -1239,6 +1273,12 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     uint8_t mavlinkNewMissionListSize = mavlink_msg_mission_count_get_count(&msg);
                     evaluateMissionState(MISSION_EVENT_COUNT_RECEIVED, &mavlinkNewMissionListSize);
                     processedMissionMessage = TRUE;
+#ifdef DEBUG_MISSION_SM
+                    mlPending.statustext++;
+                    mlStatustext.severity = MAV_SEVERITY_INFO;
+                    sprintf(mlStatustext.text,"Got count %d.", mavlinkNewMissionListSize);
+#endif
+                    
                 } break;
 
                 // Handle receiving a mission.
@@ -1247,6 +1287,11 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     mavlink_msg_mission_item_decode(&msg, &currentMission);
                     evaluateMissionState(MISSION_EVENT_ITEM_RECEIVED, &currentMission);
                     processedMissionMessage = TRUE;
+#ifdef DEBUG_MISSION_SM
+                    mlPending.statustext++;
+                    mlStatustext.severity = MAV_SEVERITY_INFO;
+                    sprintf(mlStatustext.text,"Got mission item %d.", currentMission.seq);
+#endif
                 } break;
 
                 // Responding to a mission request entails moving into the first active state and scheduling a MISSION_COUNT message.
@@ -1256,6 +1301,11 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     //MavLinkSendGpsGlobalOrigin();  // TODO determine if we need this
                     evaluateMissionState(MISSION_EVENT_REQUEST_LIST_RECEIVED, NULL);
                     processedMissionMessage = TRUE;
+#ifdef DEBUG_MISSION_SM
+                    mlPending.statustext++;
+                    mlStatustext.severity = MAV_SEVERITY_INFO;
+                    sprintf(mlStatustext.text,"Got mission request list.");
+#endif
                 } break;
 
                 // When a mission request message is received, respond with that mission information from the MissionManager
@@ -1263,6 +1313,11 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     uint8_t receivedMissionIndex = mavlink_msg_mission_request_get_seq(&msg);
                     evaluateMissionState(MISSION_EVENT_REQUEST_RECEIVED, &receivedMissionIndex);
                     processedMissionMessage = TRUE;
+#ifdef DEBUG_MISSION_SM
+                    mlPending.statustext++;
+                    mlStatustext.severity = MAV_SEVERITY_INFO;
+                    sprintf(mlStatustext.text,"Got mission request %d.", receivedMissionIndex);
+#endif
                 } break;
 
                 // Allow for clearing waypoints. Here we respond simply with an ACK message if we successfully
@@ -1283,6 +1338,11 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     uint8_t type = mavlink_msg_mission_ack_get_type(&msg);
                     evaluateMissionState(MISSION_EVENT_ACK_RECEIVED, &type);
                     processedMissionMessage = TRUE;
+#ifdef DEBUG_MISSION_SM
+                    mlPending.statustext++;
+                    mlStatustext.severity = MAV_SEVERITY_INFO;
+                    sprintf(mlStatustext.text,"Got mission ack=%d", type);
+#endif
                 } break;
                 /*
                  * Replaced mission state machine code.
@@ -1752,6 +1812,7 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                 if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)) {
                     _prepareTransmitMissionAck(MAV_MISSION_ERROR);
                     nextState = MISSION_STATE_INACTIVE;
+                    // break; // stop handling count received (boat code missing this)
                 }
                 uint8_t newListSize = *(uint8_t *) data;
 
@@ -1774,12 +1835,11 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
 
                     // TODO determine if we need this
                     // Update the starting point to the vehicle's current location
-                    /*
-                    SetStartingPointToCurrentLocation();
+                    //SetStartingPointToCurrentLocation();
+
                     // And wait for info on the first mission.
-                    mlPending.miTotalMissions = newListSize;
+                    mlPending.miTotalMissions = newListSize; // must set this or ignores missions
                     mlPending.miCurrentMission = 0;
-                     */
 
                     // And finally trigger the proper response.
                     nextState = MISSION_STATE_SEND_MISSION_REQUEST;
@@ -2049,7 +2109,7 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                         }
                         // Otherwise we just increment and request the next mission.
                         else {
-                            ++(mlPending.miCurrentMission);
+                            mlPending.miCurrentMission++;
                             _prepareTransmitMissionRequest(mlPending.miCurrentMission);
                             nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
                         }
@@ -2367,42 +2427,6 @@ char sendQGCDebugMessage(const char * dbgMessage, char severity, unsigned char* 
     bytes2Send = mavlink_msg_to_send_buffer((bytesToAdd + positionStart), &msg);
 
     return bytes2Send;
-}
-
-// TODO: This probably needs to move to another file since, strictly speaking it has nothing
-//				to do with Mavlink comms.
-
-int8_t clearWaypointsFrom(uint8_t startingWp) {
-
-    int8_t writeSuccess = 0;
-    uint8_t indx, indexOffset;
-    tFloatToChar tempFloat;
-
-    // erase the flash values in EEPROM emulation
-    for (indx = startingWp; indx < MAX_NUM_WPS - 1; indx++) {
-        // Compute the adecuate index offset
-        indexOffset = indx * 8;
-
-        // Clear the data from the EEPROM
-        tempFloat.flData = 0.0;
-        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset);
-        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 1);
-
-        tempFloat.flData = 0.0;
-        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 2);
-        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 3);
-
-        tempFloat.flData = 0.0;
-        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 4);
-        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 5);
-
-
-        writeSuccess += DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 6);
-
-        writeSuccess += DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 7);
-    }
-
-    return writeSuccess;
 }
 
 void addMessageToSpiOut(mavlink_message_t* msg) {
