@@ -166,6 +166,13 @@
                   value="sources;sensorMCUSlugsMKII_dspic/sources;.;sources;C:/Users/User/SLUGS/apcode_2011b;C:/Users/User/SLUGS/mavlink/include/slugs;C:/Users/User/SLUGS/apcode_2011b/clib;C:/PROGRA~1/MATLAB/R2011b/toolbox/dsp/include;C:/PROGRA~2/MICROC~1/MPLABC~1/include;C:/PROGRA~1/MATLAB/R2011b/simulink/include;C:/PROGRA~1/MATLAB/R2011b/extern/include;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src;C:/PROGRA~1/MATLAB/R2011b/rtw/c/ert;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/common;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/custom;C:/PROGRA~1/MATLAB/R2011b/simulink/src"/>
       </C30-LD>
       <C30Global>
+        <property key="fast-math" value="false"/>
+        <property key="generic-16-bit" value="false"/>
+        <property key="legacy-libc" value="false"/>
+        <property key="oXC16glb-macros" value=""/>
+        <property key="output-file-format" value="elf"/>
+        <property key="relaxed-math" value="false"/>
+        <property key="save-temps" value="false"/>
       </C30Global>
       <PICkit3PlatformTool>
       </PICkit3PlatformTool>

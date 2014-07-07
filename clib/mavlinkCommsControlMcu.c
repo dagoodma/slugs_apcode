@@ -235,7 +235,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
     // Generic buffer used to hold data to be streamed via serial port
     //uint8_t buf[MAVLINK_MAX_PACKET_LEN];
 
-    // Cycles from 1 to 10 to decide which 
+    // Cycles from 1 to 10 to decide which
     // message's turn is to be sent
     static uint8_t sampleTelemetry = 1;
 
@@ -304,8 +304,8 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
             }
 
             break; //case 1
-            
-        case 2: // GPS Date Time, diagnostic, air data, 
+
+        case 2: // GPS Date Time, diagnostic, air data,
             mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
                 SLUGS_COMPID,
                 &msg,
@@ -558,7 +558,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
                 sw_debug = 0;
             }
-            // 
+            //
             if (sw_debug == 4) {
                 memset(vr_message, 0, sizeof (vr_message));
                 sprintf(vr_message, "%d %d %d %d %d %d %d %d %d %d", sw_temp[0], sw_temp[1], sw_temp[2], sw_temp[3], sw_temp[4], sw_temp[5], sw_temp[6], sw_temp[7], sw_temp[8], sw_temp[9]);
@@ -566,12 +566,12 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 sw_debug = 0;
 
             }
-            // 						
+            //
             // 			if (sw_debug == 3){
             // 				memset(vr_message,0,sizeof(vr_message));
-            // 				sprintf(vr_message, "Mode = %d", mlSystemStatus.mode);	
-            // 				bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);	
-            // 				sw_debug = 0;		
+            // 				sprintf(vr_message, "Mode = %d", mlSystemStatus.mode);
+            // 				bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+            // 				sw_debug = 0;
             // 			}
 
              // Raw pressure
@@ -700,197 +700,6 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
             }
 
-/*
-                mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                    mlParamInterface.param_name[mlPending.piCurrentParameter],
-                    mlParamInterface.param[mlPending.piCurrentParameter],
-                    MAV_PARAM_TYPE_REAL32, // NOTE we only use floats for now
-                    PAR_PARAM_COUNT,
-                    mlPending.piCurrentParameter);
-
-                mlPending.piTransaction = PARAM_TRANSACTION_NONE;
-                if (++mlPending.piCurrentParameter >= PAR_PARAM_COUNT)
-                    mlPending.piCurrentParameter = 0;
-*/
-
-            /*
-
-            if (mlPending.wpProtState == WP_PROT_TX_WP) {
-                memset(vr_message, 0, sizeof (vr_message));
-                sprintf(vr_message, "%d: y =%2.2f x =%2.2f z =%2.2f o =%d  t =%d", mlPending.wpCurrentWpInTransaction, (double)mlWpValues.lat[mlPending.wpCurrentWpInTransaction],
-                    (double)mlWpValues.lon[mlPending.wpCurrentWpInTransaction],
-                    (double)mlWpValues.alt[mlPending.wpCurrentWpInTransaction],
-                    mlWpValues.orbit[mlPending.wpCurrentWpInTransaction],
-                    mlWpValues.type[mlPending.wpCurrentWpInTransaction]);
-                bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
-            }
-
-
-            if (mlPending.wpProtState == WP_PROT_GETTING_WP_IDLE) {
-                memset(vr_message, 0, sizeof (vr_message));
-                sprintf(vr_message, "com = %d, tb =%2.2f ta = %2.2f", sw_intTemp, (double)fl_temp1, (double)fl_temp2);
-                bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
-
-            }
-
-            // Current mission item (1 off indexing issue in qgc vs et)
-            if (mlPending.wpSendCurrent) {
-                memset(&msg, 0, sizeof (mavlink_message_t));
-                mavlink_msg_mission_current_pack(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg, ((uint16_t)mlNavigation.toWP) - 1);
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-                mlPending.wpSendCurrent = FALSE;
-            }
-
-
-          
-            if (!mlPending.wpTransaction) break;
-
-            switch (mlPending.wpProtState) {
-
-                case WP_PROT_LIST_REQUESTED:
-                    // clear the msg
-                    memset(&msg, 0, sizeof (mavlink_message_t));
-
-                    //mlPending.statustext++;
-                    //mlStatustext.severity = MAV_SEVERITY_INFO;
-                    //strncpy(mlStatustext.text, "Got mission list request. Sending count...", 49);
-
-                    mavlink_msg_mission_count_pack(SLUGS_SYSTEMID,
-                        MAV_COMP_ID_MISSIONPLANNER,
-                        &msg,
-                        GS_SYSTEMID,
-                        GS_COMPID,
-                        mlWpValues.wpCount);
-
-                    // Copy the message to the send buffer
-                    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                    // Change the state machine state
-                    mlPending.wpProtState = WP_PROT_NUM_SENT;
-
-                    // Reset the timeout
-                    mlPending.wpTimeOut = 0;
-                    break;
-
-                case WP_PROT_GETTING_WP_IDLE:
-                    if (mlPending.wpCurrentWpInTransaction < mlPending.wpTotalWps) {
-
-                        // clear the msg
-                        memset(&msg, 0, sizeof (mavlink_message_t));
-
-                        mavlink_msg_mission_request_pack(SLUGS_SYSTEMID,
-                            MAV_COMP_ID_MISSIONPLANNER,
-                            &msg,
-                            GS_SYSTEMID,
-                            GS_COMPID,
-                            mlPending.wpCurrentWpInTransaction++);
-
-                        // Copy the message to the send buffer
-                        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                        // Change the state machine state
-                        mlPending.wpProtState = WP_PROT_RX_WP;
-
-                    } else {
-                        // clear the msg
-                        memset(&msg, 0, sizeof (mavlink_message_t));
-
-                        mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID,
-                            MAV_COMP_ID_MISSIONPLANNER,
-                            &msg,
-                            GS_SYSTEMID,
-                            GS_COMPID,
-                            MAV_MISSION_ACCEPTED); // 0 is success
-
-                        // Copy the message to the send buffer
-                        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                        // Update the waypoint count
-                        mlWpValues.wpCount = mlPending.wpTotalWps;
-
-                        // End the transaction
-                        mlPending.wpTransaction = 0;
-                        mlPending.wpProtState = WP_PROT_IDLE;
-                        mlPending.wpCurrentWpInTransaction = 0;
-                        mlPending.wpTotalWps = 0;
-                        mlPending.wpSendCurrent = TRUE; // send current waypoint index
-
-                        // put zeros in the rest of the waypoints;
-                        clearWaypointsFrom(mlWpValues.wpCount);
-
-                    }
-
-                    // Reset the timeout
-                    mlPending.wpTimeOut = 0;
-                    break;
-
-                case WP_PROT_TX_WP:
-                    memset(&msg, 0, sizeof (mavlink_message_t));
-
-                    mlPending.statustext++;
-                    mlStatustext.severity = MAV_SEVERITY_INFO;
-                    strncpy(mlStatustext.text, "Sending waypoint.", 25);
-
-
-                    // Send WP
-                    mavlink_msg_mission_item_pack(SLUGS_SYSTEMID,
-                        MAV_COMP_ID_MISSIONPLANNER,
-                        &msg,
-                        GS_SYSTEMID,
-                        GS_COMPID,
-                        mlPending.wpCurrentWpInTransaction,
-                        MAV_FRAME_GLOBAL,
-                        mlWpValues.type[mlPending.wpCurrentWpInTransaction],
-                        0, // not current
-                        1, // autocontinue
-                        0.0, // Param 1 not used
-                        0.0, // Param 2 not used
-                        (float) mlWpValues.orbit[mlPending.wpCurrentWpInTransaction],
-                        0.0, // Param 4 not used
-                        mlWpValues.lat[mlPending.wpCurrentWpInTransaction],
-                        mlWpValues.lon[mlPending.wpCurrentWpInTransaction],
-                        mlWpValues.alt[mlPending.wpCurrentWpInTransaction]); // always autocontinue
-
-                    // Copy the message to the send buffer
-                    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                    // Switch the state waiting for the next request
-                    // Change the state machine state
-                    mlPending.wpProtState = WP_PROT_SENDING_WP_IDLE;
-
-                    // Reset the timeout
-                    mlPending.wpTimeOut = 0;
-                    break;
-
-            } // switch wpProtState
-
-            mlPending.wpTimeOut++;
-
-            // if Timed out reset the state machine and send an error
-            if (mlPending.wpTimeOut > PROTOCOL_TIMEOUT_TICKS) {
-                memset(&msg, 0, sizeof (mavlink_message_t));
-
-                mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID,
-                    MAV_COMP_ID_MISSIONPLANNER,
-                    &msg,
-                    GS_SYSTEMID,
-                    GS_COMPID,
-                    1); // 1 is failure
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                // reset the state machine
-                mlPending.wpTransaction = 0;
-                mlPending.wpProtState = WP_PROT_IDLE;
-                mlPending.wpCurrentWpInTransaction = 0;
-                mlPending.wpTimeOut = 0;
-                mlPending.wpTotalWps = 0;
-            }
-             *
-             **/
             break; // case 8
 
         case 9: // Action Ack, Pilot Console, Mid Level Commands, boot
@@ -1019,7 +828,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
         SLUGS_COMPID,
         &msg,
         &mlAttitudeRotated);
-    // Copy the message to the send buffer	
+    // Copy the message to the send buffer
     bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
 
 
@@ -1031,6 +840,101 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
     sampleTelemetry = (sampleTelemetry >= 10) ? 1 : sampleTelemetry + 1;
 
 }
+
+//void prepareTelemetryMavlink(unsigned char* dataOut) {
+//
+//    // Generic message container used to pack the messages
+//    mavlink_message_t msg;
+//
+//    // Generic buffer used to hold data to be streamed via serial port
+//    //uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+//
+//    // Cycles from 1 to 10 to decide which
+//    // message's turn is to be sent
+//    static uint8_t sampleTelemetry = 1;
+//
+//    // Contains the total bytes to send via the serial port
+//    uint8_t bytes2Send = 0;//, paramDelay = 0;
+//
+//    // String used to send text messages to QGC console
+//    char vr_message[50];
+//
+//    memset(&msg, 0, sizeof (mavlink_message_t));
+//
+//    switch (sampleTelemetry) {
+//        case 1: // GPS, Heartbeat and Passthrough if necessary
+//
+//            // clear the msg to pack a new variable
+//            memset(&msg, 0, sizeof (mavlink_message_t));
+//
+//            // Pack the Heartbeat message
+//            mavlink_msg_heartbeat_pack(SLUGS_SYSTEMID,
+//                SLUGS_COMPID,
+//                &msg,
+//                MAV_TYPE_FIXED_WING,
+//                MAV_AUTOPILOT_SLUGS,
+//                mlHeartbeatLocal.base_mode,
+//                mlHeartbeatLocal.custom_mode,
+//                mlHeartbeatLocal.system_status//,
+//                //mlHeartbeatLocal.mavlink_version
+//                );
+//
+//            // Copy the message to the send buffer
+//            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+//
+//
+//            break; //case 1
+//
+//        case 2: // GPS Date Time, diagnostic, air data,
+//
+//            break; // case 2
+//
+//        case 3: // data log, ping, vfr_hud
+//
+//            break; // case 3
+//
+//        case 4: // navigation, cpu load, sensor diag
+//
+//
+//            break; // case 4
+//
+//        case 5: // Raw IMU, Parameter Interface
+//
+//            break; // case 5
+//
+//        case 6: // Local Position, System Status, GPS Status
+//
+//
+//            break; // case 6
+//
+//        case 7: // PWM Commands, Biases, slugs action
+//
+//
+//            break; // case 7
+//
+//        case 8:// mission Protocol state machine, raw Pressure
+//
+//            break; // case 8
+//
+//        case 9: // Action Ack, Pilot Console, Mid Level Commands, boot
+//
+//
+//            break; // case 9
+//
+//        case 10:
+//
+//            break; // case 10
+//
+//    } // Switch
+//
+//
+//    // increment/overflow the samplePeriod counter
+//    // configured for 10 Hz in non vital messages
+//    sampleTelemetry = (sampleTelemetry >= 10) ? 1 : sampleTelemetry + 1;
+//
+//    // Put the length of the message in the first byte of the outgoing array
+//    *dataOut = bytes2Send;
+//}
 
 void protDecodeMavlink(uint8_t* dataIn) {
 
@@ -1066,6 +970,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
         // Try to get a new message
         if (mavlink_parse_char(commChannel, dataIn[i], &msg, &status)) {
 
+             uint8_t id = msg.msgid;
             // Handle message
             switch (msg.msgid) {
                 case MAVLINK_MSG_ID_HEARTBEAT:

@@ -85,8 +85,13 @@ typedef char BOOL;
 
     // DMA Maximum Char Sending
     // ========================
+
 #define MAXSEND					109
 #define MAXSPI                   200
+/*
+#define MAXSEND                 512
+#define MAXSPI                  512
+ * */
 
     // Maximun Number of WPs and PIDs
 #define MAX_NUM_WPS		17
