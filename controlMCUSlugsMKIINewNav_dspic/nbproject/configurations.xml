@@ -20,6 +20,7 @@
       <itemPath>sources/rtGetNaN.h</itemPath>
       <itemPath>sources/rt_nonfinite.h</itemPath>
       <itemPath>../clib/updateControlMcuState.h</itemPath>
+      <itemPath>../clib/apDefinitions.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -61,6 +62,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>../clib</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="default" type="2">
@@ -108,7 +112,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="sources;.;sources;../;../../mavlink/include/slugs;../clib;../../mavlink/include"/>
+                  value="sources;.;sources;../;../../mavlink/include_slugs/slugs;../clib;../../mavlink/include"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>

@@ -167,6 +167,9 @@ enum PARAM_TRANSACTION {
         uint8_t spiCurrentIndex;
         uint8_t spiTotalData;
         uint8_t spiSendGSLocation;
+
+        // sensor dsp
+        uint8_t sensorDspReady;
         
         // Heartbeat status
         uint16_t heartbeatAge;

@@ -170,8 +170,8 @@ typedef char BOOL;
 
 #define UCSCAP_UBRGI 	((SYSCLK/GPSBAUDI)/16)-1 //64 for 38400
 
-#define LOGBAUD		115200
-#define LOG_UBRG		21
+#define LOGBAUD		115200//57600
+#define LOG_UBRG		21//43
 
 #define CAMERABAUD              9600
 #define CAMERA_UBRG            259
