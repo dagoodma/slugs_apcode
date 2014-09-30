@@ -1022,6 +1022,12 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
 
             // TODO LOG this message
             */
+            memset(&msg, 0, sizeof (mavlink_message_t));
+
+            mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
+                SLUGS_COMPID,
+                &msg,
+                &mlAttitudeRotated);
 
 
             break; // case 20
@@ -1460,6 +1466,12 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
         mlBoot.version = 0;
     }
 
+    if (mlPending.connectionWarning && !mlPending.connectionWarningSent) {
+         bytes2Send += sendQGCDebugMessage ("Connection failing. Pleaser restart GS radio.",
+            0, dataOut, bytes2Send+1);
+         mlPending.connectionWarningSent = 1;
+    }
+
     // Send additional statustext messages
     if (mlPending.statustext > 0) {
         memset(&msg, 0, sizeof (mavlink_message_t));
@@ -1540,6 +1552,8 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     mavlink_msg_heartbeat_decode(&msg, &mlHeartbeat);
                     // Reset the heartbeat
                     mlPending.heartbeatAge = 0;
+                    mlPending.connectionWarning = 0;
+                    mlPending.connectionWarningSent = 0;
                     break;
 
                 case MAVLINK_MSG_ID_GPS_RAW_INT:

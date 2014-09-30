@@ -174,6 +174,10 @@ enum PARAM_TRANSACTION {
         // Heartbeat status
         uint16_t heartbeatAge;
 
+        // Connection warning
+        uint8_t connectionWarning;
+        uint8_t connectionWarningSent;
+
     } mavlink_pending_requests_t;
 
 

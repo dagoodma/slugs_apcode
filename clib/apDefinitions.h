@@ -98,6 +98,7 @@ typedef char BOOL;
 
     // Age limit of heartbeat to consider that the UAV has lost comm with GC
 #define HEARTBEAT_LIMIT 6000  // 30 seconds
+#define HEARTBEAT_WARN_LIMIT 3000  // 30 seconds
 
     // Define log raw data at 100 hz. Comment out to have
     // XYZ data come at 100 Hz instead. COMMENT not Change to 0 (using #ifdef)

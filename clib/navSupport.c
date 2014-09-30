@@ -238,6 +238,11 @@ void getAccBias(float * bias) {
 }
 
 void getRTB(uint8_t* rtb) {
+    if (!mlPending.connectionWarningSent &&
+            mlPending.heartbeatAge > HEARTBEAT_WARN_LIMIT) {
+        mlPending.connectionWarning = 1;
+    }
+
     rtb[0] = (mlRTB.rtb || (mlPending.heartbeatAge > HEARTBEAT_LIMIT));
     rtb[1] = mlRTB.track_mobile; 
 
