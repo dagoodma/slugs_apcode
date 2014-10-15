@@ -59,7 +59,10 @@ void controlMCUInit(void) {
     uart2Init();
 
     // Initialize the UART1 for camera control
-    uartCameraInit();
+    //uartCameraInit();
+#ifdef RECORD_TO_LOGGER
+    uart1Init();
+#endif
 
     // Initialize EEPROM emulator and Load Data from EEPROM if the initialization worked
     if (EEPInit() == EEP_MEMORY_OK) {

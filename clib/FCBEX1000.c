@@ -26,7 +26,7 @@ void uartCameraInit(void) {
 
     // U1BRG Register
     // ==============
-    U1BRG = CAMERA_UBRG; // Set the baud rate for initial config of GPS
+    U1BRG = CAMERA_BAUDRATE_GENERATOR; // Set the baud rate for initial config of GPS
 
     // Enable the port;
     U1MODEbits.UARTEN = 1; // Enable the port	

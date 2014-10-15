@@ -83,7 +83,8 @@ void loadEEPData(void){
 }
 
 /**
- * @brief Stores a waypoint item to EEPROM.
+ * Stores a waypoint item to EEPROM.
+ *
  * @param mlSingleWp Pointer to mission
  * @return Zero on success, or an error code.
  * @todo Check if all mission parameters are recorded.

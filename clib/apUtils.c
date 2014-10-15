@@ -158,6 +158,7 @@ BOOL hasMode(uint8_t field, uint8_t flag) {
 
 #ifndef __cplusplus
 
+
 // ================================
 //    Debug Functions
 // ================================

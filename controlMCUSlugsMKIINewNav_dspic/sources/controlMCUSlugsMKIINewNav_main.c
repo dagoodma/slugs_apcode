@@ -56,9 +56,14 @@ int main(void)
   PLLFBD = 38;                         /* configure clock speed */
   CLKDIV = 1;
 
+
+  TRISAbits.TRISA15 = 0;
+  LATAbits.LATA15 = 1; // control MCU LED 1
+
   /* Initialize model */
   controlMCUSlugsMKIINewNav_initialize(1);
   for (;;) {
+    LATAbits.LATA15 = 0; // control MCU LED 1
     /* Associate rt_OneStep() with a timer that executes at the base rate of the model */
     while (!_T1IF) ;
     _T1IF = 0;

@@ -162,6 +162,7 @@ typedef char BOOL;
     // ==========================
 #define APFCY			40000000
 
+// TODO correct baudrate equations
 
 #define GPSBAUDF		9600//19200//38400
 #define GPSBAUDI		9600//38400
@@ -171,11 +172,16 @@ typedef char BOOL;
 
 #define UCSCAP_UBRGI 	((SYSCLK/GPSBAUDI)/16)-1 //64 for 38400
 
-#define LOGBAUD		115200//57600
-#define LOG_UBRG		21//43
+//#define LOGBAUD		115200//57600
+//#define LOG_UBRG		21//43
+#define RADIO_BAUDRATE		        115200//57600
+#define RADIO_BAUDRATE_GENERATOR    21//43
 
-#define CAMERABAUD              9600
-#define CAMERA_UBRG            259
+#define LOGGER_BAUDRATE		        57600
+#define LOGGER_BAUDRATE_GENERATOR   43
+
+#define CAMERA_BAUDRATE             9600
+#define CAMERA_BAUDRATE_GENERATOR   259
 
 
     // ifdef switches for debugging and conditional inclusion
