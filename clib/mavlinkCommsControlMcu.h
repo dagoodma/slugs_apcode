@@ -140,7 +140,6 @@ void uart1Init(void);
 void uart2Init(void);
 void send2GS(unsigned char* protData);
 void gsRead(unsigned char* gsChunk);
-void copyBufferToDMA1(unsigned char size);
 
 void evaluateParameterState(enum PARAM_EVENT event, const void *data);
 void evaluateMissionState(enum MISSION_EVENT event, const void *data);

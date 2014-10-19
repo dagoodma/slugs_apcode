@@ -23,8 +23,8 @@ static uint16_t uart1BytesToSend;
 #endif
 
 // UART2 circular and DMA buffers for radio RX messages from groundstation
-static struct CircBuffer _uart2BufferIn;
-static CBRef uart2BufferIn;
+static volatile struct CircBuffer _uart2BufferIn;
+static volatile CBRef uart2BufferIn;
 static struct CircBuffer _uart2BufferOut;
 static CBRef uart2BufferOut;
 unsigned int dma2Buffer[MAXSEND] __attribute__((space(dma))) = {0};
@@ -37,7 +37,7 @@ float fl_temp1, fl_temp2;
 
 // **** Private function prototypes ****
 static void _uart1OutputToDMA1(uint16_t size);
-//void uart2CopyOutputToDMA2(unsigned char size);
+static void _uart2OutputToDMA2(uint16_t size);
 static void _logTelemetryMavlink(void);
 
 static void _prepareTransmitParameter(uint16_t id);
@@ -132,28 +132,28 @@ void uart2Init(void) {
     newCircBuffer(uart2BufferOut);
 
 
-    // DMA1REQ is channel IRQ select register
-    DMA1REQ = 31; // IRQ Number for UART2 Transmission (see table 8-1)
+    // DMA2REQ is channel IRQ select register
+    DMA2REQ = 31; // IRQ Number for UART2 Transmission (see table 8-1)
 
-    // DMA1PAD is peripheral address register
-    DMA1PAD = (volatile unsigned int) &U2TXREG;
+    // DMA2PAD is peripheral address register
+    DMA2PAD = (volatile unsigned int) &U2TXREG;
 
-    // DMA1CON is channel control register
-    DMA1CONbits.AMODE = 0; // Register Indirect with post-increment
-    DMA1CONbits.MODE = 1; // One-shot, No Ping-Pong Mode
-    DMA1CONbits.DIR = 1; // Read from RAM and send to Periphereal
-    DMA1CONbits.SIZE = 0; // Word Data Transfer
+    // DMA2CON is channel control register
+    DMA2CONbits.AMODE = 0; // Register Indirect with post-increment
+    DMA2CONbits.MODE = 1; // One-shot, No Ping-Pong Mode
+    DMA2CONbits.DIR = 1; // Read from RAM and send to Periphereal
+    DMA2CONbits.SIZE = 0; // Word Data Transfer
 
-    // DMA1CNT is transfer count register
-    DMA1CNT = MAXSEND - 1;
+    // DMA2CNT is transfer count register
+    DMA2CNT = MAXSEND - 1;
 
-    // DMA1STA is primary start address offset register
-    DMA1STA = __builtin_dmaoffset(dma2Buffer);
+    // DMA2STA is primary start address offset register
+    DMA2STA = __builtin_dmaoffset(dma2Buffer);
 
-    // Enable DMA1 TX interrupts
-    IFS0bits.DMA1IF = 0; // Clear DMA Interrupt Flag
-    IPC3bits.DMA1IP = 6; // interrupt priority to 6
-    IEC0bits.DMA1IE = 1; // Enable DMA interrupt
+    // Enable DMA2 TX interrupts
+    IFS1bits.DMA2IF = 0; // Clear DMA Interrupt Flag
+    IPC6bits.DMA2IP = 6; // interrupt priority to 6
+    IEC1bits.DMA2IE = 1; // Enable DMA interrupt
 
     // Configure and open the port
     // U2MODE is UART settings register
@@ -209,15 +209,15 @@ void send2GS(unsigned char* protData) {
 
     // if the interrupt caught up with the circularBuffer
     // and new data was added then turn on the DMA 
-    if (!(DMA1CONbits.CHEN) && (bufLen > 0)) {
+    if (!(DMA2CONbits.CHEN) && (bufLen > 0)) {
         // Configure the bytes to send
-        DMA1CNT = bufLen <= (MAXSEND - 1) ? bufLen - 1 : MAXSEND - 1;
+        DMA2CNT = bufLen <= (MAXSEND - 1) ? bufLen - 1 : MAXSEND - 1;
         // copy the buffer to the DMA channel outgoing buffer
-        copyBufferToDMA1((unsigned char) DMA1CNT + 1);
+        _uart2OutputToDMA2((unsigned char) DMA2CNT + 1);
         // Enable the DMA
-        DMA1CONbits.CHEN = 1;
+        DMA2CONbits.CHEN = 1;
         // Init the transmission
-        DMA1REQbits.FORCE = 1;
+        DMA2REQbits.FORCE = 1;
     }
 }
 
@@ -2987,8 +2987,9 @@ static void _prepareTransmitMissionRequest(uint8_t currentMissionIndex) {
 static void _uart1OutputToDMA1(uint16_t size) {
 #ifdef RECORD_TO_LOGGER
     uint16_t i;
+    size = (size > 0x400)? 0x400 : size; // 10-bit max
     for (i = 0; i < size; i++) {
-        dma1Buffer[i] = (unsigned int) readFront(uart1BufferOut); //[i];
+        dma1Buffer[i] = (unsigned int) readFront(uart1BufferOut);
     }
 #endif
 }
@@ -2997,8 +2998,9 @@ static void _uart1OutputToDMA1(uint16_t size) {
  * Copies the UART2 output buffer to the DMA1 buffer for sending.
  * @param size in bytes to copy to the DMA1 buffer.
  */
-void copyBufferToDMA1(unsigned char size) {
-    unsigned char i;
+static void _uart2OutputToDMA2(uint16_t size) {
+    uint16_t i;
+    size = (size > 0x400)? 0x400 : size; // 10-bit max
     for (i = 0; i < size; i += 1) {
         dma2Buffer[i] = (unsigned int) readFront(uart2BufferOut);
     }
@@ -3009,12 +3011,11 @@ void __attribute__((interrupt, no_auto_psv)) _DMA1Interrupt(void) {
     // Clear the DMA1 Interrupt Flag;
     IFS0bits.DMA1IF = 0;
 }
-/*
-void __attribute__((interrupt, no_auto_psv)) _DMA1Interrupt(void) {
+
+void __attribute__((interrupt, no_auto_psv)) _DMA2Interrupt(void) {
     // Clear the DMA1 Interrupt Flag;
-    IFS1bits.DMA1IF = 0;
+    IFS1bits.DMA2IF = 0;
 }
- * */
 
 void __attribute__((__interrupt__, no_auto_psv)) _U2RXInterrupt(void) {
     // Read the buffer while it has data
