@@ -222,7 +222,6 @@ int8_t setParameterByName(const char *name, float value) {
             }
         }
     }
-
     return FAILURE;
 }
 
@@ -234,7 +233,7 @@ int8_t clearMissionList(void) {
     int8_t writeResult = SUCCESS;
     memset(&mlWpValues, 0, sizeof (mavlink_mission_item_values_t));
 
-    writeResult = clearWaypointsFrom(0);
+    writeResult = eraseWaypointsInEeprom(0);
 
     mlWpValues.wpCount = 0;
     mlPending.miCurrentMission = 0;
@@ -243,52 +242,13 @@ int8_t clearMissionList(void) {
     return writeResult;
 }
 
-
-/**
- * Clear waypoints (missions) from EEPROM starting from the given waypoint index.
- * @param Index of waypoint to start clearing from inclusively.
- * @return SUCCESS or FAILURE of EEPROM write.
- */
-int8_t  clearWaypointsFrom(uint8_t startingWp) {
-
-    int8_t  writeSuccess = 0;
-    uint8_t indx, indexOffset;
-    tFloatToChar tempFloat;
-
-    // erase the flash values in EEPROM emulation
-    for (indx = startingWp; indx < MAX_NUM_WPS - 1; indx++) {
-        // Compute the adecuate index offset
-        indexOffset = indx * 8;
-
-        // Clear the data from the EEPROM
-        tempFloat.flData = 0.0;
-        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset);
-        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 1);
-
-        tempFloat.flData = 0.0;
-        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 2);
-        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 3);
-
-        tempFloat.flData = 0.0;
-        writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 4);
-        writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 5);
-
-
-        writeSuccess += DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 6);
-
-        writeSuccess += DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 7);
-    }
-
-    return writeSuccess;
-}
-
 /**
  * Add a mission item to the list.
  * @return SUCCESS or FAILURE whether mission was added to the list.
  */
 int8_t addMission(mavlink_mission_item_t *mission)
 {
-    int8_t  writeSuccess = SUCCESS;
+    int8_t  writeResult = SUCCESS;
     uint8_t index = (uint8_t) mission->seq;
 
     mlWpValues.lat[index] = mission->x;
@@ -299,20 +259,25 @@ int8_t addMission(mavlink_mission_item_t *mission)
 
     mlWpValues.orbit[index] = (uint16_t) mission->param3;
 
-    // Record the data in EEPROM
-    writeSuccess = storeWaypointInEeprom(mission);
+    // Clear all waypoints up to and after the index of this waypoint
+    writeResult = eraseWaypointsInEeprom(mission->seq);
+    if (writeResult == SUCCESS) {
+        // Record the data in EEPROM
+        writeResult = storeWaypointInEeprom(mission);
+    }
 
-    return writeSuccess;
-
+    return writeResult;
 }
 
 /**
  * Add a mission item to the list.
  * @return SUCCESS or FAILURE whether mission was added to the list.
  */
-
-/*
-void setCurrentMission(uint8_t idx) {
-
+int8_t setCurrentMission(uint8_t idx) {
+    int8_t result = FAILURE;
+    if (idx < mlPending.miTotalMissions) {
+        mlPending.miCurrentMission = idx;
+        result = SUCCESS;
+    }
+    return result;
 }
-*/

@@ -260,8 +260,8 @@ enum PARAM_TRANSACTION {
 
     // Mission interface related
     int8_t addMission(mavlink_mission_item_t *mission);
-    int8_t  clearMissionList(void);
-    int8_t  clearWaypointsFrom(uint8_t startingWp);
+    int8_t clearMissionList(void);
+    int8_t setCurrentMission(uint8_t idx);
 
 
 

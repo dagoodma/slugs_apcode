@@ -25,61 +25,70 @@ THE SOFTWARE.
 
 #include "eepLoader.h"
 
-unsigned char EEPInit(void){
-	unsigned char eepInitMsg = 0;
-	
-	// Initialize the EEPROM emulation and read the PID Data
-	eepInitMsg = DataEEInit();
-	
-	if (eepInitMsg == 1){
-            mlPending.statustext++;
+int8_t EEPInit(void) {
+    int8_t eepInitMsg = SUCCESS;
 
-            mlStatustext.severity = MAV_SEVERITY_ERROR;
-            strncat(mlStatustext.text, "Page expired while initializing EEPROM.", 49);
-            //mlStatustext.text = "Page expired while initializing EEPROM.";
-        } else if (eepInitMsg == 6){
-            
-            mlPending.statustext++;
+    // Initialize the EEPROM emulation and read the PID Data
+    eepInitMsg = (int8_t)DataEEInit();
 
-            mlStatustext.severity = MAV_SEVERITY_ERROR;
-            strncat(mlStatustext.text, "Memory corrupted while initializing EEPROM.", 49);
-            //mlStatustext.text = "Memory corrupted while initializing EEPROM.";
-        }
-	
-	return eepInitMsg;
+    if (eepInitMsg == EEPROM_ERROR_PAGE_EXPIRED){
+        mlPending.statustext++;
+
+        mlStatustext.severity = MAV_SEVERITY_ERROR;
+        strncat(mlStatustext.text, "Page expired while initializing EEPROM.", 49);
+        //mlStatustext.text = "Page expired while initializing EEPROM.";
+    } else if (eepInitMsg == EEPROM_ERROR_MEMORY_CORRUPTED){
+        mlPending.statustext++;
+
+        mlStatustext.severity = MAV_SEVERITY_ERROR;
+        strncat(mlStatustext.text, "Memory corrupted while initializing EEPROM.", 49);
+        //mlStatustext.text = "Memory corrupted while initializing EEPROM.";
+    }
+
+   return eepInitMsg;
 }
 
-void loadEEPData(void){
-	unsigned char i;
-	tFloatToChar tempShData;
-	
-	readParamsInEeprom();
-	
-	for(i = 0; i < MAX_NUM_WPS; i++ ){		
-		// Way Points
-		tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM);   
-		tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+1);      
-		mlWpValues.lat[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;      
-		
-		tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+2);      
-		tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+3);      
-		mlWpValues.lon[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;      
-		
-		tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+4);      
-		tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+5);      
-		mlWpValues.alt[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;     
-		
-		mlWpValues.type[i]	= (uint8_t)DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+6);
-		
-		mlWpValues.orbit[i]   = DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM +7);         	
-		         	
-	}
+/**
+ * Loads parameters, waypoints, and mid-level commands from EEPROM.
+ */
+void loadAllEEPData(void) {
+    readParamsInEeprom();
+    readWaypointsInEeprom();
+}
 
-	// Compute the waypoint count
-	mlWpValues.wpCount = 0;
-	while ((int)(mlWpValues.lat[mlWpValues.wpCount]) != 0 && mlWpValues.wpCount< MAX_NUM_WPS-1 ){
-		mlWpValues.wpCount++;
-	}
+/**
+ * Erases all waypoints after the specified waypoint index.
+ * @param startingWp index to clear from
+ * @return SUCCESS or ERROR
+ */
+int8_t eraseWaypointsInEeprom(uint8_t startingWp) {
+    int8_t writeSuccess = SUCCESS;
+    uint8_t indx, indexOffset;
+    tFloatToChar tempFloat;
+
+    // erase the flash values in EEPROM emulation
+    for (indx = startingWp; indx < MAX_NUM_WPS - 1; indx++) {
+        // Compute the adecuate index offset
+        indexOffset = indx * 8;
+
+        // Clear the data from the EEPROM
+        tempFloat.flData = 0.0;
+        writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset);
+        writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 1);
+
+        tempFloat.flData = 0.0;
+        writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 2);
+        writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 3);
+
+        tempFloat.flData = 0.0;
+        writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], WPS_OFFSET + indexOffset + 4);
+        writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], WPS_OFFSET + indexOffset + 5);
+
+        writeSuccess += (int8_t)DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 6);
+        writeSuccess += (int8_t)DataEEWrite((unsigned short) 0, WPS_OFFSET + indexOffset + 7);
+    }
+
+    return writeSuccess;
 }
 
 /**
@@ -89,35 +98,35 @@ void loadEEPData(void){
  * @return Zero on success, or an error code.
  * @todo Check if all mission parameters are recorded.
  */
-uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp){
-	
-	uint8_t indexOffset = 0, indx= 0, writeSuccess = 0;
-	tFloatToChar tempFloat;
-	
-	// get the WP index
-	indx = (uint8_t)mlSingleWp->seq;
-					
-	// Compute the adecuate index offset
-	indexOffset = indx*WP_SIZE_IN_EEPROM;
-	
-	// Save the data to the EEPROM
-	tempFloat.flData = mlSingleWp->x;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET+indexOffset);   
-	writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET+indexOffset+1);
-	
-	tempFloat.flData = mlSingleWp->y; 
-	writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET+indexOffset+2);      
-	writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET+indexOffset+3);
-	
-	tempFloat.flData = mlSingleWp->z;       
-	writeSuccess += DataEEWrite(tempFloat.shData[0], WPS_OFFSET+indexOffset+4);      
-	writeSuccess += DataEEWrite(tempFloat.shData[1], WPS_OFFSET+indexOffset+5);
-	
-	writeSuccess += DataEEWrite((unsigned short)mlSingleWp->command, WPS_OFFSET+indexOffset+6);
-	
-	writeSuccess += DataEEWrite((unsigned short)mlSingleWp->param3, WPS_OFFSET+indexOffset+7);          
-		
-	return writeSuccess;
+int8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp) {
+    uint8_t indexOffset = 0, indx= 0;
+    int8_t writeSuccess = SUCCESS;
+    tFloatToChar tempFloat;
+
+    // get the WP index
+    indx = (uint8_t)mlSingleWp->seq;
+
+    // Compute the adecuate index offset
+    indexOffset = indx*WP_SIZE_IN_EEPROM;
+
+    // Save the data to the EEPROM
+    tempFloat.flData = mlSingleWp->x;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], WPS_OFFSET+indexOffset);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], WPS_OFFSET+indexOffset+1);
+
+    tempFloat.flData = mlSingleWp->y;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], WPS_OFFSET+indexOffset+2);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], WPS_OFFSET+indexOffset+3);
+
+    tempFloat.flData = mlSingleWp->z;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], WPS_OFFSET+indexOffset+4);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], WPS_OFFSET+indexOffset+5);
+
+    writeSuccess += (int8_t)DataEEWrite((unsigned short)mlSingleWp->command, WPS_OFFSET+indexOffset+6);
+
+    writeSuccess += (int8_t)DataEEWrite((unsigned short)mlSingleWp->param3, WPS_OFFSET+indexOffset+7);
+
+    return writeSuccess;
 }
 
 /**
@@ -126,32 +135,34 @@ uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp){
  * @param pmIndex Index of paramter.
  * @return Zero on success, and non-zero on failure
  */
-uint8_t storeParameterInEeprom (float parameter, uint8_t pmIndex){
-	uint8_t indexOffset = 0,/* indx= 0 ,*/ writeSuccess = 0;
-	tFloatToChar tempFloat;
-	// Save the data to the EEPROM
-	indexOffset = pmIndex*2;
-	
-	tempFloat.flData = parameter;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], PARAM_OFFSET+indexOffset);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], PARAM_OFFSET+indexOffset+1);
-	
-	
-	return writeSuccess;
+int8_t storeParameterInEeprom (float parameter, uint8_t pmIndex){
+    uint8_t indexOffset = 0;/* indx= 0 ,*/
+    int8_t writeSuccess = SUCCESS;
+    tFloatToChar tempFloat;
+    // Save the data to the EEPROM
+    indexOffset = pmIndex*2;
+
+    tempFloat.flData = parameter;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], PARAM_OFFSET+indexOffset);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], PARAM_OFFSET+indexOffset+1);
+
+
+    return writeSuccess;
 }
 
 /**
  * @brief Saves all parameters to EEPROM.
  * @return Zero for success, or non-zero error code.
  */
-uint8_t storeAllParamsInEeprom(void){
-	uint8_t  indx= 0, writeSuccess = 0;
-	
-	for (indx = 0; indx < PAR_PARAM_COUNT; indx ++){
-		writeSuccess += storeParameterInEeprom(mlParamInterface.param[indx], indx);
-	}
-	
-	return writeSuccess;
+int8_t storeAllParamsInEeprom(void){
+    uint8_t indx= 0;
+    int8_t writeSuccess = SUCCESS;
+
+    for (indx = 0; indx < PAR_PARAM_COUNT; indx ++){
+            writeSuccess += storeParameterInEeprom(mlParamInterface.param[indx], indx);
+    }
+
+    return writeSuccess;
 }
 
 
@@ -160,56 +171,56 @@ uint8_t storeAllParamsInEeprom(void){
  * @note Mid-level commands are read from the mlMidLevelCommands struct.
  * @return SUCCESS or FAILURE.
  */
-uint8_t storeMidLevelCommandsInEeprom (void) {
-	uint8_t indexOffset = 0,/* indx= 0 ,*/ writeSuccess = 0;
-	tFloatToChar tempFloat;
+int8_t storeMidLevelCommandsInEeprom (void) {
+    uint8_t indexOffset = 0;
+    int8_t writeSuccess = SUCCESS;
+    tFloatToChar tempFloat;
 
-	// Save the data to the EEPROM
-	tempFloat.flData = mlMidLevelCommands.hCommand;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset++);
+    // Save the data to the EEPROM
+    tempFloat.flData = mlMidLevelCommands.hCommand;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset++);
 
-	tempFloat.flData = mlMidLevelCommands.uCommand;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset++);
+    tempFloat.flData = mlMidLevelCommands.uCommand;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset++);
 
-	tempFloat.flData = mlMidLevelCommands.rCommand;
-	writeSuccess += DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
-	writeSuccess += DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset);
+    tempFloat.flData = mlMidLevelCommands.rCommand;
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[0], MIDLEVEL_OFFSET + indexOffset++);
+    writeSuccess += (int8_t)DataEEWrite(tempFloat.shData[1], MIDLEVEL_OFFSET + indexOffset);
 
-	return writeSuccess;
+    return writeSuccess;
 }
 
 /**
  * @brief Reads all paramters from EEPROM to RAM.
  * @return Zero on success, or non-zero error code.
  */
-uint8_t readParamsInEeprom (void){
-	uint8_t indx= 0, i=0;
-	tFloatToChar tempFloat;
-        uint8_t readSuccess = SUCCESS;
-		
-	for(indx = 0; indx < (PAR_PARAM_COUNT*2); indx+=2 ){
-		tempFloat.shData[0]= DataEERead(PARAM_OFFSET+indx);
-		tempFloat.shData[1]= DataEERead(PARAM_OFFSET+indx+1);
+int8_t readParamsInEeprom (void){
+    uint8_t indx= 0, i=0;
+    tFloatToChar tempFloat;
+    int8_t readSuccess = SUCCESS;
 
-                // This doesn't seem to indicate success or failure.
-                //if (tempFloat.shData[0] == 0xFFFF || tempFloat.shData[1] == 0xFFFF)
-                //    readSuccess = FAILURE;
-		
-		// If the value read from memory is finite assign it, else assign 0
-		mlParamInterface.param[i++]	= isFinite(tempFloat.flData)? tempFloat.flData : 0.0;
-	}
+    for(indx = 0; indx < (PAR_PARAM_COUNT*2); indx+=2 ){
+        tempFloat.shData[0]= DataEERead(PARAM_OFFSET+indx);
+        tempFloat.shData[1]= DataEERead(PARAM_OFFSET+indx+1);
 
-        return readSuccess; 
+        // This doesn't seem to indicate success or failure.
+        //if (tempFloat.shData[0] == 0xFFFF || tempFloat.shData[1] == 0xFFFF)
+        //    readSuccess = FAILURE;
+
+        // If the value read from memory is finite assign it, else assign 0
+        mlParamInterface.param[i++]	= isFinite(tempFloat.flData)? tempFloat.flData : 0.0;
+    }
+
+    return readSuccess;
 }
-
 
 /**
  * @brief Reads mid-level command values from EEPROM and loads into
  *  mlMidLevelCommand struct.
  */
-uint8_t readMidLevelCommandsInEeprom (void) {
+int8_t readMidLevelCommandsInEeprom (void) {
     uint8_t indx= 0, i=0;
     tFloatToChar tempFloat;
     uint8_t readSuccess = SUCCESS;
@@ -232,3 +243,40 @@ uint8_t readMidLevelCommandsInEeprom (void) {
     return readSuccess;
 }
 
+
+
+/**
+ * Reads all paramters from EEPROM to RAM.
+ * @return ERROR or the number of waypoints read.
+ */
+int8_t readWaypointsInEeprom (void) {
+    uint8_t i;
+    tFloatToChar tempShData;
+
+    for(i = 0; i < MAX_NUM_WPS; i++ ){
+        // Way Points
+        tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM);
+        tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+1);
+        mlWpValues.lat[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;
+
+        tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+2);
+        tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+3);
+        mlWpValues.lon[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;
+
+        tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+4);
+        tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+5);
+        mlWpValues.alt[i] = isFinite(tempShData.flData)? tempShData.flData : 0.0;
+
+        mlWpValues.type[i] = (uint8_t)DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+6);
+
+        mlWpValues.orbit[i]   = DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM +7);
+    }
+
+    // Compute the waypoint count
+    mlWpValues.wpCount = 0;
+    while ((int)(mlWpValues.lat[mlWpValues.wpCount]) != 0 && (mlWpValues.wpCount< MAX_NUM_WPS - 1) ){
+        mlWpValues.wpCount++;
+    }
+
+    return mlWpValues.wpCount;
+}

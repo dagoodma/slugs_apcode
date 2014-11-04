@@ -66,7 +66,7 @@ void controlMCUInit(void) {
 
     // Initialize EEPROM emulator and Load Data from EEPROM if the initialization worked
     if (EEPInit() == EEP_MEMORY_OK) {
-        loadEEPData();
+        loadAllEEPData();
     }
 
     // Initialize default parameters

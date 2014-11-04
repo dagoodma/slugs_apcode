@@ -39,28 +39,33 @@ THE SOFTWARE.
 #include "DEE.h"
 
 
-// EEPROM Emulation Values
+// EEPROM Data Macros
 // =======================
 #define PARAM_OFFSET            0
 #define MIDLEVEL_OFFSET         160
 #define WPS_OFFSET              172  // = 160 + 4*3 = start + floatsize * #mid-level_cmds
 #define WP_SIZE_IN_EEPROM 	8
 
+// EEPROM Errors
+// =======================
+#define EEPROM_ERROR_PAGE_EXPIRED       1
+#define EEPROM_ERROR_MEMORY_CORRUPTED   6
+
 /* Note: With 2 EEPROM banks, we have 510 16-bit EEPROM addresses available.
  *       This means that there is space for roughly 79 parameters, 3 mid-level
  *       commands, and 42 waypoints in EEPROM.
  */
 
-
-
-unsigned char EEPInit (void);
-void loadEEPData (void);
-uint8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp);
-uint8_t storeParameterInEeprom (float parameter, uint8_t pmIndex);
-uint8_t storeAllParamsInEeprom (void);
-uint8_t storeMidLevelCommandsInEeprom (void);
-uint8_t readParamsInEeprom (void);
-uint8_t readMidLevelCommandsInEeprom (void);
+int8_t EEPInit (void);
+void loadAllEEPData (void); // TODO add error handling to this function
+int8_t eraseWaypointsInEeprom(uint8_t startingWp);
+int8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp);
+int8_t storeParameterInEeprom (float parameter, uint8_t pmIndex);
+int8_t storeAllParamsInEeprom (void);
+int8_t storeMidLevelCommandsInEeprom (void);
+int8_t readParamsInEeprom (void);
+int8_t readWaypointsInEeprom (void);
+int8_t readMidLevelCommandsInEeprom (void);
 
 #ifdef __cplusplus
       }
