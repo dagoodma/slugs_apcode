@@ -53,7 +53,7 @@ typedef char BOOL;
 
     // Circular Buffer Size
     // ===================
-#define BSIZE			512
+#define BSIZE			1024
 
     // GPS Circular Buffers
     // ====================
@@ -233,6 +233,32 @@ typedef char BOOL;
         uint16_t shData[4];
         uint64_t liData;
     } t64IntToChar;
+    
+    
+    
+    
+    //===== LED Macros =======
+    
+    #define ON      ((unsigned char) 1)
+    #define OFF     ((unsigned char) 0)
+
+
+    #define LED_CTRL_BUSY_TRIS  (TRISAbits.TRISA14)
+    #define LED_CTRL_STATUS_TRIS  (TRISAbits.TRISA15)
+    #define LED_CTRL_BUSY       (LATAbits.LATA14)
+    #define LED_CTRL_STATUS     (LATAbits.LATA15)
+
+    #define LED_CTRL_BUSY_SET(state)    (LED_CTRL_BUSY = (unsigned char)state)
+    #define LED_CTRL_STATUS_SET(state)  (LED_CTRL_STATUS = (unsigned char)state)
+    #define LED_CTRL_BUSY_TOGGLE()    (LED_CTRL_BUSY = LED_CTRL_BUSY ^ 1)
+    #define LED_CTRL_STATUS_TOGGLE()  (LED_CTRL_STATUS = LED_CTRL_STATUS ^ 1)
+
+    #define LED_CTRL_INIT() do { \
+                                    LED_CTRL_BUSY_TRIS = 0; \
+                                    LED_CTRL_BUSY_SET(OFF); \
+                                    LED_CTRL_STATUS_TRIS = 0; \
+                                    LED_CTRL_STATUS_SET(OFF); \
+                                } while(0)
 
 #ifdef __cplusplus
 }

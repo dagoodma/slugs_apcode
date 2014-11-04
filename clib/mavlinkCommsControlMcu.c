@@ -4,6 +4,7 @@
 // Standard libraries
 #include <math.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 // Microchip libraries
 
@@ -12,14 +13,16 @@
 
 // **** Macros or preprocessor directives ****
 
-
 // **** Module-level, global, or external variables ****
+// Round-robin telemetry counters (for radio communication)
+static uint8_t periodicCounter, responseCounter;
+
 // UART1 circular buffer for logging mavlink messages
 #ifdef RECORD_TO_LOGGER
-static volatile struct CircBuffer _uart1BufferOut;
-static volatile CBRef uart1BufferOut;
-unsigned volatile int dma1Buffer[MAXSEND] __attribute__((space(dma))) = {0};
-static uint16_t uart1BytesToSend;
+static uint8_t loggerCounter; // round-robin log counter
+static struct CircBuffer _uart1BufferOut;
+static CBRef uart1BufferOut;
+unsigned int dma1Buffer[MAXSEND] __attribute__((space(dma))) = {0};
 #endif
 
 // UART2 circular and DMA buffers for radio RX messages from groundstation
@@ -30,6 +33,7 @@ static CBRef uart2BufferOut;
 unsigned int dma2Buffer[MAXSEND] __attribute__((space(dma))) = {0};
 
 // Temporary and debug variables
+mavlink_message_t mavlinkMessageBuffer;
 char sw_debug;
 char sw_temp[50];
 char sw_intTemp;
@@ -39,13 +43,56 @@ float fl_temp1, fl_temp2;
 static void _uart1OutputToDMA1(uint16_t size);
 static void _uart2OutputToDMA2(uint16_t size);
 static void _logTelemetryMavlink(void);
+static void _send2Logger(unsigned char* buf, uint16_t bufLen);
 
+// -- Parameter and mission message --
 static void _prepareTransmitParameter(uint16_t id);
 static void _prepareTransmitCurrentMission(void);
 static void _prepareTransmitMissionAck(uint8_t type);
 static void _prepareTransmitMissionCount(void);
 static void _prepareTransmitMissionItem(uint8_t currentMissionIndex);
 static void _prepareTransmitMissionRequest(uint8_t currentMissionIndex);
+
+//-- Uart Messages --
+static uint8_t _prepareGpsMavlink(unsigned char *buf);
+static uint8_t _prepareHeartbeatMavlink(unsigned char *buf);
+static uint8_t _prepareGpsTimeMavlink(unsigned char *buf);
+static uint8_t _prepareVfrHudMavlink(unsigned char *buf);
+static uint8_t _prepareSlugsNavigationMavlink(unsigned char *buf);
+static uint8_t _prepareCpuLoadMavlink(unsigned char *buf);
+static uint8_t _prepareAttitudeMavlink(unsigned char *buf);
+static uint8_t _prepareLocalPositionMavlink(unsigned char *buf);
+static uint8_t _prepareSystemStatusMavlink(unsigned char *buf);
+static uint8_t _prepareDiagnosticMavlink(unsigned char *buf);
+static uint8_t _prepareSensorDiagnosticMavlink(unsigned char *buf);
+static uint8_t _prepareDataLogMavlink(unsigned char *buf);
+static uint8_t _prepareGpsStatusMavlink(unsigned char *buf);
+static uint8_t _prepareServoOutputMavlink(unsigned char *buf);
+static uint8_t _prepareSensorBiasMavlink(unsigned char *buf);
+static uint8_t _prepareRawPressureMavlink(unsigned char *buf);
+static uint8_t _prepareScaledPressureMavlink(unsigned char *buf);
+static uint8_t _prepareRcChannelsMavlink(unsigned char *buf);
+static uint8_t _prepareRawImuMavlink(unsigned char *buf);
+static uint8_t _prepareScaledImuMavlink(unsigned char *buf);
+static uint8_t _preparePtzStatusMavlink(unsigned char *buf);
+static uint8_t _prepareVoltSensorMavlink(unsigned char *buf);
+static uint8_t _preparePassthroughMavlink(unsigned char *buf);
+static uint8_t _preparePingMavlink(unsigned char *buf);
+static uint8_t _prepareParamValueMavlink(unsigned char *buf);
+static uint8_t _prepareCommandLongMavlink(unsigned char *buf);
+static uint8_t _prepareGpsOriginMavlink(unsigned char *buf);
+static uint8_t _prepareMissionCurrentMavlink(unsigned char *buf);
+static uint8_t _prepareMissionAckMavlink(unsigned char *buf);
+static uint8_t _prepareMissionCountMavlink(unsigned char *buf);
+static uint8_t _prepareMissionItemMavlink(unsigned char *buf);
+static uint8_t _prepareMissionRequestMavlink(unsigned char *buf);
+static uint8_t _prepareCommandAckMavlink(unsigned char *buf);
+static uint8_t _prepareMidLevelCommandsMavlink(unsigned char *buf);
+static uint8_t _prepareIsrMavlink(unsigned char *buf);
+static uint8_t _prepareStatusTextMavlink(unsigned char *buf);
+//-- SPI Messages --
+static void _sendSpiSetGpsOriginMavlink(void);
+static void _sendSpiServoOutputMavlink(void);
 
 // **** Public functions ****
 /**
@@ -56,7 +103,6 @@ void uart1Init(void) {
     // Initialize the circular buffer
     uart1BufferOut = (struct CircBuffer*) &_uart1BufferOut;
     newCircBuffer(uart1BufferOut);
-    uart1BytesToSend = 0;
 
     // DMA1REQ is channel IRQ select register
     DMA1REQ = 12; // IRQ Number for UART1 Transmission (see table 8-1)
@@ -71,7 +117,7 @@ void uart1Init(void) {
     DMA1CONbits.SIZE = 0; // Word Data Transfer
 
     // DMA1CNT is transfer count register
-    DMA1CNT = MAXSEND - 1; // NOTE should this be 0 to start?
+    DMA1CNT = MAXSEND; // NOTE should this be 0 to start?
 
     // DMA1STA is primary start address offset register
     DMA1STA = __builtin_dmaoffset(dma1Buffer);
@@ -122,6 +168,11 @@ void uart1Init(void) {
  * Initializes UART2 and DMA2 for radio communication.
  */
 void uart2Init(void) {
+
+    /* Initialize LEDS */
+    // TODO move this to a better init function
+    LED_CTRL_INIT();
+
     sw_debug = 0;
 
     // Initialize the circular buffers
@@ -245,6 +296,39 @@ void gsRead(unsigned char* gsChunk) {
 }
 
 /**
+ * Send mavlink messages to the logger over UART1.
+ * @note Called by _logTelemetryMavlink()
+ * @param buf is a pointer to the buffer with messages to send
+ * @param bufLen is the length of bytes to send
+ */
+static void _send2Logger(unsigned char* buf, uint16_t bufLen) {
+    #ifdef RECORD_TO_LOGGER
+    unsigned int i;
+
+    // add the data to the circular buffer
+    for (i = 0; i < bufLen; i ++) {
+        writeBack(uart1BufferOut, buf[i]);
+    }
+
+    // get the Length of the logBuffer
+    bufLen = getLength(uart1BufferOut);
+
+    // if the interrupt caught up with the circularBuffer
+    // and new data was added then turn on the DMA 
+    if (!(DMA1CONbits.CHEN) && (bufLen > 0)) {
+        // Configure the bytes to send
+        DMA1CNT = bufLen <= (MAXSEND) ? bufLen : MAXSEND;
+        // copy the buffer to the DMA channel outgoing buffer
+        _uart1OutputToDMA1((unsigned char) DMA1CNT);
+        // Enable the DMA
+        DMA1CONbits.CHEN = 1;
+        // Init the transmission
+        DMA1REQbits.FORCE = 1;
+    }
+    #endif
+}
+
+/**
  * Send a debug message to groundstation using statustext mavlink message.
  * @param dbgMessage is the message to be sent
  * @param severity is the severity of the message (see MAV_SEVERITY enum)
@@ -275,551 +359,270 @@ void addMessageToSpiOut(mavlink_message_t* msg) {
         &(mlPending.spiToSensor[mlPending.spiTotalData]), msg);
 }
 
-/* Called at 50 Hz by Simulink. */
-/* Full telemetry version. */
-#ifdef ENABLE_FULL_TELEMETRY
 void prepareTelemetryMavlink(unsigned char* dataOut) {
     // Record to logger first
     #ifdef RECORD_TO_LOGGER
     _logTelemetryMavlink();
     #endif
 
-    // Generic message container used to pack the messages
-    mavlink_message_t msg;
+    // Whether to skip this step of periodic messages (counter not incremented)
+    bool skipPeriodicStep = false;
 
-    // Generic buffer used to hold data to be streamed via serial port
-    //uint8_t buf[MAVLINK_MAX_PACKET_LEN];
-
-    // Cycles from 1 to 10 to decide which
-    // message's turn is to be sent
-    static uint8_t sampleTelemetry = 1;
+    // Reduced radio telemetry
+    /* Reduces frequency of 5 Hz messages to 1 Hz, and only sends QGC essential messages
+       instead of the full telemetry. Attitude is reduced from 50 Hz to 2 Hz. */
+    #ifdef REDUCE_RADIO_TELEMETRY
+    static uint8_t reducedRateCounter = 1;
+    skipPeriodicStep = (reducedRateCounter++ > 1);
+    reducedRateCounter = (reducedRateCounter > 5)? 1 : reducedRateCounter;
+    #endif
 
     // Contains the total bytes to send via the serial port
-    uint8_t bytes2Send = 0;//, paramDelay = 0;
+    uint8_t bytes2Send = 0;
 
     // String used to send text messages to QGC console
     char vr_message[50];
 
-    memset(&msg, 0, sizeof (mavlink_message_t));
+    // Periodic messages
+    if (!skipPeriodicStep) {
+        switch (periodicCounter) {
+             case 1: // GPS and Heartbeat
+                // == GPS Raw ==
+                bytes2Send += _prepareGpsMavlink(dataOut + 1 + bytes2Send);
 
-    switch (sampleTelemetry) {
-        case 1: // GPS, Heartbeat and Passthrough if necessary
-            // Pack the GPS message
-            mavlink_msg_gps_raw_int_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                mlGpsData.time_usec,
-                mlGpsData.fix_type,
-                mlGpsData.lat,
-                mlGpsData.lon,
-                mlGpsData.alt,
-                mlGpsData.eph,
-                0.0, // ephv
-                mlGpsData.vel,
-                mlGpsData.cog,
-                0 // sattelites_visible
-                );
+                // == Heartbeat ==
+                bytes2Send += _prepareHeartbeatMavlink(dataOut + 1 + bytes2Send);
 
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                break;
 
-            // clear the msg to pack a new variable
-            memset(&msg, 0, sizeof (mavlink_message_t));
+            case 2: // GPS Date Time, (diagnostic, scaled pressure)
+                // == GPS Date Time ==
+                bytes2Send += _prepareGpsTimeMavlink(dataOut + 1 + bytes2Send);
 
-            // Pack the Heartbeat message
-            mavlink_msg_heartbeat_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                MAV_TYPE_FIXED_WING,
-                MAV_AUTOPILOT_SLUGS,
-                //MAV_AUTOPILOT_GENERIC,
-                mlHeartbeatLocal.base_mode,
-                mlHeartbeatLocal.custom_mode,
-                mlHeartbeatLocal.system_status//,
-                //mlHeartbeatLocal.mavlink_version
-                );
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Diagnostic ==
+                bytes2Send += _prepareDiagnosticMavlink(dataOut + 1 + bytes2Send);
 
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                // == Scaled Pressure ==
+                bytes2Send += _prepareScaledPressureMavlink(dataOut + 1 + bytes2Send);
 
-            // If passthrough was requested (never used)
+                #endif
+
+                break;
+
+            case 3: // vfr_hud, data log
+                // == VFR Hud ==
+                bytes2Send += _prepareVfrHudMavlink(dataOut + 1 + bytes2Send);
+
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Data Log ==
+                bytes2Send += _prepareDataLogMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break; 
+
+            case 4: // navigation, cpu load, sensor diag
+                // == SLUGS Navigation ==
+                bytes2Send += _prepareSlugsNavigationMavlink(dataOut + 1 + bytes2Send);
+
+                // == CPU Load ==
+                bytes2Send += _prepareCpuLoadMavlink(dataOut + 1 + bytes2Send);
+
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Sensor Diagnostic ==
+                bytes2Send += _prepareSensorDiagnosticMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break;
+
+            case 5: // Raw IMU
+
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Raw IMU ==
+                bytes2Send += _prepareRawImuMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break;
+
+            case 6: // Local Position, System Status, GPS Status
+                // == Local Position (NED) ==
+                bytes2Send += _prepareLocalPositionMavlink(dataOut + 1 + bytes2Send);
+
+                // == System Status ==
+                bytes2Send += _prepareSystemStatusMavlink(dataOut + 1 + bytes2Send);
+
+                // == GPS Status ==
+                bytes2Send += _prepareGpsStatusMavlink(dataOut + 1 + bytes2Send);
+
+                break;
+
+            case 7: // Servo PWM Commands, Biases
+
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Servo Output ==
+                bytes2Send += _prepareServoOutputMavlink(dataOut + 1 + bytes2Send);
+
+                // == Sensor Bias ==
+                bytes2Send += _prepareSensorBiasMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break;
+
+            case 8:// raw Pressure
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Raw Pressure ==
+                bytes2Send += _prepareRawPressureMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break;
+
+            case 9: // Manual RC Channels
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == RC Channels ==
+                bytes2Send += _prepareRcChannelsMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break;
+
+            case 10: // Scaled IMU, PTZ data, VI Sensor
+                // == Volt Sensor ==
+                bytes2Send += _prepareVoltSensorMavlink(dataOut + 1 + bytes2Send);
+
+                #ifndef REDUCE_RADIO_TELEMETRY
+                // == Scaled IMU ==
+                bytes2Send += _prepareScaledImuMavlink(dataOut + 1 + bytes2Send);
+                // == PTZ Status ==
+                bytes2Send += _preparePtzStatusMavlink(dataOut + 1 + bytes2Send);
+                #endif
+
+                break;
+
+            default:
+                break;
+        } // switch
+        // increment/overflow the periodic counter (for 5 Hz messages)
+        periodicCounter = (periodicCounter >= 10) ? 1 : periodicCounter + 1;
+    } // if (!skipPerioidicStep)
+
+    switch (responseCounter) {
+        case 1: // Ctrl srfc passthrough
+            // == Control Surface Passthrough ==
             if (mlPending.pt == TRUE) {
-                // clear the message
-                memset(&msg, 0, sizeof (mavlink_message_t));
-
-                mavlink_msg_ctrl_srfc_pt_pack(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    GS_SYSTEMID,
-                    mlPassthrough.bitfieldPt);
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                // Clear the flag
+                bytes2Send += _preparePassthroughMavlink(dataOut + 1 + bytes2Send);
                 mlPending.pt = FALSE;
             }
-
-            break; //case 1
-
-        case 2: // GPS Date Time, diagnostic, air data,
-            mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlGpsDateTime);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_diagnostic_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlDiagnosticData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_scaled_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlAirData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; // case 2
-
-        case 3: // data log, ping, vfr_hud
-            mavlink_msg_data_log_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlDataLog);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            if (mlPending.ping == 1) {
-                // clear the msg
-                memset(&msg, 0, sizeof (mavlink_message_t));
-                mlPending.ping = 0;
-
-                mavlink_msg_ping_pack(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    mlPing.time_usec, // respond with sent time
-                    mlPing.seq,
-                    SLUGS_SYSTEMID,
-                    SLUGS_COMPID
-                    );
-                    //mlRawImuData.time_usec); // this is for a request
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            break;
+        case 3: // Ping
+            // == Ping ==
+            if (mlPending.ping == TRUE) {
+                bytes2Send += _preparePingMavlink(dataOut + 1 + bytes2Send);
+                mlPending.ping = FALSE;
             }
-
-
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            // Hud data for primary flight display
-            mavlink_msg_vfr_hud_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                mlNavigation.u_m,               // air speed (m/s)
-                (float)mlGpsData.vel * 0.01f,   // ground speed (m/s)
-                //(float)(mlAttitudeData.yaw + M_PI)*(180.0f/M_PI), // heading from 0 to 360 (deg)
-                0.0f,
-                0,                              // throttle from 0 to 100 (percent)
-                mlLocalPositionData.z,          // altitude (m)
-                mlLocalPositionData.vz         // climb rate (m/s)
-                );
-
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
-            break; // case 3
-
-        case 4: // navigation, cpu load, sensor diag
-
-            mavlink_msg_slugs_navigation_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlNavigation);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_cpu_load_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlCpuLoadData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-             // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSensorDiag);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; // case 4
-
-        case 5: // Raw IMU, Parameter Interface
-            mavlink_msg_raw_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawImuData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
+            break;
+        case 5: // Parameter interface
+            // = Parameter State Machine =
             evaluateParameterState(PARAM_EVENT_NONE, NULL);
 
+            // == Param Value ==
             /* Set by evaluateParameterState() via _prepareTransmitParameter()
                when we're ready to transmit. */
-            //if (mlPending.sensorDspReady) { // TODO check param request on startup
             if (mlPending.piTransaction == PARAM_TRANSACTION_SEND) {
-                mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                    mlParamInterface.param_name[mlPending.piCurrentParameter],
-                    mlParamInterface.param[mlPending.piCurrentParameter],
-                    MAV_PARAM_TYPE_REAL32, // NOTE we only use floats for now
-                    PAR_PARAM_COUNT,
-                    mlPending.piCurrentParameter);
+                bytes2Send += _prepareParamValueMavlink(dataOut + 1 + bytes2Send);
 
                 mlPending.piTransaction = PARAM_TRANSACTION_NONE;
                 if (++mlPending.piCurrentParameter >= PAR_PARAM_COUNT)
                     mlPending.piCurrentParameter = 0;
-
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-/*
-                memset(vr_message,0,sizeof(vr_message));
-             	sprintf(vr_message, "P = %d, V=%f ", mlPending.piCurrentParameter,
-                    (float)mlParamInterface.param[mlPending.piCurrentParameter]);
-             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-   */
             }
-            break; // case 5
-
-        case 6: // Local Position, System Status, GPS Status
-
-            mavlink_msg_local_position_ned_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlLocalPositionData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_sys_status_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSystemStatus);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            memset(&msg, 0, sizeof (mavlink_message_t));
-#if USE_NMEA
-            mavlink_msg_status_gps_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlGpsStatus);
-#else
-            mavlink_msg_novatel_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlNovatelStatus);
-#endif
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; // case 6
-
-        case 7: // PWM Commands, Biases, slugs action
-
-            mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPwmCommands);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // if in HIL Mode, report PWM commands to Sensor MCU so they
-            // are sent to the 6DOF model in Simulink
+            break;
+        case 7: // servo output, command ack
+            // == Servo Output (Raw) ==
+            /* In HIL Mode, report PWM commands to Sensor MCU so they are sent
+                to the 6DOF model in Simulink. This is not a response per say,
+                but we do not want to rate limit it in reduced telemetry mode. */
             if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_HIL_ENABLED)) {
-                addMessageToSpiOut(&msg);
+                _sendSpiServoOutputMavlink();
             }
 
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_sensor_bias_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSensorBiasData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            //
+            // == Command Long ==
+            // == Command Long ==
             if (mlPending.command != FALSE) {
-                // clear the msg
-                memset(&msg, 0, sizeof (mavlink_message_t));
-
-                mavlink_msg_command_long_encode(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    &mlCommand);
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                mlPending.command = 0;
-            }
-
-            break; // case 7
-
-        case 8:// mission Protocol state machine, raw Pressure
-            // This block goes via SPI to the sensor DSC so it does not count
-            // towards the Bandwith budget
-            if (mlPending.spiSendGSLocation) {
-                mavlink_msg_set_gps_global_origin_pack(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    //GS_COMPID,
-                    GS_SYSTEMID,
-                    mlWpValues.lat[MAX_NUM_WPS - 1],
-                    mlWpValues.lon[MAX_NUM_WPS - 1],
-                    mlWpValues.alt[MAX_NUM_WPS - 1]);
-
-                addMessageToSpiOut(&msg);
-
-                memset(vr_message, 0, sizeof (vr_message));
-                sprintf(vr_message, "Sensor DSC Reboot.");
-                bytes2Send += sendQGCDebugMessage(vr_message, 255, dataOut, bytes2Send + 1);
-
-                mlPending.spiSendGSLocation = 0;
-            }
-
-            // end of SPI block
-
-            if (sw_debug == 1) {
-                memset(vr_message, 0, sizeof (vr_message));
-                sprintf(vr_message, "hla = %2.4f, hlo =%2.4f  hh = %2.2f", (double)mlWpValues.lat[MAX_NUM_WPS - 1], (double)mlWpValues.lon[MAX_NUM_WPS - 1], (double)mlWpValues.alt[MAX_NUM_WPS - 1]);
-                bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
-                sw_debug = 0;
-            }
-            //
-            if (sw_debug == 4) {
-                memset(vr_message, 0, sizeof (vr_message));
-                sprintf(vr_message, "%d %d %d %d %d %d %d %d %d %d", sw_temp[0], sw_temp[1], sw_temp[2], sw_temp[3], sw_temp[4], sw_temp[5], sw_temp[6], sw_temp[7], sw_temp[8], sw_temp[9]);
-                bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
-                sw_debug = 0;
-
-            }
-            //
-            // 			if (sw_debug == 3){
-            // 				memset(vr_message,0,sizeof(vr_message));
-            // 				sprintf(vr_message, "Mode = %d", mlSystemStatus.mode);
-            // 				bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-            // 				sw_debug = 0;
-            // 			}
-
-             // Raw pressure
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawPressureData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
-            /****  New mission state machine code ******/
-
+                bytes2Send += _prepareCommandLongMavlink(dataOut + 1 + bytes2Send);
+                mlPending.command = FALSE;
+            } 
+            break;
+        case 8: // mission state machine
+            // = Mission State Machine =
             evaluateMissionState(MISSION_EVENT_NONE, NULL);
 
-            // TODO determine if we need this
-            // clear the msg
-            if (mlPending.miTransaction != MISSION_TRANSACTION_NONE)
-                memset(&msg, 0, sizeof (mavlink_message_t));
+            if (mlPending.miTransaction != MISSION_TRANSACTION_NONE) {
+                // == Mission Current ==
+                if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_CURRENT) {
+                    bytes2Send += _prepareMissionCurrentMavlink(dataOut + 1 + bytes2Send);
+                    mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+                }
+                // == Mission Ack ==
+                else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ACK) {
+                    bytes2Send += _prepareMissionAckMavlink(dataOut + 1 + bytes2Send);
+                    mlPending.miTransaction = MISSION_TRANSACTION_NONE;
 
-            /* Set by evaluateMissionState() when we're ready to transmit. */
-            // Send current mission item number
-            if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_CURRENT) {
-                mavlink_msg_mission_current_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                         ((uint16_t)mlNavigation.toWP) - 1);
+                    #ifdef DEBUG_MISSION_SM
+                    memset(vr_message,0,sizeof(vr_message));
+                    sprintf(vr_message, "Sent ack = %d", mlPending.miAckType);
+                    bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+                    #endif
+                }
+                // == Mission Count ==
+                else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_COUNT) {
+                    bytes2Send += _prepareMissionCountMavlink(dataOut + 1 + bytes2Send);
+                    mlPending.miTransaction = MISSION_TRANSACTION_NONE;
 
-                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+                    #ifdef DEBUG_MISSION_SM
+                    memset(vr_message,0,sizeof(vr_message));
+                    sprintf(vr_message, "Sent count = %d", mlPending.miTotalMissions);
+                    bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+                    #endif
+                }
+                // == Mission Item ==
+                else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ITEM) {
+                    bytes2Send += _prepareMissionItemMavlink(dataOut + 1 + bytes2Send);
+                    mlPending.miTransaction = MISSION_TRANSACTION_NONE;
 
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-            }
-            // Send mission acknowledgement
-            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ACK) {
-                mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID,
-                        MAV_COMP_ID_MISSIONPLANNER,
-                        &msg,
-                        GS_SYSTEMID,
-                        GS_COMPID,
-                        mlPending.miAckType);
+                    #ifdef DEBUG_MISSION_SM
+                    memset(vr_message,0,sizeof(vr_message));
+                    sprintf(vr_message, "Sent item = %d", mlPending.miCurrentMission);
+                    bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+                    #endif
+                }
+                // == Mission Request ==
+                else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_REQUEST
+                        && mlPending.miCurrentMission < mlPending.miTotalMissions) {
+                    bytes2Send += _prepareMissionRequestMavlink(dataOut + 1 + bytes2Send);
+                    mlPending.miTransaction = MISSION_TRANSACTION_NONE;
 
-                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
+                    #ifdef DEBUG_MISSION_SM
+                    memset(vr_message,0,sizeof(vr_message));
+                    sprintf(vr_message, "Sent request = %d", mlPending.miCurrentMission);
+                    bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
+                    #endif
+                }
 
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-#ifdef DEBUG_MISSION_SM
-                memset(vr_message,0,sizeof(vr_message));
-             	sprintf(vr_message, "Sent ack = %d", mlPending.miAckType);
-             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-#endif
-            }
-            // Send mission count
-            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_COUNT) {
-                mavlink_msg_mission_count_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                    GS_SYSTEMID, GS_COMPID, mlPending.miTotalMissions);
-
-                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-#ifdef DEBUG_MISSION_SM
-                memset(vr_message,0,sizeof(vr_message));
-             	sprintf(vr_message, "Sent count = %d", mlPending.miTotalMissions);
-             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-#endif
-            }
-            // Send mission item
-            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ITEM) {
-                mavlink_msg_mission_item_pack(SLUGS_SYSTEMID,
-                    MAV_COMP_ID_MISSIONPLANNER,
-                    &msg,
-                    GS_SYSTEMID,
-                    GS_COMPID,
-                    mlPending.miCurrentMission,
-                    MAV_FRAME_GLOBAL,
-                    mlWpValues.type[mlPending.miCurrentMission],
-                    0, // not current
-                    1, // autocontinue
-                    0.0, // Param 1 not used
-                    0.0, // Param 2 not used
-                    (float) mlWpValues.orbit[mlPending.miCurrentMission],
-                    0.0, // Param 4 not used
-                    mlWpValues.lat[mlPending.miCurrentMission],
-                    mlWpValues.lon[mlPending.miCurrentMission],
-                    mlWpValues.alt[mlPending.miCurrentMission]); // always autocontinue
-
-                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-#ifdef DEBUG_MISSION_SM
-                memset(vr_message,0,sizeof(vr_message));
-             	sprintf(vr_message, "Sent item = %d", mlPending.miCurrentMission);
-             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-#endif
-            }
-             // Send mission request
-            else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_REQUEST
-                    && mlPending.miCurrentMission < mlPending.miTotalMissions) {
-
-                mavlink_msg_mission_request_pack(SLUGS_SYSTEMID,
-                    MAV_COMP_ID_MISSIONPLANNER,
-                    &msg,
-                    GS_SYSTEMID,
-                    GS_COMPID,
-                    mlPending.miCurrentMission);
-
-                mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-                // Increment pending
-                // TODO remove this or not
-                /*
-                if (++mlPending.miCurrentMission >= mlPending.miTotalMissions)
-                    mlPending.miCurrentMission = 0;
-                 */
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-#ifdef DEBUG_MISSION_SM
-                memset(vr_message,0,sizeof(vr_message));
-             	sprintf(vr_message, "Sent request = %d", mlPending.miCurrentMission);
-             	bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-#endif
-
-            }
-
-            break; // case 8
-
-        case 9: // Action Ack, Pilot Console, Mid Level Commands, boot
-
-            mavlink_msg_rc_channels_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPilotConsoleData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
+                periodicCounter = (periodicCounter >= 10) ? 1 : periodicCounter + 1;
+            } // if mission SM
+            break;
+        case 9: // command ack, mid level commands, boot, isr
+            // == Command Ack ==
             if (mlPending.commandAck) {
-                mavlink_msg_command_ack_encode(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    &mlCommandAck);
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
+                bytes2Send += _prepareCommandAckMavlink(dataOut + 1 + bytes2Send);
                 mlPending.commandAck = FALSE;
             }
 
-
-            // if there is a pending request for the Mid Level Commands
-            if (mlPending.midLvlCmds == 1) {
-                // clear the msg
-                memset(&msg, 0, sizeof (mavlink_message_t));
-
-                mavlink_msg_mid_lvl_cmds_pack(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    GS_SYSTEMID,
-                    mlMidLevelCommands.hCommand,
-                    mlMidLevelCommands.uCommand,
-                    mlMidLevelCommands.rCommand);
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                // clear the flag
-                mlPending.midLvlCmds = 0;
+            // == Mid Level Commands ==
+            if (mlPending.midLvlCmds == TRUE) {
+                bytes2Send += _prepareMidLevelCommandsMavlink(dataOut + 1 + bytes2Send);
+                mlPending.midLvlCmds = FALSE;
             }
-
-            if (mlPending.isrLoc == 1) {
-                // clear the msg
-                memset(&msg, 0, sizeof (mavlink_message_t));
-
-                mavlink_msg_isr_location_encode(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
-                    &msg,
-                    &mlISR);
-
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-                mlPending.isrLoc = 0;
-            }
-
-            // if the boot message is set then transmit it urgently
+            
+            // == Boot ==
             if (mlBoot.version == 1) {
                 memset(vr_message, 0, sizeof (vr_message));
                 sprintf(vr_message, "%s DSC Reboot.", "Control");
@@ -827,1007 +630,181 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 mlBoot.version = 0;
             }
 
-            break; // case 9
-
-        case 10: // Filtered data, PTZ data, VI Sensor
-            mavlink_msg_scaled_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlFilteredData);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_ptz_status_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPtzStatus);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_volt_sensor_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlVISensor);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; // case 10
-
-    } // Switch
-
-    // Send additional statustext messages
-    if (mlPending.statustext > 0) {
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-
-        mavlink_msg_statustext_pack(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
-        &msg,
-        mlStatustext.severity,
-        mlStatustext.text);
-
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-        mlPending.statustext = 0;
-    }
-
-
-
-    memset(&msg, 0, sizeof (mavlink_message_t));
-
-    mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
-        &msg,
-        &mlAttitudeRotated);
-    // Copy the message to the send buffer
-    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
-    // Put the length of the message in the first byte of the outgoing array
-    *dataOut = bytes2Send;
-
-    // increment/overflow the samplePeriod counter
-    // configured for 10 Hz in non vital messages
-    sampleTelemetry = (sampleTelemetry >= 10) ? 1 : sampleTelemetry + 1;
-
-}
-
-#else
-
-// Stripped down version of prepareTelemetryMavlink()
-
-void prepareTelemetryMavlink(unsigned char* dataOut) {
-    // Record to logger first
-    #ifdef RECORD_TO_LOGGER
-    _logTelemetryMavlink();
-    #endif
-
-    // Generic message container used to pack the messages
-    mavlink_message_t msg;
-
-    // Generic buffer used to hold data to be streamed via serial port
-    //uint8_t buf[MAVLINK_MAX_PACKET_LEN];
-
-    // Cycles from 1 to 10 to decide which
-    // message's turn is to be sent
-    static uint8_t sampleTelemetry = 1;
-
-    // Contains the total bytes to send via the serial port
-    uint8_t bytes2Send = 0;//, paramDelay = 0;
-
-    // String used to send text messages to QGC console
-    char vr_message[50];
-
-    memset(&msg, 0, sizeof (mavlink_message_t));
-
-    switch (sampleTelemetry) {
-         case 1: // GPS, Heartbeat and Passthrough if necessary
-            // Pack the GPS message
-            mavlink_msg_gps_raw_int_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                mlGpsData.time_usec,
-                mlGpsData.fix_type,
-                mlGpsData.lat,
-                mlGpsData.lon,
-                mlGpsData.alt,
-                mlGpsData.eph,
-                0.0, // ephv
-                mlGpsData.vel,
-                mlGpsData.cog,
-                0 // sattelites_visible
-                );
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg to pack a new variable
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            // Pack the Heartbeat message
-            mavlink_msg_heartbeat_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                MAV_TYPE_FIXED_WING,
-                MAV_AUTOPILOT_SLUGS,
-                //MAV_AUTOPILOT_GENERIC,
-                mlHeartbeatLocal.base_mode,
-                mlHeartbeatLocal.custom_mode,
-                mlHeartbeatLocal.system_status//,
-                //mlHeartbeatLocal.mavlink_version
-                );
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; //case 1
-
-        case 5: // GPS Date Time, diagnostic, air data,
-            mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlGpsDateTime);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            /*
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_diagnostic_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlDiagnosticData);
-            // Copy the message to the send buffer
-            // TODO LOG this message
-            */
-
-            /*
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_scaled_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlAirData);
-
-            // TODO LOG this message
-            */
-
-            break; // case 2
-
-        case 10: // data log, ping, vfr_hud
-            /*
-            mavlink_msg_data_log_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlDataLog);
-
-            // TODO LOG this message
-            */
-
-
-
-
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            // Hud data for primary flight display
-            mavlink_msg_vfr_hud_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                mlNavigation.u_m,               // air speed (m/s)
-                (float)mlGpsData.vel * 0.01f,   // ground speed (m/s)
-                //(float)(mlAttitudeData.yaw + M_PI)*(180.0f/M_PI), // heading from 0 to 360 (deg)
-                0.0f,
-                0,                              // throttle from 0 to 100 (percent)
-                mlLocalPositionData.z,          // altitude (m)
-                mlLocalPositionData.vz         // climb rate (m/s)
-                );
-
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
-            break; // case 10
-
-        case 15: // navigation, cpu load, sensor diag
-
-            mavlink_msg_slugs_navigation_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlNavigation);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_cpu_load_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlCpuLoadData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            /*
-             // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSensorDiag);
-
-            // TODO LOG this message
-            */
-            break; // case 15
-
-        case 20: // Raw IMU, Parameter Interface
-            /*
-            mavlink_msg_raw_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawImuData);
-
-            // TODO LOG this message
-            */
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlAttitudeRotated);
-
-
-            break; // case 20
-
-        case 25: // Local Position, System Status, GPS Status
-
-            mavlink_msg_local_position_ned_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlLocalPositionData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_sys_status_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSystemStatus);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            memset(&msg, 0, sizeof (mavlink_message_t));
-#if USE_NMEA
-            mavlink_msg_status_gps_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlGpsStatus);
-#else
-            mavlink_msg_novatel_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlNovatelStatus);
-#endif
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; // case 25
-
-        case 30: // PWM Commands, Biases, slugs action
-
-            /*
-            mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPwmCommands);
-            // TODO LOG this message
-            */
-
-            // TODO fix rate of this back to 5 Hz
-
-            // if in HIL Mode, report PWM commands to Sensor MCU so they
-            // are sent to the 6DOF model in Simulink
-            if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_HIL_ENABLED)) {
-                addMessageToSpiOut(&msg);
+            // == ISR Location ==
+            if (mlPending.isrLoc == TRUE) {
+                bytes2Send += _prepareIsrMavlink(dataOut + 1 + bytes2Send);
+                mlPending.isrLoc = FALSE;
             }
-
-            /*
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_sensor_bias_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSensorBiasData);
-            // TODO LOG this message
-            */
-
-            //
-            break; // case 30
-
-        case 35:// mission Protocol state machine, raw Pressure
-
-            //
-            // 			if (sw_debug == 3){
-            // 				memset(vr_message,0,sizeof(vr_message));
-            // 				sprintf(vr_message, "Mode = %d", mlSystemStatus.mode);
-            // 				bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-            // 				sw_debug = 0;
-            // 			}
-
-             // Raw pressure
-            /*
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawPressureData);
-
-            // TODO LOG this message
-            */
-
-
-            break; // case 35
-
-        case 40: // Action Ack, Pilot Console, Mid Level Commands, boot
-
-            /*
-            mavlink_msg_rc_channels_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPilotConsoleData);
-            // TODO LOG this message
-            */
-
-
-            break; // case 40
-
-        case 50: // Filtered data, PTZ data, VI Sensor
-            /*
-            mavlink_msg_scaled_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlFilteredData);
-            // TODO LOG this message
-
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_ptz_status_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPtzStatus);
-            // TODO LOG this message
-             */
-
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_volt_sensor_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlVISensor);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-            break; // case 10
-
-        default:
             break;
+    } // switch(responseCounter)
 
-    } // Switch
-
-    // If passthrough was requested (never used)
-    if (mlPending.pt == TRUE) {
-        // clear the message
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-        mavlink_msg_ctrl_srfc_pt_pack(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            GS_SYSTEMID,
-            mlPassthrough.bitfieldPt);
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-        // Clear the flag
-        mlPending.pt = FALSE;
-    }
-
-     if (mlPending.ping == 1) {
-        // clear the msg
-        memset(&msg, 0, sizeof (mavlink_message_t));
-        mlPending.ping = 0;
-
-        mavlink_msg_ping_pack(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            mlPing.time_usec, // respond with sent time
-            mlPing.seq,
-            SLUGS_SYSTEMID,
-            SLUGS_COMPID
-            );
-            //mlRawImuData.time_usec); // this is for a request
-
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-    }
-
-    // ***** Parameter State Machine ******
-    evaluateParameterState(PARAM_EVENT_NONE, NULL);
-
-    /* Set by evaluateParameterState() via _prepareTransmitParameter()
-       when we're ready to transmit. */
-    //if (mlPending.sensorDspReady) { // TODO check param request on startup
-    if (mlPending.piTransaction == PARAM_TRANSACTION_SEND) {
-        mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-            mlParamInterface.param_name[mlPending.piCurrentParameter],
-            mlParamInterface.param[mlPending.piCurrentParameter],
-            MAV_PARAM_TYPE_REAL32, // NOTE we only use floats for now
-            PAR_PARAM_COUNT,
-            mlPending.piCurrentParameter);
-
-        mlPending.piTransaction = PARAM_TRANSACTION_NONE;
-        if (++mlPending.piCurrentParameter >= PAR_PARAM_COUNT)
-            mlPending.piCurrentParameter = 0;
+    // increment/overflow the response counter (for 5 Hz messages)
+    responseCounter = (responseCounter >= 10) ? 1 : responseCounter + 1;
 
 
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-/*
-        memset(vr_message,0,sizeof(vr_message));
-        sprintf(vr_message, "P = %d, V=%f ", mlPending.piCurrentParameter,
-            (float)mlParamInterface.param[mlPending.piCurrentParameter]);
-        bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-*/
-    }
-
-    // Command to send
-    if (mlPending.command != FALSE) {
-        // clear the msg
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-        mavlink_msg_command_long_encode(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            &mlCommand);
-
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-        mlPending.command = 0;
-    }
-
+    // == GPS Global Origin ==
     // This block goes via SPI to the sensor DSC so it does not count
     // towards the Bandwith budget
     if (mlPending.spiSendGSLocation) {
-        mavlink_msg_set_gps_global_origin_pack(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            //GS_COMPID,
-            GS_SYSTEMID,
-            mlWpValues.lat[MAX_NUM_WPS - 1],
-            mlWpValues.lon[MAX_NUM_WPS - 1],
-            mlWpValues.alt[MAX_NUM_WPS - 1]);
+        _sendSpiSetGpsOriginMavlink();
+        mlPending.spiSendGSLocation = 0;
 
-        addMessageToSpiOut(&msg);
-
-        memset(vr_message, 0, sizeof (vr_message));
+        memset(vr_message,0,sizeof(vr_message));
         sprintf(vr_message, "Sensor DSC Reboot.");
         bytes2Send += sendQGCDebugMessage(vr_message, 255, dataOut, bytes2Send + 1);
 
-        mlPending.spiSendGSLocation = 0;
     }
 
-    // end of SPI block
-
-    if (sw_debug == 1) {
-        memset(vr_message, 0, sizeof (vr_message));
-        sprintf(vr_message, "hla = %2.4f, hlo =%2.4f  hh = %2.2f", (double)mlWpValues.lat[MAX_NUM_WPS - 1], (double)mlWpValues.lon[MAX_NUM_WPS - 1], (double)mlWpValues.alt[MAX_NUM_WPS - 1]);
-        bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
-        sw_debug = 0;
-    }
-    //
-    if (sw_debug == 4) {
-        memset(vr_message, 0, sizeof (vr_message));
-        sprintf(vr_message, "%d %d %d %d %d %d %d %d %d %d", sw_temp[0], sw_temp[1], sw_temp[2], sw_temp[3], sw_temp[4], sw_temp[5], sw_temp[6], sw_temp[7], sw_temp[8], sw_temp[9]);
-        bytes2Send += sendQGCDebugMessage(vr_message, 0, dataOut, bytes2Send + 1);
-        sw_debug = 0;
-
-    }
-
-
-    /****  New mission state machine code ******/
-
-    evaluateMissionState(MISSION_EVENT_NONE, NULL);
-
-    // TODO determine if we need this
-    // clear the msg
-    if (mlPending.miTransaction != MISSION_TRANSACTION_NONE) {
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-        /* Set by evaluateMissionState() when we're ready to transmit. */
-        // Send current mission item number
-        if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_CURRENT) {
-            mavlink_msg_mission_current_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                     ((uint16_t)mlNavigation.toWP) - 1);
-
-            mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-        }
-        // Send mission acknowledgement
-        else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ACK) {
-            mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID,
-                    MAV_COMP_ID_MISSIONPLANNER,
-                    &msg,
-                    GS_SYSTEMID,
-                    GS_COMPID,
-                    mlPending.miAckType);
-
-            mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-    #ifdef DEBUG_MISSION_SM
-            memset(vr_message,0,sizeof(vr_message));
-            sprintf(vr_message, "Sent ack = %d", mlPending.miAckType);
-            bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-    #endif
-        }
-        // Send mission count
-        else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_COUNT) {
-            mavlink_msg_mission_count_pack(SLUGS_SYSTEMID, SLUGS_COMPID, &msg,
-                GS_SYSTEMID, GS_COMPID, mlPending.miTotalMissions);
-
-            mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-    #ifdef DEBUG_MISSION_SM
-            memset(vr_message,0,sizeof(vr_message));
-            sprintf(vr_message, "Sent count = %d", mlPending.miTotalMissions);
-            bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-    #endif
-        }
-        // Send mission item
-        else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_ITEM) {
-            mavlink_msg_mission_item_pack(SLUGS_SYSTEMID,
-                MAV_COMP_ID_MISSIONPLANNER,
-                &msg,
-                GS_SYSTEMID,
-                GS_COMPID,
-                mlPending.miCurrentMission,
-                MAV_FRAME_GLOBAL,
-                mlWpValues.type[mlPending.miCurrentMission],
-                0, // not current
-                1, // autocontinue
-                0.0, // Param 1 not used
-                0.0, // Param 2 not used
-                (float) mlWpValues.orbit[mlPending.miCurrentMission],
-                0.0, // Param 4 not used
-                mlWpValues.lat[mlPending.miCurrentMission],
-                mlWpValues.lon[mlPending.miCurrentMission],
-                mlWpValues.alt[mlPending.miCurrentMission]); // always autocontinue
-
-            mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-    #ifdef DEBUG_MISSION_SM
-            memset(vr_message,0,sizeof(vr_message));
-            sprintf(vr_message, "Sent item = %d", mlPending.miCurrentMission);
-            bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-    #endif
-        }
-         // Send mission request
-        else if (mlPending.miTransaction == MISSION_TRANSACTION_SEND_REQUEST
-                && mlPending.miCurrentMission < mlPending.miTotalMissions) {
-
-            mavlink_msg_mission_request_pack(SLUGS_SYSTEMID,
-                MAV_COMP_ID_MISSIONPLANNER,
-                &msg,
-                GS_SYSTEMID,
-                GS_COMPID,
-                mlPending.miCurrentMission);
-
-            mlPending.miTransaction = MISSION_TRANSACTION_NONE;
-            // Increment pending
-            // TODO remove this or not
-            /*
-            if (++mlPending.miCurrentMission >= mlPending.miTotalMissions)
-                mlPending.miCurrentMission = 0;
-             */
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-    #ifdef DEBUG_MISSION_SM
-            memset(vr_message,0,sizeof(vr_message));
-            sprintf(vr_message, "Sent request = %d", mlPending.miCurrentMission);
-            bytes2Send += sendQGCDebugMessage (vr_message, 0, dataOut, bytes2Send+1);
-    #endif
-        }
-    } // if mission SM
-
-    if (mlPending.commandAck) {
-        mavlink_msg_command_ack_encode(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            &mlCommandAck);
-
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-        mlPending.commandAck = FALSE;
-    }
-
-
-    // if there is a pending request for the Mid Level Commands
-    if (mlPending.midLvlCmds == 1) {
-        // clear the msg
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-        mavlink_msg_mid_lvl_cmds_pack(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            GS_SYSTEMID,
-            mlMidLevelCommands.hCommand,
-            mlMidLevelCommands.uCommand,
-            mlMidLevelCommands.rCommand);
-
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-        // clear the flag
-        mlPending.midLvlCmds = 0;
-    }
-
-    if (mlPending.isrLoc == 1) {
-        // clear the msg
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-        mavlink_msg_isr_location_encode(SLUGS_SYSTEMID,
-            SLUGS_COMPID,
-            &msg,
-            &mlISR);
-
-        // Copy the message to the send buffer
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-        mlPending.isrLoc = 0;
-    }
-
-    // if the boot message is set then transmit it urgently
-    if (mlBoot.version == 1) {
-        memset(vr_message, 0, sizeof (vr_message));
-        sprintf(vr_message, "%s DSC Reboot.", "Control");
-        bytes2Send += sendQGCDebugMessage(vr_message, 255, dataOut, bytes2Send + 1);
-        mlBoot.version = 0;
-    }
-
+    // == Connection Warning ==
     if (mlPending.connectionWarning && !mlPending.connectionWarningSent) {
          bytes2Send += sendQGCDebugMessage ("Connection failing. Pleaser restart GS radio.",
             0, dataOut, bytes2Send+1);
-         mlPending.connectionWarningSent = 1;
+         mlPending.connectionWarningSent = TRUE;
     }
 
-    // Send additional statustext messages
+    // == Status Text ==
     if (mlPending.statustext > 0) {
-        memset(&msg, 0, sizeof (mavlink_message_t));
-
-
-        mavlink_msg_statustext_pack(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
-        &msg,
-        mlStatustext.severity,
-        mlStatustext.text);
-
-        bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
+        bytes2Send += _prepareStatusTextMavlink(dataOut + 1 + bytes2Send);
         mlPending.statustext = 0;
     }
 
-
-    /*
-    memset(&msg, 0, sizeof (mavlink_message_t));
-
-    mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
-        &msg,
-        &mlAttitudeRotated);
-    // Copy the message to the send buffer
-    // TODO  Log this instead
-     * */
+    // == Attitude ==
+    /* Reduce rate from 50 Hz to 2 Hz if REDUCE_RADIO_TELEMETRY is set. */
+    #ifdef REDUCE_RADIO_TELEMETRY
+    if (!skipPeriodicStep && (periodicCounter % 5) == 0) {
+    #endif
+        bytes2Send += _prepareAttitudeMavlink(dataOut + 1 + bytes2Send);
+    #ifdef REDUCE_RADIO_TELEMETRY
+    }
+    #endif
 
 
     // Put the length of the message in the first byte of the outgoing array
     *dataOut = bytes2Send;
-
-    // increment/overflow the samplePeriod counter
-    // configured for 10 Hz in non vital messages
-    sampleTelemetry = (sampleTelemetry >= 50) ? 1 : sampleTelemetry + 1;
 }
-#endif
 
 /**
  * Record mavlink messages to the on-board logger.
  */
-static void _logTelemetryMavlink(void) {
-#if defined(RECORD_TO_LOGGER)
-    // Generic message container used to pack the messages
-    mavlink_message_t msg;
+void _logTelemetryMavlink(void) {
+    #ifdef RECORD_TO_LOGGER
+    // Bytes to send
+    uint16_t logBytes = 0;
+    uint8_t logOut[MAXSEND];
 
-    // Cycles from 1 to 10 
-    static uint8_t sampleT elemetry = 1;
-
-    switch (sampleTelemetry) {
-        case 1: // GPS and Heartbeat
+    switch (loggerCounter) {
+         case 1: // GPS and Heartbeat
             // == GPS Raw ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_gps_raw_int_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                mlGpsData.time_usec,
-                mlGpsData.fix_type,
-                mlGpsData.lat,
-                mlGpsData.lon,
-                mlGpsData.alt,
-                mlGpsData.eph,
-                0.0, // ephv
-                mlGpsData.vel,
-                mlGpsData.cog,
-                0 // sattelites_visible
-                );
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
-            
+            logBytes += _prepareGpsMavlink(logOut + logBytes);
 
             // == Heartbeat ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_heartbeat_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                MAV_TYPE_FIXED_WING,
-                MAV_AUTOPILOT_SLUGS,//MAV_AUTOPILOT_GENERIC,
-                mlHeartbeatLocal.base_mode,
-                mlHeartbeatLocal.custom_mode,
-                mlHeartbeatLocal.system_status
-                );
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareHeartbeatMavlink(logOut + logBytes);
 
-            break; //case 1
+            break;
 
-        case 2: // GPS Date Time, diagnostic, air data,
+        case 2: // GPS Date Time, (diagnostic, scaled pressure)
             // == GPS Date Time ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlGpsDateTime);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareGpsTimeMavlink(logOut + logBytes);
 
-            // == Diagnotic ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_diagnostic_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlDiagnosticData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            // == Diagnostic ==
+            logBytes += _prepareDiagnosticMavlink(logOut + logBytes);
 
-            // == Scaled Pressure (Air Data) ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_scaled_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlAirData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            // == Scaled Pressure ==
+            logBytes += _prepareScaledPressureMavlink(logOut + logBytes);
 
-            break; // case 2
+            break;
 
-        case 3: // data log, ping, vfr_hud
-            // == Data Log (more diagnostics) ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_data_log_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlDataLog);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
-
+        case 3: // vfr_hud, data log
             // == VFR Hud ==
-            // TODO determine if this is needed in logs
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_vfr_hud_pack(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                mlNavigation.u_m,               // air speed (m/s)
-                (float)mlGpsData.vel * 0.01f,   // ground speed (m/s)
-                0.0f,
-                0,                              // throttle from 0 to 100 (percent)
-                mlLocalPositionData.z,          // altitude (m)
-                mlLocalPositionData.vz         // climb rate (m/s)
-                );
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareVfrHudMavlink(logOut + logBytes);
 
-            break; // case 3
+            // == Data Log ==
+            logBytes += _prepareDataLogMavlink(logOut + logBytes);
+
+            break; 
 
         case 4: // navigation, cpu load, sensor diag
             // == SLUGS Navigation ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_slugs_navigation_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlNavigation);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareSlugsNavigationMavlink(logOut + logBytes);
 
             // == CPU Load ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_cpu_load_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlCpuLoadData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareCpuLoadMavlink(logOut + logBytes);
 
-             // == Sensor Diagnostics ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSensorDiag);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            // == Sensor Diagnostic ==
+            logBytes += _prepareSensorDiagnosticMavlink(logOut + logBytes);
 
-            break; // case 4
+            break;
 
         case 5: // Raw IMU
-            // == Raw IMU ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_raw_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawImuData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
 
-            break; // case 5
+            // == Raw IMU ==
+            logBytes += _prepareRawImuMavlink(logOut + logBytes);
+
+            break;
 
         case 6: // Local Position, System Status, GPS Status
-            // == Local Position NED ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_local_position_ned_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlLocalPositionData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            // == Local Position (NED) ==
+            logBytes += _prepareLocalPositionMavlink(logOut + logBytes);
 
             // == System Status ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_sys_status_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSystemStatus);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareSystemStatusMavlink(logOut + logBytes);
 
-            // == GPS Status or Novatel Diagnostic ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-#if USE_NMEA
-            mavlink_msg_status_gps_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlGpsStatus);
-#else
-            mavlink_msg_novatel_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlNovatelStatus);
-#endif
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            // == GPS Status ==
+            logBytes += _prepareGpsStatusMavlink(logOut + logBytes);
 
-            break; // case 6
+            break;
 
-        case 7: // PWM Commands, Biases, slugs action
-            // == Servo Output Raw ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPwmCommands);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+        case 7: // Servo PWM Commands, Biases
+
+            // == Servo Output ==
+            logBytes += _prepareServoOutputMavlink(logOut + logBytes);
 
             // == Sensor Bias ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_sensor_bias_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlSensorBiasData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareSensorBiasMavlink(logOut + logBytes);
 
-            break; // case 7
+            break;
 
-        case 8:// raw pressure
-             // == Raw Pressure ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlRawPressureData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+        case 8:// raw Pressure
 
-            break; // case 8
+            // == Raw Pressure ==
+            logBytes += _prepareRawPressureMavlink(logOut + logBytes);
 
-        case 9: // Action Ack, Pilot Console, Mid Level Commands, boot
-            // == RC Channels Raw ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_rc_channels_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPilotConsoleData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            break;
 
-            break; // case 9
+        case 9: // Manual RC Channels
 
-        case 10: // Filtered data, PTZ data, VI Sensor
+            // == RC Channels ==
+            logBytes += _prepareRcChannelsMavlink(logOut + logBytes);
+
+            break;
+
+        case 10: // Scaled IMU, PTZ data, VI Sensor
+
+            // == Volt Sensor ==
+            logBytes += _prepareVoltSensorMavlink(logOut + logBytes);
             // == Scaled IMU ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_scaled_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlFilteredData);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+            logBytes += _prepareScaledImuMavlink(logOut + logBytes);
+            // == PTZ Status ==
+            logBytes += _preparePtzStatusMavlink(logOut + logBytes);
 
-            // == PTZ Status (from camera) ==
-            /*
-            memset(&msg, 0, sizeof (mavlink_message_t));
+            break;
 
-            mavlink_msg_ptz_status_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlPtzStatus);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
-            */
+        default:
+            break;
+    } // switch
 
-            // == Voltage Sensor ==
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_volt_sensor_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
-                &msg,
-                &mlVISensor);
-            uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+    // == Attitude ==
+    logBytes += _prepareAttitudeMavlink(logOut + logBytes);
 
-            break; // case 10
-
-    } // Switch
-
-    // == Attitude (50 Hz) ==
-    memset(&msg, 0, sizeof (mavlink_message_t));
-    mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
-        &msg,
-        &mlAttitudeRotated);
-    uart1BytesToSend += mavlink_msg_to_send_buffer((uart1BufferOut + uart1BytesToSend), &msg);
+    // Copy the buffer and start DMA
+    _send2Logger(logOut, logBytes);
 
     // increment/overflow the samplePeriod counter
-    sampleTelemetry = (sampleTelemetry >= 10) ? 1 : sampleTelemetry + 1;
+    // configured for 10 Hz in non vital messages
+    loggerCounter = (loggerCounter >= 10) ? 1 : loggerCounter + 1;
+    #endif
+}
 
-    // Send the data
-    _uart1OutputToDMA1(uart1BytesToSend);
-
-#endif
-} // _logTelemetryMavlink()
 
 /**
  * Decodes incoming MAVLink messages.
@@ -1858,7 +835,6 @@ void protDecodeMavlink(uint8_t* dataIn) {
         // Try to get a new message
         if (mavlink_parse_char(commChannel, dataIn[i], &msg, &status)) {
 
-             uint8_t id = msg.msgid;
             // Handle message
             switch (msg.msgid) {
                 case MAVLINK_MSG_ID_HEARTBEAT:
@@ -2011,7 +987,8 @@ void protDecodeMavlink(uint8_t* dataIn) {
                                 // Send an error message
                                 mlPending.statustext++;
                                 mlStatustext.severity = MAV_SEVERITY_ERROR;
-                                sprintf(mlStatustext.text, "Unknown slugs mode sent: %X.", mlSetMode.custom_mode);
+                                sprintf(mlStatustext.text, "Unknown slugs mode sent: %X.",
+                                    (unsigned int)mlSetMode.custom_mode);
                                 break;
                         } // switch (mlSetMode.custom_mode)
                         // Set new slugs mode if valid
@@ -2980,6 +1957,428 @@ static void _prepareTransmitMissionRequest(uint8_t currentMissionIndex) {
     }
 }
 
+//-- Uart Messages --
+static uint8_t _prepareGpsMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_gps_raw_int_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        mlGpsData.time_usec,
+        mlGpsData.fix_type,
+        mlGpsData.lat,
+        mlGpsData.lon,
+        mlGpsData.alt,
+        mlGpsData.eph,
+        0.0, // ephv
+        mlGpsData.vel,
+        mlGpsData.cog,
+        0 // sattelites_visible
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareHeartbeatMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_heartbeat_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        MAV_TYPE_FIXED_WING,
+        MAV_AUTOPILOT_SLUGS, //MAV_AUTOPILOT_GENERIC,
+        mlHeartbeatLocal.base_mode,
+        mlHeartbeatLocal.custom_mode,
+        mlHeartbeatLocal.system_status
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareGpsTimeMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlGpsDateTime);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareVfrHudMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_vfr_hud_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        mlNavigation.u_m,               // air speed (m/s)
+        (float)mlGpsData.vel * 0.01f,   // ground speed (m/s)
+        0.0f,
+        0,                              // throttle from 0 to 100 (percent)
+        mlLocalPositionData.z,          // altitude (m)
+        mlLocalPositionData.vz         // climb rate (m/s)
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareSlugsNavigationMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_slugs_navigation_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlNavigation);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareCpuLoadMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_cpu_load_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlCpuLoadData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareAttitudeMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlAttitudeRotated);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareLocalPositionMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_local_position_ned_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlLocalPositionData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareSystemStatusMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_sys_status_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlSystemStatus);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareDiagnosticMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_diagnostic_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlDiagnosticData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareSensorDiagnosticMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlSensorDiag);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareDataLogMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_data_log_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlDataLog);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareGpsStatusMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+#if USE_NMEA
+    mavlink_msg_status_gps_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlGpsStatus);
+#else
+    mavlink_msg_novatel_diag_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlNovatelStatus);
+#endif
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareServoOutputMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlPwmCommands);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareSensorBiasMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_sensor_bias_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlSensorBiasData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareRawPressureMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlRawPressureData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareScaledPressureMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_scaled_pressure_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlAirData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareRcChannelsMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_rc_channels_raw_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlPilotConsoleData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareRawImuMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_raw_imu_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlRawImuData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareScaledImuMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_scaled_imu_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlFilteredData);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _preparePtzStatusMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_ptz_status_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlPtzStatus);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareVoltSensorMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_volt_sensor_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlVISensor);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _preparePassthroughMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_ctrl_srfc_pt_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        GS_SYSTEMID,
+        mlPassthrough.bitfieldPt);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _preparePingMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_ping_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        mlPing.time_usec, // respond with sent time
+        mlPing.seq,
+        SLUGS_SYSTEMID,
+        SLUGS_COMPID
+        );
+        //mlRawImuData.time_usec); // this is for a request
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareParamValueMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_param_value_pack(SLUGS_SYSTEMID, SLUGS_COMPID,
+         &mavlinkMessageBuffer,
+        mlParamInterface.param_name[mlPending.piCurrentParameter],
+        mlParamInterface.param[mlPending.piCurrentParameter],
+        MAV_PARAM_TYPE_REAL32, // NOTE we only use floats for now
+        PAR_PARAM_COUNT,
+        mlPending.piCurrentParameter);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareCommandLongMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_command_long_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlCommand);
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareGpsOriginMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_gps_global_origin_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        mlWpValues.lat[MAX_NUM_WPS - 1],
+        mlWpValues.lon[MAX_NUM_WPS - 1],
+        mlWpValues.alt[MAX_NUM_WPS - 1]
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareMissionCurrentMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_mission_current_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        (uint16_t)mlNavigation.toWP - 1
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareMissionAckMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_mission_ack_pack(SLUGS_SYSTEMID,
+        MAV_COMP_ID_MISSIONPLANNER,
+        &mavlinkMessageBuffer,
+        GS_SYSTEMID,
+        GS_COMPID,
+        mlPending.miAckType
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareMissionCountMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_mission_count_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        GS_SYSTEMID,
+        GS_COMPID,
+        mlPending.miTotalMissions
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareMissionItemMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_mission_item_pack(SLUGS_SYSTEMID,
+        MAV_COMP_ID_MISSIONPLANNER,
+        &mavlinkMessageBuffer,
+        GS_SYSTEMID,
+        GS_COMPID,
+        mlPending.miCurrentMission,
+        MAV_FRAME_GLOBAL,
+        mlWpValues.type[mlPending.miCurrentMission],
+        0, // not current
+        1, // always autocontinue
+        0.0, // Param 1 not used
+        0.0, // Param 2 not used
+        (float) mlWpValues.orbit[mlPending.miCurrentMission],
+        0.0, // Param 4 not used
+        mlWpValues.lat[mlPending.miCurrentMission],
+        mlWpValues.lon[mlPending.miCurrentMission],
+        mlWpValues.alt[mlPending.miCurrentMission]
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareMissionRequestMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_mission_request_pack(SLUGS_SYSTEMID,
+        MAV_COMP_ID_MISSIONPLANNER,
+        &mavlinkMessageBuffer,
+        GS_SYSTEMID,
+        GS_COMPID,
+        mlPending.miCurrentMission
+        );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareCommandAckMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_command_ack_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlCommandAck
+    );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareMidLevelCommandsMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_mid_lvl_cmds_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        GS_SYSTEMID,
+        mlMidLevelCommands.hCommand,
+        mlMidLevelCommands.uCommand,
+        mlMidLevelCommands.rCommand
+    );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareIsrMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_isr_location_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlISR
+    );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+static uint8_t _prepareStatusTextMavlink(unsigned char *buf) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_statustext_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        mlStatustext.severity,
+        mlStatustext.text
+    );
+    return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
+}
+
+//-- SPI Messages --
+static void _sendSpiSetGpsOriginMavlink(void) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_set_gps_global_origin_pack(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        SLUGS_SYSTEMID, // target system ID
+        mlWpValues.lat[MAX_NUM_WPS - 1],
+        mlWpValues.lon[MAX_NUM_WPS - 1],
+        mlWpValues.alt[MAX_NUM_WPS - 1]
+        );
+    addMessageToSpiOut(&mavlinkMessageBuffer);
+}
+
+
+static void _sendSpiServoOutputMavlink(void) {
+    memset(&mavlinkMessageBuffer, 0, sizeof (mavlink_message_t));
+    mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
+        SLUGS_COMPID,
+        &mavlinkMessageBuffer,
+        &mlPwmCommands
+        );
+    addMessageToSpiOut(&mavlinkMessageBuffer);
+}
+
 /**
  * Copies the UART1 output buffer to the DMA1 buffer for sending.
  * @param size in bytes to copy to the DMA1 buffer.
@@ -3018,6 +2417,7 @@ void __attribute__((interrupt, no_auto_psv)) _DMA2Interrupt(void) {
 }
 
 void __attribute__((__interrupt__, no_auto_psv)) _U2RXInterrupt(void) {
+    LED_CTRL_STATUS_TOGGLE();
     // Read the buffer while it has data
     // and add it to the circular buffer
     while (U2STAbits.URXDA == 1) {
@@ -3033,15 +2433,30 @@ void __attribute__((__interrupt__, no_auto_psv)) _U2RXInterrupt(void) {
     IFS1bits.U2RXIF = 0;
 }
 
+void __attribute__((interrupt, no_auto_psv)) _U1ErrInterrupt(void) {
+
+    // If there was an overun error clear it and continue
+    if (U1STAbits.OERR == 1) {
+        U1STAbits.OERR = 0;
+    }
+
+    // If there was an overun error clear it and continue
+    if (IFS4bits.U1EIF == 1) {
+        IFS4bits.U1EIF = 0; // Clear the UART1 Error Interrupt Flag
+    }
+}
+
 void __attribute__((interrupt, no_auto_psv)) _U2ErrInterrupt(void) {
 
     // If there was an overun error clear it and continue
     if (U2STAbits.OERR == 1) {
+        LED_CTRL_BUSY = ON;
         U2STAbits.OERR = 0;
     }
 
     // If there was an overun error clear it and continue
     if (IFS4bits.U2EIF == 1) {
+        LED_CTRL_BUSY = ON;
         IFS4bits.U2EIF = 0; // Clear the UART2 Error Interrupt Flag
     }
 }

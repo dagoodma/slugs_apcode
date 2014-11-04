@@ -54,7 +54,7 @@ extern "C" {
 //#define DEBUG_MISSION_SM  // comment this out to disable mission state machine
                             // debug messages sent to groundstation
 
-//#define ENABLE_FULL_TELEMETRY // uncomment to send full 38,400 bps telemetry over radio
+//#define REDUCE_RADIO_TELEMETRY // comment to send full 38,400 bps telemetry over radio
 
 //#define RECORD_TO_LOGGER // comment this out to disable recording messages to logger
                          // TODO send full telemetry stream when this is disabled

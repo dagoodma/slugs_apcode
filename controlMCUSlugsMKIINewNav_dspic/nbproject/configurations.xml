@@ -75,7 +75,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion></languageToolchainVersion>
+        <languageToolchainVersion>1.11</languageToolchainVersion>
         <platform>4</platform>
       </toolsSet>
       <compileType>
@@ -136,7 +136,6 @@
         <property key="preprocessor-macros" value=""/>
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
-        <property key="use-iar" value="false"/>
       </C30>
       <C30-AS>
         <property key="assembler-symbols" value=""/>
@@ -170,19 +169,11 @@
         <property key="enable-pack-data" value="true"/>
         <property key="extra-lib-directories"
                   value="sources;controlMCUSlugsMKIINewNav_dspic/sources;.;sources;C:/Users/User/SLUGS/apcode_2011b;C:/Users/User/SLUGS/mavlink/include/slugs;C:/Users/User/SLUGS/apcode_2011b/clib;C:/PROGRA~2/MICROC~1/MPLABC~1/include;C:/PROGRA~1/MATLAB/R2011b/simulink/include;C:/PROGRA~1/MATLAB/R2011b/extern/include;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src;C:/PROGRA~1/MATLAB/R2011b/rtw/c/ert;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/common;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/custom;C:/PROGRA~1/MATLAB/R2011b/simulink/src"/>
-        <property key="fill-flash-options-addr" value=""/>
-        <property key="fill-flash-options-const" value=""/>
-        <property key="fill-flash-options-how" value="0"/>
-        <property key="fill-flash-options-inc-const" value="1"/>
-        <property key="fill-flash-options-increment" value=""/>
-        <property key="fill-flash-options-seq" value=""/>
-        <property key="fill-flash-options-what" value="0"/>
         <property key="general-code-protect" value="no_code_protect"/>
         <property key="general-write-protect" value="no_write_protect"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="heap-size" value=""/>
         <property key="input-libraries" value=""/>
-        <property key="linker-stack" value="true"/>
         <property key="linker-symbols" value=""/>
         <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
         <property key="oXC16ld-extra-opts" value=""/>
@@ -209,8 +200,6 @@
         <property key="legacy-libc" value="false"/>
         <property key="oXC16glb-macros" value=""/>
         <property key="output-file-format" value="elf"/>
-        <property key="relaxed-math" value="false"/>
-        <property key="save-temps" value="false"/>
       </C30Global>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
@@ -273,7 +262,6 @@
         <property key="programoptions.preserveprogramrange.end" value="0x2abff"/>
         <property key="programoptions.preserveprogramrange.start" value="0x0"/>
         <property key="programoptions.preserveuserid" value="false"/>
-        <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
         <property key="programoptions.usehighvoltageonmclr" value="false"/>
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
