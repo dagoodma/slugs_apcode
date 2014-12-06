@@ -26,34 +26,24 @@ THE SOFTWARE.
 #include "eepLoader.h"
 
 int8_t EEPInit(void) {
-    int8_t eepInitMsg = SUCCESS;
+    int8_t result = SUCCESS;
+    result = (int8_t)DataEEInit();
 
-    // Initialize the EEPROM emulation and read the PID Data
-    eepInitMsg = (int8_t)DataEEInit();
-
-    if (eepInitMsg == EEPROM_ERROR_PAGE_EXPIRED){
-        mlPending.statustext++;
-
-        mlStatustext.severity = MAV_SEVERITY_ERROR;
-        strncat(mlStatustext.text, "Page expired while initializing EEPROM.", 49);
-        //mlStatustext.text = "Page expired while initializing EEPROM.";
-    } else if (eepInitMsg == EEPROM_ERROR_MEMORY_CORRUPTED){
-        mlPending.statustext++;
-
-        mlStatustext.severity = MAV_SEVERITY_ERROR;
-        strncat(mlStatustext.text, "Memory corrupted while initializing EEPROM.", 49);
-        //mlStatustext.text = "Memory corrupted while initializing EEPROM.";
-    }
-
-   return eepInitMsg;
+    return result;
 }
 
 /**
  * Loads parameters, waypoints, and mid-level commands from EEPROM.
+ * @return SUCCESS of FAILURE
  */
-void loadAllEEPData(void) {
-    readParamsInEeprom();
-    readWaypointsInEeprom();
+int8_t loadAllEEPData(void) {
+    int8_t result = readParamsInEeprom();
+    if (readWaypointsInEeprom() == FAILURE)
+        result = FAILURE;
+    if (readMidLevelCommandsInEeprom() == FAILURE)
+        result = FAILURE;
+
+    return result;
 }
 
 /**
@@ -61,13 +51,13 @@ void loadAllEEPData(void) {
  * @param startingWp index to clear from
  * @return SUCCESS or ERROR
  */
-int8_t eraseWaypointsInEeprom(uint8_t startingWp) {
+int8_t eraseWaypointsInEepromFrom(uint8_t startingWp) {
     int8_t writeSuccess = SUCCESS;
     uint8_t indx, indexOffset;
     tFloatToChar tempFloat;
 
     // erase the flash values in EEPROM emulation
-    for (indx = startingWp; indx < MAX_NUM_WPS - 1; indx++) {
+    for (indx = startingWp; indx < MAX_NUM_WPS; indx++) {
         // Compute the adecuate index offset
         indexOffset = indx * 8;
 
@@ -98,7 +88,7 @@ int8_t eraseWaypointsInEeprom(uint8_t startingWp) {
  * @return Zero on success, or an error code.
  * @todo Check if all mission parameters are recorded.
  */
-int8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp) {
+int8_t storeWaypointInEeprom(mavlink_mission_item_t* mlSingleWp) {
     uint8_t indexOffset = 0, indx= 0;
     int8_t writeSuccess = SUCCESS;
     tFloatToChar tempFloat;
@@ -253,7 +243,7 @@ int8_t readWaypointsInEeprom (void) {
     uint8_t i;
     tFloatToChar tempShData;
 
-    for(i = 0; i < MAX_NUM_WPS; i++ ){
+    for(i = 0; i < MAX_NUM_WPS; i++ ) {
         // Way Points
         tempShData.shData[0]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM);
         tempShData.shData[1]= DataEERead(WPS_OFFSET+i*WP_SIZE_IN_EEPROM+1);
@@ -274,8 +264,18 @@ int8_t readWaypointsInEeprom (void) {
 
     // Compute the waypoint count
     mlWpValues.wpCount = 0;
-    while ((int)(mlWpValues.lat[mlWpValues.wpCount]) != 0 && (mlWpValues.wpCount< MAX_NUM_WPS - 1) ){
+    while ((int)(mlWpValues.lat[mlWpValues.wpCount]) != 0 && (mlWpValues.wpCount < ORIGIN_WP_INDEX) ){
         mlWpValues.wpCount++;
+    }
+
+    mlPending.miTotalMissions = mlWpValues.wpCount; // must set this or ignores missions
+    mlPending.miCurrentMission = 0;
+    
+    // Don't overwrite a pending message
+    if (!mlPending.statustext) {
+        mlStatustext.severity = MAV_SEVERITY_INFO;
+        sprintf(mlStatustext.text, "Read %d waypoints from EEPROM.",mlWpValues.wpCount);
+        mlPending.statustext++;
     }
 
     return mlWpValues.wpCount;

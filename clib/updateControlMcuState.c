@@ -71,9 +71,9 @@ unsigned char getHilOnOff (void){
 
 void getGSLocation(float* altLatLon) {
 
-    altLatLon[0] = mlWpValues.alt[MAX_NUM_WPS-1]  * 0.001;
-    altLatLon[1] = mlWpValues.lat[MAX_NUM_WPS-1]  * 0.0000001;
-    altLatLon[2] = mlWpValues.lon[MAX_NUM_WPS-1]  * 0.0000001;
+    altLatLon[0] = mlWpValues.alt[ORIGIN_WP_INDEX];
+    altLatLon[1] = mlWpValues.lat[ORIGIN_WP_INDEX];
+    altLatLon[2] = mlWpValues.lon[ORIGIN_WP_INDEX];
 }
 
 uint8_t getLightsOnOff (void){

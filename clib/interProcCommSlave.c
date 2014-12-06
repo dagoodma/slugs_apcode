@@ -47,8 +47,6 @@ struct CircBuffer spiBuffer;
 CBRef protBuffer;
 
 void controlMCUInit(void) {
-    //unsigned char eepInitMsg = 0;
-
     // Initialize the SPI Port for IPC
     spiSlaveInit();
 
@@ -65,20 +63,23 @@ void controlMCUInit(void) {
 #endif
 
     // Initialize EEPROM emulator and Load Data from EEPROM if the initialization worked
-    if (EEPInit() == EEP_MEMORY_OK) {
-        loadAllEEPData();
+    int8_t eepromResult = EEPInit();
+    if (eepromResult == SUCCESS) {
+        eepromResult = loadAllEEPData();
+        if (eepromResult != SUCCESS)
+            prepareTransmitTextMessage("Failed loading eeprom data.",MAV_SEVERITY_ERROR);
     }
-
-    // Initialize default parameters
-
-    // Comment out MAVLINK_TELEMETRY_RATE in apDefinitions.h to disable this feature
-#ifdef MAVLINK_TELEMETRY_RATE
-    // Default parameter
-    if (mlParamInterface.param[PAR_RATE_TELEMETRY] >= MAVLINK_TELEMETRY_RATE
-            || mlParamInterface.param[PAR_RATE_TELEMETRY] <= 0.0f
-            || !isFinite(mlParamInterface.param[PAR_RATE_TELEMETRY]))
-        mlParamInterface.param[PAR_RATE_TELEMETRY] = MAVLINK_TELEMETRY_RATE; // (Hz)
-#endif
+    else {
+        if (eepromResult == EEPROM_ERROR_PAGE_EXPIRED)
+            prepareTransmitTextMessage("Page expired while initializing EEPROM.",
+                    MAV_SEVERITY_ERROR);
+        else if (eepromResult == EEPROM_ERROR_MEMORY_CORRUPTED)
+            prepareTransmitTextMessage("Memory corrupted while initializing EEPROM.",
+                    MAV_SEVERITY_ERROR);
+        else
+            prepareTransmitTextMessage("Unknown error while initializing EEPROM.",
+                    MAV_SEVERITY_ERROR);
+    }
 
     // Turn the reboot flag on
     mlBoot.version = 1;

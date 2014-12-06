@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include "mavlink.h"
 #include "apDefinitions.h"
 
@@ -43,7 +44,8 @@ extern "C" {
     extern mavlink_statustext_t mlStatustext;
 
     // Others
-    extern BOOL sendCommandAcknowledgement;
+    extern bool sendCommandAcknowledgement;
+    extern bool sendGpsOriginMessage;
 
 
     void mavlinkInit(void);

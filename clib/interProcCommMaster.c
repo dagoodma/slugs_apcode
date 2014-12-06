@@ -36,6 +36,7 @@ THE SOFTWARE.
 // Code by: Mariano I. Lizarraga
 // First Revision: Aug 31 2008 @ 22:45
 // =========================================================
+#include <stdbool.h>
 #include "interProcCommMaster.h"
 
 void spiMasterInit(void) {
@@ -106,17 +107,21 @@ void spiSend(unsigned char * data2Send) {
             // Handle message
             switch (msg.msgid) {
                 case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:
-                    memset(&mlGSLocation, 0, sizeof (mavlink_set_gps_global_origin_t));
-
+                    memset(&mlGSLocation, 0, sizeof (mavlink_set_gps_global_origin_t));\
                     mavlink_msg_set_gps_global_origin_decode(&msg, &mlGSLocation);
 
-                    mlGSLocationFloat.lat = (float)(mlGSLocation.latitude);
-                    mlGSLocationFloat.lon = (float)(mlGSLocation.longitude);
-                    mlGSLocationFloat.alt = (float)(mlGSLocation.altitude);
+                    // Copy and convert for getGSLocation function
+                    mlGSLocationFloat.lat = INT32_1E7_TO_FLOAT(mlGSLocation.latitude);
+                    mlGSLocationFloat.lon = INT32_1E7_TO_FLOAT(mlGSLocation.longitude);
+                    mlGSLocationFloat.alt = INT32_1E3_TO_FLOAT(mlGSLocation.altitude);
 
+                    // Send DEBUG message
+                    sendGpsOriginMessage = true;
+
+                    // Send command ack
                     mlCommandAck.command = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN;
                     mlCommandAck.result = MAV_RESULT_ACCEPTED;
-                    sendCommandAcknowledgement = TRUE;
+                    sendCommandAcknowledgement = true;
                     break;
 
                 case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:

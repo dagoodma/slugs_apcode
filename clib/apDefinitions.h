@@ -95,6 +95,7 @@ typedef char BOOL;
 
     // Maximun Number of WPs and PIDs
 #define MAX_NUM_WPS		17
+#define ORIGIN_WP_INDEX		MAX_NUM_WPS - 1
 
     // Age limit of heartbeat to consider that the UAV has lost comm with GC
 #define HEARTBEAT_LIMIT 6000  // 30 seconds

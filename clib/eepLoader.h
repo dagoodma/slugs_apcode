@@ -57,8 +57,8 @@ THE SOFTWARE.
  */
 
 int8_t EEPInit (void);
-void loadAllEEPData (void); // TODO add error handling to this function
-int8_t eraseWaypointsInEeprom(uint8_t startingWp);
+int8_t loadAllEEPData (void); 
+int8_t eraseWaypointsInEepromFrom(uint8_t startingWp);
 int8_t storeWaypointInEeprom (mavlink_mission_item_t* mlSingleWp);
 int8_t storeParameterInEeprom (float parameter, uint8_t pmIndex);
 int8_t storeAllParamsInEeprom (void);

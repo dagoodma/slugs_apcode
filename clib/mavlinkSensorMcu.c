@@ -1,11 +1,13 @@
 
+#include <stdbool.h>
 #include "mavlinkSensorMcu.h"
 #include "apDefinitions.h"
 
 
 // Declare the global structures that will hold the state of the Sensor MCU
 
-BOOL sendCommandAcknowledgement; // used for IPC of command acks to control MCU
+bool sendCommandAcknowledgement; // used for IPC of command acks to control MCU
+bool sendGpsOriginMessage;
 
 
 mavlink_raw_imu_t mlRawImuData;
@@ -75,6 +77,7 @@ void mavlinkInit(void) {
     memset(&mlStatustext, 0, sizeof(mavlink_statustext_t));
 
     // Flags
-    sendCommandAcknowledgement = FALSE;
+    sendCommandAcknowledgement = false;
+    sendGpsOriginMessage  = false;
 
 }

@@ -69,7 +69,7 @@ void magDebugUartConfig(void){
 
 	// U2BRG Register
 	// ==============
-	U2BRG = LOG_UBRG;				// Set the baud rate for data logger
+	U2BRG = RADIO_BAUDRATE_GENERATOR;				// Set the baud rate for data logger
 
 	// Initialize the Interrupt  
   	// ========================

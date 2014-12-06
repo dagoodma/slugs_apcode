@@ -19,6 +19,7 @@ static uint8_t periodicCounter, responseCounter;
 
 // UART1 circular buffer for logging mavlink messages
 #ifdef RECORD_TO_LOGGER
+bool loggerReady = false;
 static uint8_t loggerCounter; // round-robin log counter
 static struct CircBuffer _uart1BufferOut;
 static CBRef uart1BufferOut;
@@ -43,7 +44,6 @@ float fl_temp1, fl_temp2;
 static void _uart1OutputToDMA1(uint16_t size);
 static void _uart2OutputToDMA2(uint16_t size);
 static void _logTelemetryMavlink(void);
-static void _send2Logger(unsigned char* buf, uint16_t bufLen);
 
 // -- Parameter and mission Messages --
 static void _prepareTransmitParameter(uint16_t id);
@@ -54,9 +54,6 @@ static void _prepareTransmitMissionItem(uint8_t currentMissionIndex);
 static void _prepareTransmitMissionRequest(uint8_t currentMissionIndex);
 
 //-- Outgoing Mavlink Messages --
-static void _prepareTransmitCommandAck(uint16_t commandId, uint8_t result);
-static void _prepareTransmitTextMessage(const char *message, uint8_t severity);
-
 static uint8_t _prepareGpsMavlink(unsigned char *buf);
 static uint8_t _prepareHeartbeatMavlink(unsigned char *buf);
 static uint8_t _prepareGpsTimeMavlink(unsigned char *buf);
@@ -164,6 +161,47 @@ void uart1Init(void) {
     U1STAbits.UTXEN = 1; // Enable TX
 
     IEC4bits.U1EIE = 1; // interrupt on UART1 errors
+
+    // Wait for logger
+                loggerReady = true;
+    /*
+    LED_CTRL_BUSY_TOGGLE();
+    uint32_t timeoutCounter = 0xffffff;
+    uint8_t i = 0;
+    uint8_t expect[3] = {'1', '2', '<' };
+    char *error[3] = {"UART", "SD card", "system"};
+
+    while  (!loggerReady && timeoutCounter > 0) {
+        
+        while(U2STAbits.URXDA != 0) {
+            uint8_t c = (uint8_t)U2RXREG;
+            // If we got the first expected, expect the rest
+            if (i > 0) {
+                if (expect[i] != c) {
+                    mlStatustext.severity = MAV_SEVERITY_ERROR;
+                    sprintf(mlStatustext.text, "Failed initializing logger: %s",
+                        error[i]);
+                    mlPending.statustext++;
+                    LED_CTRL_BUSY_TOGGLE();
+                    return;
+                }
+                i++;
+            }
+            else {
+                i += expect[i] == c;
+            }
+
+            if (i == 3) {
+                loggerReady = true;
+            }
+        }
+        timeoutCounter--;
+    }
+    if (!loggerReady) {
+        prepareTransmitTextMessage("Timed out initializing logger.", MAV_SEVERITY_ERROR);
+    }
+    LED_CTRL_BUSY_TOGGLE();
+*/
 #endif
 }
 
@@ -304,8 +342,11 @@ void gsRead(unsigned char* gsChunk) {
  * @param buf is a pointer to the buffer with messages to send
  * @param bufLen is the length of bytes to send
  */
-static void _send2Logger(unsigned char* buf, uint16_t bufLen) {
+void send2Logger(unsigned char* buf, uint16_t bufLen) {
     #ifdef RECORD_TO_LOGGER
+    if (!loggerReady)
+        return;
+
     unsigned int i;
 
     // add the data to the circular buffer
@@ -329,6 +370,29 @@ static void _send2Logger(unsigned char* buf, uint16_t bufLen) {
         DMA1REQbits.FORCE = 1;
     }
     #endif
+}
+
+/**
+ * Prepares to send a command acknowledgement message.
+ * @param commandId of the command to acknowledge. see MAV_CMD enum
+ * @param result of executing the command. see MAV_RESULT enum
+ */
+void prepareTransmitCommandAck(uint16_t commandId, uint8_t result) {
+    mlPending.commandAck = TRUE;
+    mlCommandAck.command = commandId;
+    mlCommandAck.result = result;
+}
+
+/**
+ * Prepares to send an error message.
+ * @param message to be sent (must be constant)
+ * @param severity see MAV_SEVERITY enum
+ * @note Uses mlStatustext. Messages are limited to 50 Hz.
+ */
+void prepareTransmitTextMessage(const char *message, uint8_t severity) {
+    mlStatustext.severity = severity;
+    strcpy(mlStatustext.text, message);
+    mlPending.statustext++;
 }
 
 /**
@@ -507,6 +571,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
         periodicCounter = (periodicCounter >= 10) ? 1 : periodicCounter + 1;
     } // if (!skipPerioidicStep)
 
+    // Response messages
     switch (responseCounter) {
         case 1: // Ctrl srfc passthrough
             // == Control Surface Passthrough ==
@@ -537,6 +602,12 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                     mlPending.piCurrentParameter = 0;
             }
             break;
+        case 6: // gps origin
+            if (mlPending.miSendOrigin) {
+                bytes2Send += _prepareGpsOriginMavlink(dataOut + 1 + bytes2Send);
+                mlPending.miSendOrigin = 0;
+            }
+            break;
         case 7: // servo output, command ack
             // == Servo Output (Raw) ==
             /* In HIL Mode, report PWM commands to Sensor MCU so they are sent
@@ -546,7 +617,6 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 _sendSpiServoOutputMavlink();
             }
 
-            // == Command Long ==
             // == Command Long ==
             if (mlPending.command != FALSE) {
                 bytes2Send += _prepareCommandLongMavlink(dataOut + 1 + bytes2Send);
@@ -626,7 +696,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
             }
             
             // == Boot ==
-            if (mlBoot.version == 1) {
+            if (mlBoot.version == 1 && !mlPending.statustext) {
                 memset(vr_message, 0, sizeof (vr_message));
                 sprintf(vr_message, "%s DSC Reboot.", "Control");
                 bytes2Send += sendQGCDebugMessage(vr_message, 255, dataOut, bytes2Send + 1);
@@ -648,9 +718,9 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
     // == GPS Global Origin ==
     // This block goes via SPI to the sensor DSC so it does not count
     // towards the Bandwith budget
-    if (mlPending.spiSendGSLocation) {
+    if (mlPending.spiSendOrigin) {
         _sendSpiSetGpsOriginMavlink();
-        mlPending.spiSendGSLocation = 0;
+        mlPending.spiSendOrigin = 0;
 
         memset(vr_message,0,sizeof(vr_message));
         sprintf(vr_message, "Sensor DSC Reboot.");
@@ -674,7 +744,7 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
     // == Attitude ==
     /* Reduce rate from 50 Hz to 2 Hz if REDUCE_RADIO_TELEMETRY is set. */
     #ifdef REDUCE_RADIO_TELEMETRY
-    if (!skipPeriodicStep && (periodicCounter % 5) == 0) {
+    if (!skipPeriodicStep && (periodicCounter % 2) == 0) {
     #endif
         bytes2Send += _prepareAttitudeMavlink(dataOut + 1 + bytes2Send);
     #ifdef REDUCE_RADIO_TELEMETRY
@@ -691,9 +761,12 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
  */
 void _logTelemetryMavlink(void) {
     #ifdef RECORD_TO_LOGGER
+    if (!loggerReady)
+        return;
+
     // Bytes to send
     uint16_t logBytes = 0;
-    uint8_t logOut[MAXSEND];
+    uint8_t logOut[255];
 
     switch (loggerCounter) {
          case 1: // GPS and Heartbeat
@@ -800,7 +873,7 @@ void _logTelemetryMavlink(void) {
     logBytes += _prepareAttitudeMavlink(logOut + logBytes);
 
     // Copy the buffer and start DMA
-    _send2Logger(logOut, logBytes);
+    send2Logger(logOut, logBytes);
 
     // increment/overflow the samplePeriod counter
     // configured for 10 Hz in non vital messages
@@ -817,7 +890,7 @@ void _logTelemetryMavlink(void) {
  */ 
 void protDecodeMavlink(uint8_t* dataIn) {
 
-    uint8_t i, indx, commChannel = dataIn[MAXSPI + 1];
+    uint8_t i, commChannel = dataIn[MAXSPI + 1];
     int8_t writeResult;
     uint32_t temp;
 
@@ -872,7 +945,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     temp = mavlink_msg_boot_get_version(&msg);
 
                     if (temp) {
-                        mlPending.spiSendGSLocation = 1;
+                        mlPending.spiSendOrigin = 1;
                     }
                     mlPending.sensorDspReady = 1;
                     /*
@@ -942,11 +1015,11 @@ void protDecodeMavlink(uint8_t* dataIn) {
                         // Turn HIL mode on/off
                         if (!hasMode(mlHeartbeatLocal.base_mode,MAV_MODE_FLAG_HIL_ENABLED)
                             && hasMode(mlSetMode.base_mode, MAV_MODE_FLAG_HIL_ENABLED)) {
-                            _prepareTransmitTextMessage("Turning on HIL mode.", MAV_SEVERITY_INFO);
+                            prepareTransmitTextMessage("Turning on HIL mode.", MAV_SEVERITY_INFO);
                         }
                         else if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_HIL_ENABLED)
                             && !hasMode(mlSetMode.base_mode,MAV_MODE_FLAG_HIL_ENABLED)) {
-                            _prepareTransmitTextMessage("Turning off HIL mode.", MAV_SEVERITY_INFO);
+                            prepareTransmitTextMessage("Turning off HIL mode.", MAV_SEVERITY_INFO);
                         }
                         mlHeartbeatLocal.base_mode = mlSetMode.base_mode;
 
@@ -998,7 +1071,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                 {
                     mavlink_msg_mid_lvl_cmds_decode(&msg, &mlMidLevelCommands);
                     // Report the Change
-                    _prepareTransmitTextMessage( "Mid level flight parameters received.",
+                    prepareTransmitTextMessage( "Mid level flight parameters received.",
                         MAV_SEVERITY_INFO);
 
                     break;
@@ -1059,6 +1132,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                  */
                 case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: {
                     //MavLinkSendGpsGlobalOrigin();  // TODO determine if we need this
+                    mlPending.miSendOrigin = 1;
                     evaluateMissionState(MISSION_EVENT_REQUEST_LIST_RECEIVED, NULL);
                     processedMissionMessage = TRUE;
 #ifdef DEBUG_MISSION_SM
@@ -1111,36 +1185,31 @@ void protDecodeMavlink(uint8_t* dataIn) {
 #endif
                 } break;
                 /*** End of mission state machine ***/
-                // Got a new home location, forward it to sensor DSC
+                // Got a new home location
                 case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:
                     writeResult = SUCCESS;
 
+                    // Forward origin to sensor DSC
                     memset(&mlSingleWp, 0, sizeof (mavlink_mission_item_t));
                     mavlink_msg_set_gps_global_origin_decode(&msg, &mlGSLocation);
                     addMessageToSpiOut(&msg);   
 
-                    mlSingleWp.x = (float) (mlGSLocation.latitude);
-                    mlSingleWp.y = (float) (mlGSLocation.longitude);
-                    mlSingleWp.z = (float) (mlGSLocation.altitude);
+                    // Save origin and record in ROM
+                    writeResult = setMissionOrigin(
+                            INT32_1E7_TO_FLOAT(mlGSLocation.latitude),
+                            INT32_1E7_TO_FLOAT(mlGSLocation.longitude),
+                            INT32_1E3_TO_FLOAT(mlGSLocation.altitude));
 
-                    indx = (uint8_t) MAX_NUM_WPS - 1;
-
-                    mlWpValues.lat[indx] = mlSingleWp.x;
-                    mlWpValues.lon[indx] = mlSingleWp.y;
-                    mlWpValues.alt[indx] = mlSingleWp.z;
-                    mlWpValues.type[indx] = MAV_CMD_NAV_LAND;
-                    mlWpValues.orbit[indx] = 0;
-
-                    // Record the data in EEPROM
-                    writeResult = storeWaypointInEeprom(&mlSingleWp);
+                    // Respond with origin
+                    mlPending.miSendOrigin = 1;
 
                     // Send a message with result
                     if (writeResult != SUCCESS) {
-                        _prepareTransmitTextMessage("Failed to write origin to EEPROM.",
+                        prepareTransmitTextMessage("Failed to write origin to EEPROM.",
                                 MAV_SEVERITY_ERROR);
                     }
                     else {
-                        _prepareTransmitTextMessage("Wrote origin to EEPROM.",
+                        prepareTransmitTextMessage("Wrote origin to EEPROM.",
                                 MAV_SEVERITY_INFO);
                     }
                     break;
@@ -1167,7 +1236,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     mavlink_msg_command_ack_decode(&msg, &mlCommandAck);
                     switch (mlCommandAck.command) {
                         case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:
-                            _prepareTransmitTextMessage("Sensor DSC origin set.",
+                            prepareTransmitTextMessage("Sensor DSC origin set.",
                                 MAV_SEVERITY_INFO);
                             break;
                         default:
@@ -1196,7 +1265,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             else if (mlCommand.param2 == 1.0f) { // write
                             }
                             
-                            _prepareTransmitCommandAck(MAV_CMD_PREFLIGHT_STORAGE,
+                            prepareTransmitCommandAck(MAV_CMD_PREFLIGHT_STORAGE,
                                 ((writeResult == SUCCESS)? MAV_RESULT_ACCEPTED : MAV_RESULT_FAILED)
                             );
 
@@ -1212,16 +1281,16 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             else if (mlCommand.param1 == 1.0f) { // write
                                 writeResult = storeMidLevelCommandsInEeprom();
                                 if (writeResult == SUCCESS) {
-                                    _prepareTransmitTextMessage("Wrote mid-level commands to EEPROM.",
+                                    prepareTransmitTextMessage("Wrote mid-level commands to EEPROM.",
                                         MAV_SEVERITY_INFO);
                                 }
                                 else {
-                                    _prepareTransmitTextMessage("Failed to write mid-level commands to EEPROM.",
+                                    prepareTransmitTextMessage("Failed to write mid-level commands to EEPROM.",
                                         MAV_SEVERITY_ERROR);
                                 }
                             }
 
-                            _prepareTransmitCommandAck(MAV_CMD_MIDLEVEL_STORAGE,
+                            prepareTransmitCommandAck(MAV_CMD_MIDLEVEL_STORAGE,
                                 ((writeResult == SUCCESS)? MAV_RESULT_ACCEPTED : MAV_RESULT_FAILED));
                             break;
 
@@ -1229,19 +1298,19 @@ void protDecodeMavlink(uint8_t* dataIn) {
                             mlRTB.rtb = TRUE;
                             mlRTB.track_mobile = mlCommand.param1;
 
-                            _prepareTransmitCommandAck(MAV_CMD_RETURN_TO_BASE, MAV_RESULT_ACCEPTED);
+                            prepareTransmitCommandAck(MAV_CMD_RETURN_TO_BASE, MAV_RESULT_ACCEPTED);
                             break;
 
                         case MAV_CMD_TURN_LIGHT:
                             mlLights.state = mlCommand.param2;
                             mlLights.type = mlCommand.param1;
 
-                            _prepareTransmitCommandAck(MAV_CMD_TURN_LIGHT, MAV_RESULT_ACCEPTED);
+                            prepareTransmitCommandAck(MAV_CMD_TURN_LIGHT, MAV_RESULT_ACCEPTED);
                             break;
                         case MAV_CMD_GET_MID_LEVEL_COMMANDS:
                             mlPending.midLvlCmds = 1;
 
-                            _prepareTransmitCommandAck(MAV_CMD_GET_MID_LEVEL_COMMANDS, MAV_RESULT_ACCEPTED);
+                            prepareTransmitCommandAck(MAV_CMD_GET_MID_LEVEL_COMMANDS, MAV_RESULT_ACCEPTED);
                             break;
 
                     } // switch COMMAND_LONG
@@ -1273,7 +1342,7 @@ void protDecodeMavlink(uint8_t* dataIn) {
                     mavlink_msg_isr_location_decode(&msg, &mlISR);
                     mlPending.isrLoc = 1;
 
-                    _prepareTransmitTextMessage("ISR position recieved.", MAV_SEVERITY_INFO);
+                    prepareTransmitTextMessage("ISR position recieved.", MAV_SEVERITY_INFO);
                     break;
      
             } // switch	
@@ -1338,11 +1407,13 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
             }                // Otherwise if a mission count was received, prepare to receive new missions.
             else if (event == MISSION_EVENT_COUNT_RECEIVED) {
                 // Don't allow for writing of new missions if we're in autonomous mode.
-                // TODO determine if we need this (safety feature)
-                if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)) {
+                if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)
+                        && mlHeartbeatLocal.custom_mode == SLUGS_MODE_WAYPOINT) {
                     _prepareTransmitMissionAck(MAV_MISSION_ERROR);
                     nextState = MISSION_STATE_INACTIVE;
-                    // break; // stop handling count received (boat code missing this)
+                    prepareTransmitTextMessage("Cannot add waypoints in autonomous mode.",
+                        MAV_SEVERITY_WARNING);
+                    break; // stop handling count received (boat code missing this)
                 }
                 uint8_t newListSize = *(uint8_t *) data;
 
@@ -1351,7 +1422,7 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                     _prepareTransmitMissionAck(MAV_MISSION_ERROR);
                     nextState = MISSION_STATE_INACTIVE;
                 }                    // If there isn't enough room, respond with a MISSION_ACK error.
-                else if (newListSize > MAX_NUM_WPS) {
+                else if (newListSize >= ORIGIN_WP_INDEX) {
                     _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
                     nextState = MISSION_STATE_INACTIVE;
                 }                    // Otherwise we're set to start retrieving a new mission list so we request the first mission.
@@ -1362,7 +1433,7 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                     // Clear all the old waypoints.
                     int8_t result = clearMissionList();
                     if (result != SUCCESS) {
-                        _prepareTransmitTextMessage("Failed to clear mission list in EEPROM.",
+                        prepareTransmitTextMessage("Failed to clear mission list in EEPROM.",
                                 MAV_SEVERITY_ERROR);
                     }
 
@@ -1379,24 +1450,29 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                 }
             } else if (event == MISSION_EVENT_CLEAR_ALL_RECEIVED) {
                 // If we're in autonomous mode, don't allow for clearing the mission list
-                if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)) {
+                if (hasMode(mlHeartbeatLocal.base_mode, MAV_MODE_FLAG_AUTO_ENABLED)
+                        && mlHeartbeatLocal.custom_mode == SLUGS_MODE_WAYPOINT) {
                     _prepareTransmitMissionAck(MAV_MISSION_ERROR);
                     nextState = MISSION_STATE_INACTIVE;
+                        prepareTransmitTextMessage("Cannot clear waypoints in autonomous mode.",
+                                MAV_SEVERITY_WARNING);
                 }                    // But if we're in manual mode, go ahead and clear everything.
                 else {
                     // Clear the old list
                     int8_t result = clearMissionList();
                     if (result != SUCCESS) {
-                        _prepareTransmitTextMessage("Failed to clear mission list in EEPROM.",
+                        prepareTransmitTextMessage("Failed to clear mission list in EEPROM.",
                                 MAV_SEVERITY_ERROR);
+                        _prepareTransmitMissionAck(MAV_MISSION_ERROR);
                     }
+                    else {
+                        // TODO determine if we need this
+                        // Update the starting point to the vehicle's current location
+                        //SetStartingPointToCurrentLocation();
 
-                    // TODO determine if we need this
-                    // Update the starting point to the vehicle's current location
-                    //SetStartingPointToCurrentLocation();
-
-                    // And then send our acknowledgement.
-                    _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                        // And then send our acknowledgement.
+                        _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                    }
                     nextState = MISSION_STATE_INACTIVE;
                 }
             } else if (event == MISSION_EVENT_SET_CURRENT_RECEIVED) {
@@ -1647,7 +1723,7 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                         }
                     } // If we've run out of space before the last message, respond saying so.
                     else {
-                        _prepareTransmitTextMessage("Failed to add mission in EEPROM.",
+                        prepareTransmitTextMessage("Failed to add mission in EEPROM.",
                                 MAV_SEVERITY_ERROR);
                         _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
                         nextState = MISSION_STATE_INACTIVE;
@@ -1870,30 +1946,6 @@ void evaluateParameterState(enum PARAM_EVENT event, const void *data)
 }
 
 // **** Private functions ****
-
-
-/**
- * Prepares to send a command acknowledgement message.
- * @param commandId of the command to acknowledge. see MAV_CMD enum
- * @param result of executing the command. see MAV_RESULT enum
- */
-static void _prepareTransmitCommandAck(uint16_t commandId, uint8_t result) {
-    mlPending.commandAck = TRUE;
-    mlCommandAck.command = commandId;
-    mlCommandAck.result = result;
-}
-
-/**
- * Prepares to send an error message.
- * @param message to be sent (must be constant)
- * @param severity see MAV_SEVERITY enum
- * @note Uses mlStatustext. Messages are limited to 50 Hz.
- */
-static void _prepareTransmitTextMessage(const char *message, uint8_t severity) {
-    mlStatustext.severity = severity;
-    strcpy(mlStatustext.text, message);
-    mlPending.statustext++;
-}
 
 /**
  * Queues a parameter to be transmitted.
@@ -2237,9 +2289,9 @@ static uint8_t _prepareGpsOriginMavlink(unsigned char *buf) {
     mavlink_msg_gps_global_origin_pack(SLUGS_SYSTEMID,
         SLUGS_COMPID,
         &mavlinkMessageBuffer,
-        mlWpValues.lat[MAX_NUM_WPS - 1],
-        mlWpValues.lon[MAX_NUM_WPS - 1],
-        mlWpValues.alt[MAX_NUM_WPS - 1]
+        FLOAT_TO_INT32_1E7(mlWpValues.lat[ORIGIN_WP_INDEX]),
+        FLOAT_TO_INT32_1E7(mlWpValues.lon[ORIGIN_WP_INDEX]),
+        FLOAT_TO_INT32_1E3(mlWpValues.alt[ORIGIN_WP_INDEX])
         );
     return mavlink_msg_to_send_buffer(buf, &mavlinkMessageBuffer);
 }
@@ -2364,9 +2416,9 @@ static void _sendSpiSetGpsOriginMavlink(void) {
         SLUGS_COMPID,
         &mavlinkMessageBuffer,
         SLUGS_SYSTEMID, // target system ID
-        mlWpValues.lat[MAX_NUM_WPS - 1],
-        mlWpValues.lon[MAX_NUM_WPS - 1],
-        mlWpValues.alt[MAX_NUM_WPS - 1]
+        FLOAT_TO_INT32_1E7(mlWpValues.lat[ORIGIN_WP_INDEX]),
+        FLOAT_TO_INT32_1E7(mlWpValues.lon[ORIGIN_WP_INDEX]),
+        FLOAT_TO_INT32_1E3(mlWpValues.alt[ORIGIN_WP_INDEX])
         );
     addMessageToSpiOut(&mavlinkMessageBuffer);
 }

@@ -40,7 +40,8 @@ THE SOFTWARE.
 // Code by: Mariano I. Lizarraga
 // First Revision: Aug 26 2008 @ 21:15
 // =========================================================
-
+#include <stdio.h>
+#include <stdbool.h>
 #include "ipcScheduler.h"
 
 
@@ -104,7 +105,7 @@ void schedulerInit(void) {
 
     // U2BRG Register
     // ==============
-    U2BRG = LOG_UBRG; // Set the baud rate for data logger
+    U2BRG = RADIO_BAUDRATE_GENERATOR; // Set the baud rate for data logger
 
     // Initialize the Interrupt  
     // ========================
@@ -143,7 +144,7 @@ void copyBufferToDMA(unsigned char size) {
 
 void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
-    static BOOL sentHILMessage = FALSE;
+    static bool sentHILMessage = false;
 
     // Generic message container used to pack the messages
     mavlink_message_t msg;
@@ -183,14 +184,14 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
                     mavlink_msg_statustext_encode(SLUGS_SYSTEMID,
                         SLUGS_COMPID, &msg, &mlStatustext);
                     bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-                    sentHILMessage = TRUE;
+                    sentHILMessage = true;
 
                     memset(&msg, 0, sizeof (mavlink_message_t));
                 }
                 
 
             }
-            else if (sentHILMessage) { sentHILMessage = FALSE; }
+            else if (sentHILMessage) { sentHILMessage = false; }
 
             mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
                 SLUGS_COMPID,
@@ -295,6 +296,19 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             break;
 
         case 9: // Raw Pressure
+            // Send status text message
+            if (sendGpsOriginMessage) {
+                sprintf(mlStatustext.text,"Sensor origin: %.2f %.2f %.1f",
+                    mlGSLocationFloat.lat, mlGSLocationFloat.lon, mlGSLocationFloat.alt);
+                mlStatustext.severity = MAV_SEVERITY_INFO;
+                mavlink_msg_statustext_encode(SLUGS_SYSTEMID,
+                    SLUGS_COMPID, &msg, &mlStatustext);
+                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                sendGpsOriginMessage = false;
+            }
+            
+            // Raw pressure
+            memset(&msg, 0, sizeof (mavlink_message_t));
             mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
                 SLUGS_COMPID,
                 &msg,
@@ -314,7 +328,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
                     &mlCommandAck);
                 // Copy the message to the send buffer
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-                sendCommandAcknowledgement = FALSE;
+                sendCommandAcknowledgement = false;
             }
 
             // clear the msg
@@ -366,6 +380,8 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
         &mlLocalPositionData);
     // Copy the message to the send buffer
     bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+
+    // Send pending status
 
 
     // Put the length of the message in the first byte of the outgoing array

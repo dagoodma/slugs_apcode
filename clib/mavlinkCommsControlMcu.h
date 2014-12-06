@@ -28,7 +28,8 @@ extern "C" {
 // **** Include libraries ****
 // Standard libraries
 #include <string.h>    
-#include <stdio.h>	
+#include <stdio.h>
+#include <stdint.h>
 
 // Microchip libraries
 #include <p33fxxxx.h>   
@@ -54,9 +55,9 @@ extern "C" {
 //#define DEBUG_MISSION_SM  // comment this out to disable mission state machine
                             // debug messages sent to groundstation
 
-//#define REDUCE_RADIO_TELEMETRY // comment to send full 38,400 bps telemetry over radio
+#define REDUCE_RADIO_TELEMETRY // comment to send full 38,400 bps telemetry over radio
 
-//#define RECORD_TO_LOGGER // comment this out to disable recording messages to logger
+#define RECORD_TO_LOGGER // comment this out to disable recording messages to logger
                          // TODO send full telemetry stream when this is disabled
                          //      instead of reduced version.
 
@@ -140,15 +141,18 @@ void uart1Init(void);
 void uart2Init(void);
 void send2GS(unsigned char* protData);
 void gsRead(unsigned char* gsChunk);
+void send2Logger(unsigned char* buf, uint16_t bufLen);
 
 void evaluateParameterState(enum PARAM_EVENT event, const void *data);
 void evaluateMissionState(enum MISSION_EVENT event, const void *data);
 
-void prepareLoggerMavlink(unsigned char* dataOut);
+//void prepareLoggerMavlink(unsigned char* dataOut); // made private
 void prepareTelemetryMavlink(unsigned char* dataOut);
 void protDecodeMavlink(uint8_t* dataIn);
 char sendQGCDebugMessage(const char * dbgMessage, char severity, unsigned char* bytesToAdd, char positionStart);
 void addMessageToSpiOut(mavlink_message_t* msg);
+void prepareTransmitCommandAck(uint16_t commandId, uint8_t result);
+void prepareTransmitTextMessage(const char *message, uint8_t severity);
 
 #ifdef __cplusplus
 }

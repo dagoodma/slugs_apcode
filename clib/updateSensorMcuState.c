@@ -58,10 +58,14 @@ void updateAttitude(float * attitudeData) {
 }
 
 void getGSLocation(float* altLatLon) {
-
+/*
     altLatLon[0] = mlGSLocationFloat.alt * 0.001;
     altLatLon[1] = mlGSLocationFloat.lat * 0.0000001;
     altLatLon[2] = mlGSLocationFloat.lon * 0.0000001;
+*/
+    altLatLon[0] = mlGSLocationFloat.alt;
+    altLatLon[1] = mlGSLocationFloat.lat;
+    altLatLon[2] = mlGSLocationFloat.lon;
 }
 
 /* Simulink sends 10's of milliseconds since boot. */

@@ -1,5 +1,6 @@
 
 #include <string.h>
+#include <stdint.h>
 #include "mavlinkControlMcu.h"
 #include "apUtils.h"
 #include "eepLoader.h"
@@ -133,7 +134,7 @@ void mavlinkInit(void)
 
     // Initialize the system Status
     mlHeartbeatLocal.base_mode = MAV_MODE_FLAG_MANUAL_INPUT_ENABLED;
-    mlHeartbeatLocal.custom_mode = SLUGS_MODE_WAYPOINT;
+    mlHeartbeatLocal.custom_mode = SLUGS_MODE_MID_LEVEL;
     mlHeartbeatLocal.system_status = MAV_STATE_ACTIVE;
     //lastNavigationMode = mlHeartbeatLocal.custom_mode;
     //mlSystemStatus.mode = MAV_MODE_MANUAL;
@@ -147,8 +148,8 @@ void mavlinkInit(void)
     mlBoot.version = 1;
 
     // Populate default mid-level commands
-    mlMidLevelCommands.hCommand = 120.0f; // altitude (m)
-    mlMidLevelCommands.uCommand = 16.0f; // airspeed (m/s)
+    mlMidLevelCommands.hCommand = 0.0f; // altitude (m)
+    mlMidLevelCommands.uCommand = 0.0f; // airspeed (m/s)
     mlMidLevelCommands.rCommand = 0.0f; // turn rate (radians/s)
 
 
@@ -226,18 +227,48 @@ int8_t setParameterByName(const char *name, float value) {
 }
 
 /**
+ * Sets the origin location and saves it to EEPROM.
+ * @return SUCCESS or FAILURE of EEPROM write.
+ * @note preserves origin
+ */
+int8_t setMissionOrigin(float lat, float lon, float alt) {
+    int8_t writeResult = SUCCESS;
+
+    // Save to mission list and ROM
+    memset(&mlSingleWp, 0, sizeof(mavlink_mission_item_t));
+    mlSingleWp.x =  lat;
+    mlSingleWp.y = lon;
+    mlSingleWp.z =  alt;
+    mlSingleWp.command = MAV_CMD_NAV_LAND;
+    mlSingleWp.param3 = 0.0f;
+    mlSingleWp.seq = ORIGIN_WP_INDEX;
+
+    writeResult = addMission(&mlSingleWp);
+    return writeResult;
+}
+
+/**
  * Clear missions (waypoints) from memory
  * @return SUCCESS or FAILURE of EEPROM write.
+ * @note preserves origin
  */
 int8_t clearMissionList(void) {
     int8_t writeResult = SUCCESS;
+
+    // Save origin before clearing
+    float lat = mlWpValues.lat[ORIGIN_WP_INDEX];
+    float lon = mlWpValues.lon[ORIGIN_WP_INDEX];
+    float alt = mlWpValues.alt[ORIGIN_WP_INDEX];
+
+    // Clear list
     memset(&mlWpValues, 0, sizeof (mavlink_mission_item_values_t));
-
-    writeResult = eraseWaypointsInEeprom(0);
-
+    writeResult = eraseWaypointsInEepromFrom(0);
     mlWpValues.wpCount = 0;
     mlPending.miCurrentMission = 0;
     mlPending.miTotalMissions = 0;
+
+    // Reload origin
+    writeResult += setMissionOrigin(lat, lon, alt);
 
     return writeResult;
 }
@@ -254,13 +285,11 @@ int8_t addMission(mavlink_mission_item_t *mission)
     mlWpValues.lat[index] = mission->x;
     mlWpValues.lon[index] = mission->y;
     mlWpValues.alt[index] = mission->z;
-
     mlWpValues.type[index] = mission->command;
-
     mlWpValues.orbit[index] = (uint16_t) mission->param3;
 
-    // Clear all waypoints up to and after the index of this waypoint
-    writeResult = eraseWaypointsInEeprom(mission->seq);
+    // Clear all waypoints at the current index, after it
+    writeResult = eraseWaypointsInEepromFrom(mission->seq);
     if (writeResult == SUCCESS) {
         // Record the data in EEPROM
         writeResult = storeWaypointInEeprom(mission);

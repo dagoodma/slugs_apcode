@@ -71,7 +71,7 @@ extern "C" {
 #define SLUGS_PARAM_NAME_LENGTH	16
 
     
-//Mission transaction states
+//Mission transaction states for mlPending
 enum MISSION_TRANSACTION {
     MISSION_TRANSACTION_NONE = 0,
     MISSION_TRANSACTION_SEND_CURRENT,
@@ -133,7 +133,6 @@ enum PARAM_TRANSACTION {
 
         // Acknowledgement counters
         uint8_t commandAck;
-        uint8_t wpAck;
 
         // Stuff to send
         uint8_t statustext;
@@ -141,34 +140,23 @@ enum PARAM_TRANSACTION {
 
         // Mission interface
         uint8_t miTransaction;
-        //uint8_t wpProtState;
         uint8_t miCurrentMission;
-        //uint8_t wpTimeOut;
         uint8_t miTotalMissions;
         uint8_t miAckType;
-        //uint8_t wpSendCurrent; // send current mission item
+        uint8_t miSendOrigin;
 
-        // Info
-        uint8_t pidIdx;
-        uint8_t wpsIdx;
-
-        //uint8_t 	requestCount;
 
         // Parameter Interface
         uint8_t piTransaction;
-        //uint8_t piProtState;
         uint8_t piCurrentParameter;
-        //uint8_t piBackToList;
-        //uint8_t piQueue[5];
-        //int8_t piQIdx;
 
-        // spi
+        // Spi
         uint8_t spiToSensor[MAXSEND];
         uint8_t spiCurrentIndex;
         uint8_t spiTotalData;
-        uint8_t spiSendGSLocation;
+        uint8_t spiSendOrigin;
 
-        // sensor dsp
+        // Sensor dsp
         uint8_t sensorDspReady;
         
         // Heartbeat status
@@ -260,6 +248,7 @@ enum PARAM_TRANSACTION {
 
     // Mission interface related
     int8_t addMission(mavlink_mission_item_t *mission);
+    int8_t setMissionOrigin(float lat, float lon, float alt);
     int8_t clearMissionList(void);
     int8_t setCurrentMission(uint8_t idx);
 
