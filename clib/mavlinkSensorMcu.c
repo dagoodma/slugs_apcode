@@ -80,4 +80,8 @@ void mavlinkInit(void) {
     sendCommandAcknowledgement = false;
     sendGpsOriginMessage  = false;
 
+    // Load default home location
+    mlGSLocationFloat.lat = HOME_LATITUDE;
+    mlGSLocationFloat.lon = HOME_LONGITUDE;
+    mlGSLocationFloat.alt = HOME_ALTITUDE;
 }

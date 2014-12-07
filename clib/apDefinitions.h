@@ -261,6 +261,15 @@ typedef char BOOL;
                                     LED_CTRL_STATUS_SET(OFF); \
                                 } while(0)
 
+    // -- Default Home Location --
+    // Also known as ground station location, and mission origin
+    // For HIL, this should match coordinates in apConfiguration\gsLocation.h
+
+    // UCSC, fork in village road (just south of parking space)
+    #define HOME_LATITUDE   36.988506f
+    #define HOME_LONGITUDE  -122.055308f
+    #define HOME_ALTITUDE   143.543f
+
 #ifdef __cplusplus
 }
 #endif

@@ -157,6 +157,12 @@ void mavlinkInit(void)
 
     // SPI
 
+    // Load default home location
+    (void)setMissionOrigin(HOME_LATITUDE, HOME_LONGITUDE, HOME_ALTITUDE);
+    mlGSLocation.latitude = FLOAT_TO_INT32_1E7(HOME_LATITUDE);
+    mlGSLocation.longitude = FLOAT_TO_INT32_1E7(HOME_LONGITUDE);
+    mlGSLocation.altitude = FLOAT_TO_INT32_1E7(HOME_ALTITUDE);
+
 }
 
 void populateParameterInterface(void)
