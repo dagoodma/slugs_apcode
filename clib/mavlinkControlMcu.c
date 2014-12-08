@@ -287,6 +287,7 @@ int8_t addMission(mavlink_mission_item_t *mission)
 {
     int8_t  writeResult = SUCCESS;
     uint8_t index = (uint8_t) mission->seq;
+    mlWpValues.wpCount++;
 
     mlWpValues.lat[index] = mission->x;
     mlWpValues.lon[index] = mission->y;
