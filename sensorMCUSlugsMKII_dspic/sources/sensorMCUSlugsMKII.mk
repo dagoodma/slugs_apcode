@@ -16,7 +16,7 @@
 #                                                              |
 #   Written by Lubin KERHUEL -  http://www.kerhuel.eu          |
 #  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
-#   Version 3.7e                             14-Sep-2012       |
+#   Version 3.7c                             09-Jan-2012       |
 #--------------------------------------------------------------
 
 MAKE 			 = "C:\PROGRA~1\MATLAB\R2011b\bin\win64\gmake"
@@ -91,20 +91,13 @@ NOOP = 0
 #------------------------------ Tool Locations ---------------------------------
 #
 
-GCCPATH	= 
-#GCCPATH	= 
+GCCPATH	= ''
 
-GCC1 = xc16-gcc -omf=coff
-AR1 = xc16-ar -r -omf=coff
-
-CC   = $(GCCPATH)$(GCC1) 
-CPP  = $(GCCPATH)$(GCC1) 
-#LD   = $(GCCPATH)pic30-ld 
-LD   = $(GCCPATH)$(GCC1) 
-AR   = $(GCCPATH)$(AR1) 
-
-BIN2HEX = xc16-bin2hex -omf=coff 
-# pic30-bin2hex or xc30-bin2hex
+CC   = $(GCCPATH)pic30-gcc 
+CPP  = $(GCCPATH)pic30-gcc
+#LD   = $(GCCPATH)pic30-ld  
+LD   = $(GCCPATH)pic30-gcc  
+AR   = $(GCCPATH)pic30-ar -r
 
 # parameter controlled from simulink
 
@@ -138,10 +131,10 @@ MATLAB_INCLUDES = \
 # Additional includes 
 #
 ADD_INCLUDES = \
-	-IC:\Users\User\SLUGS\apcode_2011b\sensorMCUSlugsMKII_dspic\sources \
-	-IC:\Users\User\SLUGS\apcode_2011b \
-	-IC:\Users\User\SLUGS\apcode_2011b\..\mavlink\include\slugs \
-	-IC:\Users\User\SLUGS\apcode_2011b\clib \
+	-IC:\Users\User\SLUGS\apcode_Davids_Repo\sensorMCUSlugsMKII_dspic\sources \
+	-IC:\Users\User\SLUGS\apcode_Davids_Repo \
+	-IC:\Users\User\SLUGS\apcode_Davids_Repo\..\mavlink\include\slugs \
+	-IC:\Users\User\SLUGS\apcode_Davids_Repo\clib \
 	-I$(MATLAB_ROOT)\toolbox\dsp\include \
 
 
@@ -220,7 +213,7 @@ SHARED_OBJS = $(addsuffix .o, $(basename $(SHARED_SRC)))
 ifeq ($(MODELREF_TARGET_TYPE),NONE)
 # Top-level model for RTW
 $(PRODUCT) : $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof 
-	$(GCCPATH)$(BIN2HEX) $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof 
+	$(GCCPATH)pic30-bin2hex $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof 
 		@echo "*** Converted $(MODEL).cof to $(MODEL).hex"	
 		@echo .
 		@echo "***  MPLAB: file -> import, choose $(MODEL).hex. Configure -> Configuration Bits : Verify !"
@@ -262,8 +255,8 @@ $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof : $(OBJS) $(SHARED_LIB) $(MODELREF_LINK_
 		@echo " |                     University of California at Santa Cruz   |"
 		@echo " |                     1156 High Street--SOE3                   |"
 		@echo " |                     Santa Cruz, CA 95064 - USA               |"
-	    @echo " | Version 3.7e                              14-Sep-2012        |"
-		@echo " | For Matlab 7.13            R2011b                            |"
+	    @echo " | Version 3.7c                              09-Jan-2012        |"
+		@echo " | For Matlab 7.10            R2010a                            |"
 		@echo " ================================================================"	
 	$(LD) -mcpu=$(PIC_REF) $(MODELREF_LINK_LIBS) $(LINK_OBJS) $(SYSLIBS) $(SHARED_LIB) $(LIBS) $(LDLIBPIC) -o $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof $(LDPICTYPE) $(LDFLAGS)	 
 		@echo "    ---$(PIC_REF)---"
@@ -307,19 +300,19 @@ $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof : $(OBJS) $(SHARED_LIB) $(MODELREF_LINK_
 %.o : $(MATLAB_ROOT)/rtw/c/src/ext_mode/custom/%.c
 	$(CC) -c $(CFLAGS) $<
 
-%.o : C:\Users\User\SLUGS\apcode_2011b\clib/%.c
+%.o : C:\Users\User\SLUGS\apcode_Davids_Repo\clib/%.c
 	$(CC) -c $(CFLAGS) $<
 %.o : $(MATLAB_ROOT)\rtw\c\src/%.c
 	$(CC) -c $(CFLAGS) $<
 
 
-%.o : C:\Users\User\SLUGS\apcode_2011b\clib/%.cpp
+%.o : C:\Users\User\SLUGS\apcode_Davids_Repo\clib/%.cpp
 	$(CC) -c $(CPPFLAGS) $<
 %.o : $(MATLAB_ROOT)\rtw\c\src/%.cpp
 	$(CC) -c $(CPPFLAGS) $<
 
 
-%.o : C:\Users\User\SLUGS\apcode_2011b\clib/%.s
+%.o : C:\Users\User\SLUGS\apcode_Davids_Repo\clib/%.s
 	$(CC) -c $< -Wa,-p=$(PIC_REF),-g
 %.o : $(MATLAB_ROOT)\rtw\c\src/%.s
 	$(CC) -c $< -Wa,-p=$(PIC_REF),-g

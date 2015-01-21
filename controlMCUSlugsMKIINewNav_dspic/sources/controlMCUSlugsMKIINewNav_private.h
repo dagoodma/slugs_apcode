@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model controlMCUSlugsMKIINewNav.
  *
- * Model version                        : 1.280
+ * Model version                        : 1.315
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Thu Jun 20 11:03:39 2013
+ * Real-Time Workshop file generated on : Wed Jan 21 12:06:26 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Thu Jun 20 11:03:40 2013
+ * C source code generated on           : Wed Jan 21 12:06:28 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -19,8 +19,8 @@
  *                                                              |
  *   Written by Lubin KERHUEL -  http://www.kerhuel.eu          |
  *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
- *   Version 3.7e                              14-Sep-2012      |
- *   For Matlab 7.13            R2011b                          |
+ *   Version 3.7c                              09-Jan-2012      |
+ *   For Matlab 7.10            R2010a                          |
  *--------------------------------------------------------------
  */
 
@@ -127,42 +127,40 @@ extern void getRTB(uint8_T* y1);
 extern void getMobileLocation(real32_T* y1);
 extern void getRangeOfParams(uint8_T u1, uint8_T u2,real32_T* y1);
 extern void getISRLocation(real32_T* y1);
-extern uint8_T getNavMode();
-extern uint8_T justEnabled(uint8_T u1, uint8_T u2);
 extern void getGSLocation(real32_T* y1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern void getWP(uint8_T u1,real32_T* y1);
-extern void getWP(uint8_T u1,real32_T* y1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern uint8_T justEnabled(uint8_T u1, uint8_T u2);
-extern void getWP(uint8_T u1,real32_T* y1);
-extern void setLogFloat2(real32_T* u1);
-extern void getWP(uint8_T u1,real32_T* y1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern void setLogFloat1(real32_T* u1);
-extern real32_T myAbs(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T myAbs(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T myAcos(real32_T u1);
-extern real32_T mySqrt(real32_T u1);
-extern real32_T myAcos(real32_T u1);
-extern real32_T myAbs(real32_T u1);
-extern real32_T myAbs(real32_T u1);
 extern void setDiagnosticFloat(real32_T* u1);
+extern uint8_T getNavMode();
 extern void setDiagnosticShort(int16_T* u1);
-extern void setNavNav(real32_T* u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern void getWP(uint8_T u1,real32_T* y1);
+extern void getWP(uint8_T u1,real32_T* y1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern void getWP(uint8_T u1,real32_T* y1);
+extern void getWP(uint8_T u1,real32_T* y1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T myAbs(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T myAbs(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T myAcos(real32_T u1);
+extern real32_T mySqrt(real32_T u1);
+extern real32_T myAcos(real32_T u1);
+extern real32_T myAbs(real32_T u1);
+extern real32_T myAbs(real32_T u1);
 extern real32_T mySqrt(real32_T u1);
 extern real32_T myAtan2(real32_T u1, real32_T u2);
+extern void setNavNav(real32_T* u1);
+extern void setLogFloat1(real32_T* u1);
 extern real32_T myAbs(real32_T u1);
 extern real32_T myAtan(real32_T u1);
+extern void setLogFloat2(real32_T* u1);
 extern void getRangeOfParams(uint8_T u1, uint8_T u2,real32_T* y1);
 extern real32_T getParamIdx(uint8_T u1);
 extern void getRangeOfParams(uint8_T u1, uint8_T u2,real32_T* y1);
@@ -171,7 +169,6 @@ extern void getRangeOfParams(uint8_T u1, uint8_T u2,real32_T* y1);
 extern real32_T getParamIdx(uint8_T u1);
 extern real32_T myPow(real32_T u1, real32_T u2);
 extern real32_T mySqrt(real32_T u1);
-extern void getGSLocation(real32_T* y1);
 extern void setNavLong(real32_T* u1);
 extern real32_T myCos(real32_T u1);
 extern void getRangeOfParams(uint8_T u1, uint8_T u2,real32_T* y1);

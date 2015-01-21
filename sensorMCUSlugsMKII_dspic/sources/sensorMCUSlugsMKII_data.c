@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.201
+ * Model version                        : 1.202
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Mon Jun 17 13:58:25 2013
+ * Real-Time Workshop file generated on : Fri Oct 17 12:28:40 2014
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Mon Jun 17 13:58:25 2013
+ * C source code generated on           : Fri Oct 17 12:28:41 2014
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -19,8 +19,8 @@
  *                                                              |
  *   Written by Lubin KERHUEL -  http://www.kerhuel.eu          |
  *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
- *   Version 3.7e                              14-Sep-2012      |
- *   For Matlab 7.13            R2011b                          |
+ *   Version 3.7c                              09-Jan-2012      |
+ *   For Matlab 7.10            R2010a                          |
  *--------------------------------------------------------------
  */
 
@@ -225,7 +225,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
    * Referenced by: '<S3>/Constant'
    */
   { 0.0F, 0.0F, 0.0F },
-  100.0F,                              /* Computed Parameter: Out1_Y0
+  143.543F,                            /* Computed Parameter: Out1_Y0
                                         * Referenced by: '<S162>/Out1'
                                         */
   120000.0F,                           /* Computed Parameter: u0k120k_UpperSat
