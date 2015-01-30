@@ -1702,32 +1702,38 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                 // the acknowledgment response.
                 if (mlPending.miCurrentMission == incomingMission->seq) {
                     int8_t missionAddStatus = addMission(incomingMission);
-                    if (missionAddStatus == SUCCESS) {
-                        // If this is going to be the new current mission, then we should set it as such.
-                        if (incomingMission->current) {
-                            // TODO should this be commented out?
-                            //setCurrentMission(incomingMission->seq);
-                        }
+                    // Report error, but keep saving waypoints to RAM
+                    if (missionAddStatus != SUCCESS) {
+                        prepareTransmitTextMessage("Failed to add mission in EEPROM.",
+                                MAV_SEVERITY_ERROR);
+                    }
+                    // If this is going to be the new current mission, then we should set it as such.
+                    if (incomingMission->current) {
+                        // TODO should this be commented out?
+                        //setCurrentMission(incomingMission->seq);
+                    }
 
-                        // If this was the last mission we were expecting, respond with an ACK
-                        // confirming that we've successfully received the entire mission list.
-                        if (mlPending.miCurrentMission == mavlinkNewMissionListSize - 1) {
-                            _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
-                            nextState = MISSION_STATE_INACTIVE;
-                        }
-                        // Otherwise we just increment and request the next mission.
-                        else {
-                            mlPending.miCurrentMission++;
-                            _prepareTransmitMissionRequest(mlPending.miCurrentMission);
-                            nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
-                        }
-                    } // If we've run out of space before the last message, respond saying so.
+                    // If this was the last mission we were expecting, respond with an ACK
+                    // confirming that we've successfully received the entire mission list.
+                    if (mlPending.miCurrentMission == mavlinkNewMissionListSize - 1) {
+                        _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
+                        nextState = MISSION_STATE_INACTIVE;
+                    }
+                    // Otherwise we just increment and request the next mission.
                     else {
+                        mlPending.miCurrentMission++;
+                        _prepareTransmitMissionRequest(mlPending.miCurrentMission);
+                        nextState = MISSION_STATE_MISSION_REQUEST_TIMEOUT;
+                    }
+                    //} // If we've run out of space before the last message, respond saying so.
+                    /*
+                     else {
                         prepareTransmitTextMessage("Failed to add mission in EEPROM.",
                                 MAV_SEVERITY_ERROR);
                         _prepareTransmitMissionAck(MAV_MISSION_NO_SPACE);
                         nextState = MISSION_STATE_INACTIVE;
                     }
+                    */
                 }
             }
             break;

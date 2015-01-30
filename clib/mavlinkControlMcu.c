@@ -306,7 +306,7 @@ int8_t addMission(mavlink_mission_item_t *mission)
 }
 
 /**
- * Add a mission item to the list.
+ * Sets the current mission.
  * @return SUCCESS or FAILURE whether mission was added to the list.
  */
 int8_t setCurrentMission(uint8_t idx) {
