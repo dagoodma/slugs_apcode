@@ -1433,8 +1433,9 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                     // Clear all the old waypoints.
                     int8_t result = clearMissionList();
                     if (result != SUCCESS) {
-                        prepareTransmitTextMessage("Failed to clear mission list in EEPROM.",
-                                MAV_SEVERITY_ERROR);
+                        mlPending.miEepromError = 1;
+                        //prepareTransmitTextMessage("Failed to clear mission list in EEPROM.",
+                        //        MAV_SEVERITY_ERROR);
                     }
 
                     // TODO determine if we need this
@@ -1704,8 +1705,9 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                     int8_t missionAddStatus = addMission(incomingMission);
                     // Report error, but keep saving waypoints to RAM
                     if (missionAddStatus != SUCCESS) {
-                        prepareTransmitTextMessage("Failed to add mission in EEPROM.",
-                                MAV_SEVERITY_ERROR);
+                        mlPending.miEepromError = 1;
+                        //prepareTransmitTextMessage("Failed to add mission in EEPROM.",
+                        //        MAV_SEVERITY_ERROR);
                     }
                     // If this is going to be the new current mission, then we should set it as such.
                     if (incomingMission->current) {
@@ -1716,6 +1718,11 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                     // If this was the last mission we were expecting, respond with an ACK
                     // confirming that we've successfully received the entire mission list.
                     if (mlPending.miCurrentMission == mavlinkNewMissionListSize - 1) {
+                        if (mlPending.miEepromError) {
+                            mlPending.miEepromError = 0;
+                            prepareTransmitTextMessage("Failed to add  mission(s) in EEPROM.",
+                                    MAV_SEVERITY_ERROR);
+                        }
                         _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
                         nextState = MISSION_STATE_INACTIVE;
                     }
@@ -1779,6 +1786,11 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                         // If this was the last mission we were expecting, respond with an ACK
                         // confirming that we've successfully received the entire mission list.
                         if (mlPending.miCurrentMission == mavlinkNewMissionListSize - 1) {
+                            if (mlPending.miEepromError) {
+                                mlPending.miEepromError = 0;
+                                prepareTransmitTextMessage("Failed to add  mission(s) in EEPROM.",
+                                        MAV_SEVERITY_ERROR);
+                            }
                             _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
                             nextState = MISSION_STATE_INACTIVE;
                         }                            // Otherwise we just increment and request the next mission.
@@ -1838,6 +1850,11 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
                         // If this was the last mission we were expecting, respond with an ACK
                         // confirming that we've successfully received the entire mission list.
                         if (mlPending.miCurrentMission  == mavlinkNewMissionListSize - 1) {
+                            if (mlPending.miEepromError) {
+                                mlPending.miEepromError = 0;
+                                prepareTransmitTextMessage("Failed to add  mission(s) in EEPROM.",
+                                        MAV_SEVERITY_ERROR);
+                            }
                             _prepareTransmitMissionAck(MAV_MISSION_ACCEPTED);
                             nextState = MISSION_STATE_INACTIVE;
                         }                            // Otherwise we just increment and request the next mission.

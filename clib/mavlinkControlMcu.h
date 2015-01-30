@@ -144,6 +144,7 @@ enum PARAM_TRANSACTION {
         uint8_t miTotalMissions;
         uint8_t miAckType;
         uint8_t miSendOrigin;
+        uint8_t miEepromError;
 
 
         // Parameter Interface
