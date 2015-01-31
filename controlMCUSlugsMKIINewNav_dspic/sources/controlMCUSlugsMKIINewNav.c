@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model controlMCUSlugsMKIINewNav.
  *
- * Model version                        : 1.280
+ * Model version                        : 1.315
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Thu Jun 20 11:03:39 2013
+ * Real-Time Workshop file generated on : Wed Jan 21 12:06:26 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Thu Jun 20 11:03:40 2013
+ * C source code generated on           : Wed Jan 21 12:06:28 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -19,8 +19,8 @@
  *                                                              |
  *   Written by Lubin KERHUEL -  http://www.kerhuel.eu          |
  *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
- *   Version 3.7e                              14-Sep-2012      |
- *   For Matlab 7.13            R2011b                          |
+ *   Version 3.7c                              09-Jan-2012      |
+ *   For Matlab 7.10            R2010a                          |
  *--------------------------------------------------------------
  */
 
@@ -65,7 +65,7 @@ static void rate_scheduler(void)
  * Initial conditions for atomic system:
  *    '<S51>/Embedded MATLAB Function'
  *    '<S89>/Embedded MATLAB Function'
- *    '<S90>/Embedded MATLAB Function'
+ *    '<S113>/Embedded MATLAB Function'
  *    '<S425>/Embedded MATLAB Function'
  *    '<S426>/Embedded MATLAB Function'
  *    '<S470>/Embedded MATLAB Function'
@@ -83,7 +83,7 @@ void con_EmbeddedMATLABFunction_Init(rtDW_EmbeddedMATLABFunction_con *localDW)
  * Output and update for atomic system:
  *    '<S51>/Embedded MATLAB Function'
  *    '<S89>/Embedded MATLAB Function'
- *    '<S90>/Embedded MATLAB Function'
+ *    '<S113>/Embedded MATLAB Function'
  *    '<S425>/Embedded MATLAB Function'
  *    '<S426>/Embedded MATLAB Function'
  *    '<S470>/Embedded MATLAB Function'
@@ -137,7 +137,7 @@ void controlM_EmbeddedMATLABFunction(real32_T rtu_u, real_T rtu_T, real_T rtu_f,
  * Output and update for atomic system:
  *    '<S16>/myMux Fun1'
  *    '<S17>/myMux Fun1'
- *    '<S127>/myMux Fun5'
+ *    '<S128>/myMux Fun2'
  *    '<S477>/myMux Fun5'
  */
 void controlMCUSlugsMKIINe_myMuxFun1(real32_T rtu_u1, real32_T rtu_u2, real32_T
@@ -154,78 +154,78 @@ void controlMCUSlugsMKIINe_myMuxFun1(real32_T rtu_u1, real32_T rtu_u2, real32_T
 
 /*
  * Output and update for atomic system:
- *    '<S113>/negprotect'
- *    '<S400>/negprotect'
- *    '<S258>/negprotect'
- *    '<S282>/negprotect'
- *    '<S289>/negprotect'
- *    '<S337>/negprotect'
- *    '<S344>/negprotect'
- *    '<S384>/negprotect'
- *    '<S242>/negprotect'
- *    '<S171>/negprotect'
+ *    '<S122>/negprotect'
+ *    '<S401>/negprotect'
+ *    '<S259>/negprotect'
+ *    '<S283>/negprotect'
+ *    '<S290>/negprotect'
+ *    '<S338>/negprotect'
+ *    '<S345>/negprotect'
+ *    '<S385>/negprotect'
+ *    '<S244>/negprotect'
+ *    '<S173>/negprotect'
  *    ...
  */
 void controlMCUSlugsMKIIN_negprotect(real32_T rtu_val,
   rtB_negprotect_controlMCUSlugsM *localB)
 {
-  /* MATLAB Function 'dsPIC_SQRT/negprotect': '<S115>:1' */
+  /* MATLAB Function 'dsPIC_SQRT/negprotect': '<S124>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
   if (rtu_val >= 0.001F) {
-    /* '<S115>:1:5' */
-    /* '<S115>:1:6' */
+    /* '<S124>:1:5' */
+    /* '<S124>:1:6' */
     localB->zpVal = rtu_val;
   } else {
-    /* '<S115>:1:8' */
+    /* '<S124>:1:8' */
     localB->zpVal = 0.001F;
   }
 }
 
 /*
  * Output and update for atomic system:
- *    '<S399>/Embedded MATLAB Function'
- *    '<S281>/Embedded MATLAB Function'
- *    '<S288>/Embedded MATLAB Function'
- *    '<S336>/Embedded MATLAB Function'
- *    '<S343>/Embedded MATLAB Function'
- *    '<S383>/Embedded MATLAB Function'
- *    '<S241>/Embedded MATLAB Function'
- *    '<S170>/Embedded MATLAB Function'
- *    '<S183>/Embedded MATLAB Function'
- *    '<S196>/Embedded MATLAB Function'
+ *    '<S400>/Embedded MATLAB Function'
+ *    '<S282>/Embedded MATLAB Function'
+ *    '<S289>/Embedded MATLAB Function'
+ *    '<S337>/Embedded MATLAB Function'
+ *    '<S344>/Embedded MATLAB Function'
+ *    '<S384>/Embedded MATLAB Function'
+ *    '<S243>/Embedded MATLAB Function'
+ *    '<S172>/Embedded MATLAB Function'
+ *    '<S185>/Embedded MATLAB Function'
+ *    '<S198>/Embedded MATLAB Function'
  *    ...
  */
 void contro_EmbeddedMATLABFunction_o(const real32_T rtu_x[3],
   rtB_EmbeddedMATLABFunction_co_h *localB)
 {
-  /* MATLAB Function 'dsPIC Dot Product/Embedded MATLAB Function': '<S401>:1' */
+  /* MATLAB Function 'dsPIC Dot Product/Embedded MATLAB Function': '<S402>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
-  /* '<S401>:1:5' */
+  /* '<S402>:1:5' */
   localB->xDoty = (rtu_x[0] * rtu_x[0] + rtu_x[1] * rtu_x[1]) + rtu_x[2] *
     rtu_x[2];
 }
 
 /*
  * Output and update for atomic system:
- *    '<S135>/Zero out Z1'
- *    '<S249>/Zero out Z1'
- *    '<S249>/Zero out Z2'
- *    '<S249>/Zero out Z3'
- *    '<S134>/Zero out Z2'
- *    '<S144>/Zero out Z2'
- *    '<S223>/Zero out Z1'
- *    '<S127>/Zero out Z1'
- *    '<S127>/Zero out Z2'
+ *    '<S136>/Zero out Z1'
+ *    '<S251>/Zero out Z1'
+ *    '<S251>/Zero out Z2'
+ *    '<S251>/Zero out Z3'
+ *    '<S135>/Zero out Z2'
+ *    '<S146>/Zero out Z2'
+ *    '<S225>/Zero out Z1'
+ *    '<S128>/Zero out Z1'
+ *    '<S128>/Zero out Z2'
  */
 void controlMCUSlugsMKIINe_ZerooutZ1(const real32_T rtu_Pin[3],
   rtB_ZerooutZ1_controlMCUSlugsMK *localB)
 {
-  /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/RTB/Follow Mobile Navigation/Zero out Z1': '<S392>:1' */
+  /* MATLAB Function 'Navigation/Navigation/RTB/Follow Mobile Navigation/Zero out Z1': '<S393>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
-  /* '<S392>:1:5' */
+  /* '<S393>:1:5' */
   localB->P[0] = rtu_Pin[0];
   localB->P[1] = rtu_Pin[1];
   localB->P[2] = 0.0F;
@@ -233,34 +233,34 @@ void controlMCUSlugsMKIINe_ZerooutZ1(const real32_T rtu_Pin[3],
 
 /*
  * Output and update for atomic system:
- *    '<S263>/Embedded MATLAB Function'
- *    '<S256>/Embedded MATLAB Function'
- *    '<S167>/Embedded MATLAB Function'
- *    '<S180>/Embedded MATLAB Function'
+ *    '<S264>/Embedded MATLAB Function'
+ *    '<S257>/Embedded MATLAB Function'
+ *    '<S169>/Embedded MATLAB Function'
+ *    '<S182>/Embedded MATLAB Function'
  */
 void contro_EmbeddedMATLABFunction_d(const real32_T rtu_x[3], const real32_T
   rtu_y[3], rtB_EmbeddedMATLABFunction_co_k *localB)
 {
-  /* MATLAB Function 'dsPIC Dot Product/Embedded MATLAB Function': '<S264>:1' */
+  /* MATLAB Function 'dsPIC Dot Product/Embedded MATLAB Function': '<S265>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
-  /* '<S264>:1:5' */
+  /* '<S265>:1:5' */
   localB->xDoty = (rtu_x[0] * rtu_y[0] + rtu_x[1] * rtu_y[1]) + rtu_x[2] *
     rtu_y[2];
 }
 
 /*
  * Output and update for atomic system:
- *    '<S271>/Select N  Terms'
- *    '<S329>/Select N  Terms'
+ *    '<S272>/Select N  Terms'
+ *    '<S330>/Select N  Terms'
  */
 void controlMCUSlugsMKI_SelectNTerms(const real32_T rtu_T[3],
   rtB_SelectNTerms_controlMCUSlug *localB)
 {
-  /* MATLAB Function 'Navigation/Compute Frenet/Select N  Terms': '<S279>:1' */
+  /* MATLAB Function 'Navigation/Compute Frenet/Select N  Terms': '<S280>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
-  /* '<S279>:1:5' */
+  /* '<S280>:1:5' */
   localB->N[0] = -rtu_T[1];
   localB->N[1] = rtu_T[0];
   localB->N[2] = 0.0F;
@@ -268,25 +268,25 @@ void controlMCUSlugsMKI_SelectNTerms(const real32_T rtu_T[3],
 
 /*
  * Output and update for atomic system:
- *    '<S158>/negprotect3'
- *    '<S159>/negprotect3'
- *    '<S146>/negprotect1'
- *    '<S146>/negprotect2'
- *    '<S215>/negprotect'
- *    '<S216>/negprotect'
+ *    '<S160>/negprotect3'
+ *    '<S161>/negprotect3'
+ *    '<S148>/negprotect1'
+ *    '<S148>/negprotect2'
+ *    '<S217>/negprotect'
+ *    '<S218>/negprotect'
  */
 void controlMCUSlugsMKII_negprotect3(real32_T rtu_val,
   rtB_negprotect3_controlMCUSlugs *localB)
 {
-  /* MATLAB Function 'Compute Angle Between Vectors/negprotect3': '<S169>:1' */
+  /* MATLAB Function 'Compute Angle Between Vectors/negprotect3': '<S171>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
   if (rtu_val >= 0.0001F) {
-    /* '<S169>:1:5' */
-    /* '<S169>:1:6' */
+    /* '<S171>:1:5' */
+    /* '<S171>:1:6' */
     localB->zpVal = rtu_val;
   } else {
-    /* '<S169>:1:8' */
+    /* '<S171>:1:8' */
     localB->zpVal = 0.0001F;
   }
 }
@@ -401,7 +401,6 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   real32_T rtb_Subtract2[3];
   real32_T rtb_Puav[3];
   real32_T rtb_Product1_l;
-  real32_T rtb_Rad2Deg;
   real32_T rtb_Sum1_a[3];
   real32_T rtb_Subtract1_o;
   real32_T rtb_h;
@@ -420,7 +419,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   real32_T rtb_Divide_d5[3];
   real32_T rtb_Divide_h[3];
   real32_T rtb_Subtract_o[3];
-  real32_T rtb_Divide2_i;
+  real32_T rtb_Divide2_m;
   real32_T rtb_ScheduleLPF;
   real32_T rtb_DifferenceInputs2;
   real32_T rtb_Theta_cLimit;
@@ -441,9 +440,10 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   real32_T rtb_VectorConcatenate_i[9];
   real32_T rtb_Product2_ep[3];
   uint16_T rtb_u2deg;
+  uint8_T rtb_DataTypeConversion2_n;
   uint8_T rtb_IC2;
   real32_T rtb_BankLimitCommand;
-  real32_T rtb_Add1_am;
+  real32_T rtb_Add4_l;
   real32_T rtb_OnOff;
   real32_T rtb_ElevatorLimit;
   real32_T rtb_ThrottleLimit;
@@ -457,7 +457,6 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   real32_T rtb_Product5[3];
   real32_T rtb_MathFunction[9];
   real32_T rtb_Product_ib[9];
-  uint8_T Merge;
   real32_T Product;
   real32_T Switch;
   real32_T Switch3_m;
@@ -750,48 +749,46 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   /* S-Function "dsPIC_C_function_Call" Block: <S18>/Get ISR Location [navSupport.c] */
   getISRLocation(&controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[0]);
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S18>/Navigation Mode [navSupport.c] */
-  controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c = getNavMode();
-
-  /* Logic: '<S127>/Logical Operator1' incorporates:
-   *  Logic: '<S127>/Logical Operator'
+  /* InitialCondition: '<S137>/IC1' incorporates:
+   *  Logic: '<S128>/Logical Operator'
+   *  Logic: '<S128>/Logical Operator1'
    */
-  rtb_IC1 = ((controlMCUSlugsMKIINewNav_B.wpFlynavSupportc != 0) &&
-             (!(controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc != 0)));
-
-  /* InitialCondition: '<S136>/IC1' */
   if (controlMCUSlugsMKIINewNav_DWork.IC1_FirstOutputTime_p) {
     controlMCUSlugsMKIINewNav_DWork.IC1_FirstOutputTime_p = FALSE;
     rtb_IC1 = FALSE;
+  } else {
+    rtb_IC1 = ((controlMCUSlugsMKIINewNav_B.wpFlynavSupportc != 0) &&
+               (!(controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc != 0)));
   }
 
-  /* End of InitialCondition: '<S136>/IC1' */
+  /* End of InitialCondition: '<S137>/IC1' */
 
-  /* DataTypeConversion: '<S406>/Data Type Conversion1' */
-  controlMCUSlugsMKIINewNav_B.DataTypeConversion1_n = rtb_IC1;
+  /* DataTypeConversion: '<S407>/Data Type Conversion2' incorporates:
+   *  Delay: '<S412>/Delay'
+   *  Logic: '<S412>/Logical Operator'
+   *  RelationalOperator: '<S412>/Relational Operator'
+   */
+  rtb_DataTypeConversion2_n = ((controlMCUSlugsMKIINewNav_DWork.Delay_DSTATE !=
+    rtb_IC1) && rtb_IC1);
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S406>/Detect Rising Transition [navSupport.c] */
-  controlMCUSlugsMKIINewNav_B.DetectRisingTransitionnavSupp_n = justEnabled
-    (controlMCUSlugsMKIINewNav_B.DataTypeConversion1_n,((uint8_T)0U));
-
-  /* InitialCondition: '<S136>/IC2' */
+  /* InitialCondition: '<S137>/IC2' */
   if (controlMCUSlugsMKIINewNav_DWork.IC2_FirstOutputTime) {
     controlMCUSlugsMKIINewNav_DWork.IC2_FirstOutputTime = FALSE;
-    rtb_IC2 = 1U;
+    rtb_IC2 = 0U;
   } else {
-    rtb_IC2 = controlMCUSlugsMKIINewNav_B.DetectRisingTransitionnavSupp_n;
+    rtb_IC2 = rtb_DataTypeConversion2_n;
   }
 
-  /* End of InitialCondition: '<S136>/IC2' */
+  /* End of InitialCondition: '<S137>/IC2' */
 
-  /* Outputs for Enabled SubSystem: '<S136>/Grab Upon Enable' incorporates:
-   *  EnablePort: '<S405>/Enable'
+  /* Outputs for Enabled SubSystem: '<S137>/Grab Upon Enable' incorporates:
+   *  EnablePort: '<S406>/Enable'
    */
   if (rtb_IC2 > 0) {
-    /* S-Function "dsPIC_C_function_Call" Block: <S405>/Get the GS Location [updateControlMCUState.c] */
+    /* S-Function "dsPIC_C_function_Call" Block: <S406>/Get the GS Location [updateControlMCUState.c] */
     getGSLocation(&controlMCUSlugsMKIINewNav_B.GettheGSLocationupdateControlMC[0]);
 
-    /* SignalConversion: '<S408>/Numerical Unity' */
+    /* SignalConversion: '<S409>/Numerical Unity' */
     controlMCUSlugsMKIINewNav_B.NumericalUnity[0] =
       controlMCUSlugsMKIINewNav_B.GettheGSLocationupdateControlMC[0];
     controlMCUSlugsMKIINewNav_B.NumericalUnity[1] =
@@ -799,104 +796,170 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_B.NumericalUnity[2] =
       controlMCUSlugsMKIINewNav_B.GettheGSLocationupdateControlMC[2];
 
-    /* Gain: '<S409>/Deg2R' */
+    /* Gain: '<S410>/Deg2R' */
     rtb_cosphi = 0.0174532924F * controlMCUSlugsMKIINewNav_B.NumericalUnity[1];
 
-    /* Trigonometry: '<S409>/sin(phi)' */
+    /* Trigonometry: '<S410>/sin(phi)' */
     rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-    /* Sum: '<S409>/Sum1' incorporates:
-     *  Constant: '<S409>/const'
-     *  Product: '<S409>/Product1'
-     *  Product: '<S409>/sin(phi)^2'
+    /* Sum: '<S410>/Sum1' incorporates:
+     *  Constant: '<S410>/const'
+     *  Product: '<S410>/Product1'
+     *  Product: '<S410>/sin(phi)^2'
      */
     rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
       controlMCUSlugsMKIINewNa_ConstB.Sum5_i;
 
-    /* Fcn: '<S409>/f' */
+    /* Fcn: '<S410>/f' */
     if (rtb_Merge_idx < 0.0F) {
       rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
     } else {
       rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
     }
 
-    /* End of Fcn: '<S409>/f' */
+    /* End of Fcn: '<S410>/f' */
 
-    /* Product: '<S409>/Rh' incorporates:
-     *  Constant: '<S409>/Re=equatorial radius'
+    /* Product: '<S410>/Rh' incorporates:
+     *  Constant: '<S410>/Re=equatorial radius'
      */
     rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-    /* Sum: '<S409>/Sum2' */
+    /* Sum: '<S410>/Sum2' */
     rtb_RhhcosphisinlambYe = controlMCUSlugsMKIINewNav_B.NumericalUnity[0] +
       rtb_Merge_idx;
 
-    /* Trigonometry: '<S409>/cos(phi)' */
+    /* Trigonometry: '<S410>/cos(phi)' */
     rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-    /* Gain: '<S409>/Deg2R1' */
+    /* Gain: '<S410>/Deg2R1' */
     rtb_Deg2R1 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.NumericalUnity[2];
 
-    /* Product: '<S409>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-     *  Trigonometry: '<S409>/cos(lamb)'
+    /* Product: '<S410>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+     *  Trigonometry: '<S410>/cos(lamb)'
      */
     rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)cos
       (rtb_Deg2R1);
 
-    /* Product: '<S409>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-     *  Trigonometry: '<S409>/sin(lamb)'
+    /* Product: '<S410>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+     *  Trigonometry: '<S410>/sin(lamb)'
      */
     rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)sin
       (rtb_Deg2R1);
 
-    /* Product: '<S409>/Ze' incorporates:
-     *  Product: '<S409>/Rh(1-e^2)'
-     *  Sum: '<S409>/Sum4'
+    /* Product: '<S410>/Ze' incorporates:
+     *  Product: '<S410>/Rh(1-e^2)'
+     *  Sum: '<S410>/Sum4'
      */
     rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_g * rtb_Merge_idx +
       controlMCUSlugsMKIINewNav_B.NumericalUnity[0];
 
-    /* DataTypeConversion: '<S405>/Data Type Conversion' */
+    /* DataTypeConversion: '<S406>/Data Type Conversion' */
     controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0] =
       controlMCUSlugsMKIINewNav_B.NumericalUnity[2];
     controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1] =
       controlMCUSlugsMKIINewNav_B.NumericalUnity[1];
 
-    /* DataTypeConversion: '<S405>/Data Type Conversion1' */
+    /* DataTypeConversion: '<S406>/Data Type Conversion1' */
     controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0] = rtb_RhhcosphicoslambXe;
     controlMCUSlugsMKIINewNav_B.DataTypeConversion1[1] = rtb_RhhcosphisinlambYe;
     controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2] = rtb_Ze;
   }
 
-  /* End of Outputs for SubSystem: '<S136>/Grab Upon Enable' */
+  /* End of Outputs for SubSystem: '<S137>/Grab Upon Enable' */
+
+  /* MATLAB Function: '<S128>/myMux Fun2' */
+  controlMCUSlugsMKIINe_myMuxFun1
+    (controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0],
+     controlMCUSlugsMKIINewNav_B.DataTypeConversion1[1],
+     controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2],
+     &controlMCUSlugsMKIINewNav_B.sf_myMuxFun2_c);
+
+  /* S-Function "dsPIC_C_function_Call" Block: <S128>/Diagnostics Float [navSupport.c] */
+  setDiagnosticFloat(controlMCUSlugsMKIINewNav_B.sf_myMuxFun2_c.y);
+
+  /* S-Function "dsPIC_C_function_Call" Block: <S18>/Navigation Mode [navSupport.c] */
+  controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c = getNavMode();
+
+  /* InitialCondition: '<S137>/IC3' */
+  if (controlMCUSlugsMKIINewNav_DWork.IC3_FirstOutputTime) {
+    controlMCUSlugsMKIINewNav_DWork.IC3_FirstOutputTime = FALSE;
+    controlMCUSlugsMKIINewNav_B.IC3 = 0.0F;
+  } else {
+    controlMCUSlugsMKIINewNav_B.IC3 =
+      controlMCUSlugsMKIINewNav_B.NumericalUnity[0];
+  }
+
+  /* End of InitialCondition: '<S137>/IC3' */
+
+  /* MATLAB Function: '<S128>/myMux Fun4' incorporates:
+   *  DataTypeConversion: '<S128>/Data Type Conversion3'
+   */
+  /* MATLAB Function 'Navigation/Navigation/myMux Fun4': '<S143>:1' */
+  /*  This block supports an embeddable subset of the MATLAB language. */
+  /*  See the help menu for details.  */
+  /* '<S143>:1:5' */
+  controlMCUSlugsMKIINewNav_B.y_eh[0] =
+    controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c;
+  controlMCUSlugsMKIINewNav_B.y_eh[1] = 0;
+
+  /* DataTypeConversion: '<S128>/Data Type Conversion7' */
+  rtb_Product3_p4_idx = (real32_T)floor(controlMCUSlugsMKIINewNav_B.IC3);
+  if (rtIsNaNF(rtb_Product3_p4_idx) || rtIsInfF(rtb_Product3_p4_idx)) {
+    rtb_Product3_p4_idx = 0.0F;
+  } else {
+    rtb_Product3_p4_idx = (real32_T)fmod(rtb_Product3_p4_idx, 65536.0F);
+  }
+
+  /* MATLAB Function: '<S128>/myMux Fun4' incorporates:
+   *  DataTypeConversion: '<S128>/Data Type Conversion7'
+   */
+  controlMCUSlugsMKIINewNav_B.y_eh[2] = rtb_Product3_p4_idx < 0.0F ? -(int16_T)
+    (uint16_T)-rtb_Product3_p4_idx : (int16_T)(uint16_T)rtb_Product3_p4_idx;
+
+  /* S-Function "dsPIC_C_function_Call" Block: <S128>/Diagnostics Short [navSupport.c] */
+  setDiagnosticShort(controlMCUSlugsMKIINewNav_B.y_eh);
+
+  /* InitialCondition: '<S137>/IC4' */
+  if (controlMCUSlugsMKIINewNav_DWork.IC4_FirstOutputTime) {
+    controlMCUSlugsMKIINewNav_DWork.IC4_FirstOutputTime = FALSE;
+    controlMCUSlugsMKIINewNav_B.IC4[0] = 36.9885063F;
+    controlMCUSlugsMKIINewNav_B.IC4[1] = -122.055305F;
+  } else {
+    controlMCUSlugsMKIINewNav_B.IC4[0] =
+      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
+    controlMCUSlugsMKIINewNav_B.IC4[1] =
+      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
+  }
+
+  /* End of InitialCondition: '<S137>/IC4' */
 
   /* Inport: '<S18>/Puav' */
   rtb_Puav[0] = controlMCUSlugsMKIINewNav_B.GetXYZnavSupportc[0];
   rtb_Puav[1] = controlMCUSlugsMKIINewNav_B.GetXYZnavSupportc[1];
   rtb_Puav[2] = controlMCUSlugsMKIINewNav_B.GetXYZnavSupportc[2];
 
-  /* MATLAB Function: '<S127>/Zero out Z2' */
+  /* MATLAB Function: '<S128>/Zero out Z2' */
   controlMCUSlugsMKIINe_ZerooutZ1(rtb_Puav,
     &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2);
 
-  /* MATLAB Function: '<S127>/Zero out Z1' */
+  /* MATLAB Function: '<S128>/Zero out Z1' */
   controlMCUSlugsMKIINe_ZerooutZ1(controlMCUSlugsMKIINewNav_B.GetVnednavSupportc,
     &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1);
 
-  /* MATLAB Function: '<S209>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S211>/Embedded MATLAB Function' */
   contro_EmbeddedMATLABFunction_o(controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1.P,
-    &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_et);
+    &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_e);
 
-  /* MATLAB Function: '<S210>/negprotect' */
+  /* MATLAB Function: '<S212>/negprotect' */
   controlMCUSlugsMKIIN_negprotect
-    (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_et.xDoty,
+    (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_e.xDoty,
      &controlMCUSlugsMKIINewNav_B.sf_negprotect_p);
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S210>/C Function Call */
+  /* S-Function "dsPIC_C_function_Call" Block: <S212>/C Function Call */
   controlMCUSlugsMKIINewNav_B.CFunctionCall_a = mySqrt
     (controlMCUSlugsMKIINewNav_B.sf_negprotect_p.zpVal);
 
-  /* InitialCondition: '<S133>/IC' */
+  /* InitialCondition: '<S134>/IC' */
   if (controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime) {
     controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime = FALSE;
     rtb_Merge_idx = 1.5F;
@@ -904,87 +967,85 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Merge_idx = controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_c[0];
   }
 
-  /* End of InitialCondition: '<S133>/IC' */
+  /* End of InitialCondition: '<S134>/IC' */
 
-  /* Product: '<S133>/Product3' incorporates:
-   *  Constant: '<S133>/Constant1'
-   *  Product: '<S133>/Product1'
-   *  Product: '<S133>/Product2'
-   *  Saturate: '<S133>/[1.5 10]'
+  /* Product: '<S134>/Product3' incorporates:
+   *  Constant: '<S134>/Constant1'
+   *  Product: '<S134>/Product1'
+   *  Product: '<S134>/Product2'
+   *  Saturate: '<S134>/[1.5 10]'
    */
   Product = (rtb_Merge_idx >= 10.0F ? 10.0F : rtb_Merge_idx <= 1.5F ? 1.5F :
              rtb_Merge_idx) *
     (controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[0] *
      controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[0]) / 4.57681F;
 
-  /* If: '<S127>/Determine Overall Nav by the Nav Mode' incorporates:
-   *  Inport: '<S132>/MidLvl h_c'
-   *  Inport: '<S135>/MidLvl h_c'
+  /* If: '<S128>/Determine Overall Nav by the Nav Mode' incorporates:
+   *  Inport: '<S133>/MidLvl h_c'
+   *  Inport: '<S136>/MidLvl h_c'
    */
   if (controlMCUSlugsMKIINewNav_B.GetRTBOrdernavSupportc[0] == 1) {
-    /* Outputs for IfAction SubSystem: '<S127>/RTB//Follow Mobile Navigation' incorporates:
-     *  ActionPort: '<S135>/Action Port'
+    /* Outputs for IfAction SubSystem: '<S128>/RTB//Follow Mobile Navigation' incorporates:
+     *  ActionPort: '<S136>/Action Port'
      */
-    /* Outputs for Enabled SubSystem: '<S135>/Compute Mobile Location' incorporates:
-     *  EnablePort: '<S389>/Enable'
+    /* Outputs for Enabled SubSystem: '<S136>/Compute Mobile Location' incorporates:
+     *  EnablePort: '<S390>/Enable'
      */
     if (controlMCUSlugsMKIINewNav_B.GetRTBOrdernavSupportc[1] > 0) {
-      /* Gain: '<S394>/Deg2R' */
-      rtb_Deg2R_m_idx_0 = 0.0174532924F *
-        controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-      rtb_Deg2R_m_idx = 0.0174532924F *
-        controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
-
       /* Gain: '<S395>/Deg2R' */
+      rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+      rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
+
+      /* Gain: '<S396>/Deg2R' */
       rtb_cosphi = 0.0174532924F *
         controlMCUSlugsMKIINewNav_B.GetMobileLocationnavSupportc[0];
 
-      /* Trigonometry: '<S395>/sin(phi)' */
+      /* Trigonometry: '<S396>/sin(phi)' */
       rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-      /* Sum: '<S395>/Sum1' incorporates:
-       *  Constant: '<S395>/const'
-       *  Product: '<S395>/Product1'
-       *  Product: '<S395>/sin(phi)^2'
+      /* Sum: '<S396>/Sum1' incorporates:
+       *  Constant: '<S396>/const'
+       *  Product: '<S396>/Product1'
+       *  Product: '<S396>/sin(phi)^2'
        */
       rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
         controlMCUSlugsMKIINewNa_ConstB.Sum5_ib;
 
-      /* Fcn: '<S395>/f' */
+      /* Fcn: '<S396>/f' */
       if (rtb_Merge_idx < 0.0F) {
         rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
       } else {
         rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
       }
 
-      /* End of Fcn: '<S395>/f' */
+      /* End of Fcn: '<S396>/f' */
 
-      /* Product: '<S395>/Rh' incorporates:
-       *  Constant: '<S395>/Re=equatorial radius'
+      /* Product: '<S396>/Rh' incorporates:
+       *  Constant: '<S396>/Re=equatorial radius'
        */
       rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-      /* Trigonometry: '<S395>/cos(phi)' */
+      /* Trigonometry: '<S396>/cos(phi)' */
       rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-      /* Gain: '<S395>/Deg2R1' */
+      /* Gain: '<S396>/Deg2R1' */
       rtb_Deg2R1 = 0.0174532924F *
         controlMCUSlugsMKIINewNav_B.GetMobileLocationnavSupportc[1];
 
-      /* Product: '<S395>/Ze' incorporates:
-       *  Product: '<S395>/Rh(1-e^2)'
+      /* Product: '<S396>/Ze' incorporates:
+       *  Product: '<S396>/Rh(1-e^2)'
        */
       rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_e * rtb_Merge_idx;
 
-      /* SignalConversion: '<S394>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-       *  Fcn: '<S397>/11'
-       *  Fcn: '<S397>/12'
-       *  Fcn: '<S397>/13'
-       *  Fcn: '<S397>/21'
-       *  Fcn: '<S397>/22'
-       *  Fcn: '<S397>/31'
-       *  Fcn: '<S397>/32'
-       *  Fcn: '<S397>/33'
+      /* SignalConversion: '<S395>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+       *  Fcn: '<S398>/11'
+       *  Fcn: '<S398>/12'
+       *  Fcn: '<S398>/13'
+       *  Fcn: '<S398>/21'
+       *  Fcn: '<S398>/22'
+       *  Fcn: '<S398>/31'
+       *  Fcn: '<S398>/32'
+       *  Fcn: '<S398>/33'
        */
       rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)
         cos(rtb_Deg2R_m_idx);
@@ -1000,12 +1061,12 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_VectorConcatenate_i[7L] = 0.0F;
       rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
 
-      /* Sum: '<S393>/Sum1' incorporates:
-       *  Product: '<S395>/(Rh+h)cos(phi)*cos(lamb)=Xe'
-       *  Product: '<S395>/(Rh+h)cos(phi)*sin(lamb)=Ye'
-       *  Sum: '<S395>/Sum2'
-       *  Trigonometry: '<S395>/cos(lamb)'
-       *  Trigonometry: '<S395>/sin(lamb)'
+      /* Sum: '<S394>/Sum1' incorporates:
+       *  Product: '<S396>/(Rh+h)cos(phi)*cos(lamb)=Xe'
+       *  Product: '<S396>/(Rh+h)cos(phi)*sin(lamb)=Ye'
+       *  Sum: '<S396>/Sum2'
+       *  Trigonometry: '<S396>/cos(lamb)'
+       *  Trigonometry: '<S396>/sin(lamb)'
        */
       rtb_Deg2R_m_idx = rtb_Merge_idx * rtb_cosphi * (real32_T)cos(rtb_Deg2R1) -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
@@ -1014,8 +1075,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Product3_p4_idx = rtb_Ze -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
 
-      /* Product: '<S394>/Product1' incorporates:
-       *  Gain: '<S393>/UEN 2 NEU'
+      /* Product: '<S395>/Product1' incorporates:
+       *  Gain: '<S394>/UEN 2 NEU'
        */
       for (i = 0; i < 3; i++) {
         tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
@@ -1023,10 +1084,10 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
            rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
       }
 
-      /* End of Product: '<S394>/Product1' */
+      /* End of Product: '<S395>/Product1' */
 
-      /* Reshape: '<S393>/Reshape1' incorporates:
-       *  Gain: '<S393>/UEN 2 NEU'
+      /* Reshape: '<S394>/Reshape1' incorporates:
+       *  Gain: '<S394>/UEN 2 NEU'
        */
       for (i = 0; i < 3; i++) {
         controlMCUSlugsMKIINewNav_B.Reshape1[i] = 0.0F;
@@ -1041,16 +1102,16 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
           controlMCUSlugsMKIINewNav_B.Reshape1[i];
       }
 
-      /* End of Reshape: '<S393>/Reshape1' */
+      /* End of Reshape: '<S394>/Reshape1' */
     }
 
-    /* End of Outputs for SubSystem: '<S135>/Compute Mobile Location' */
+    /* End of Outputs for SubSystem: '<S136>/Compute Mobile Location' */
 
-    /* MATLAB Function: '<S135>/Zero out Z1' */
+    /* MATLAB Function: '<S136>/Zero out Z1' */
     controlMCUSlugsMKIINe_ZerooutZ1(controlMCUSlugsMKIINewNav_B.Reshape1,
       &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_o);
 
-    /* Sum: '<S135>/Subtract' */
+    /* Sum: '<S136>/Subtract' */
     rtb_Subtract_o[0] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_o.P[0] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
     rtb_Subtract_o[1] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_o.P[1] -
@@ -1058,7 +1119,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Subtract_o[2] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_o.P[2] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-    /* DiscreteIntegrator: '<S390>/Discrete-Time Integrator' */
+    /* DiscreteIntegrator: '<S391>/Discrete-Time Integrator' */
     if (controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_IC_LOADI != 0) {
       controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[0] =
         rtb_Subtract_o[0];
@@ -1068,8 +1129,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         rtb_Subtract_o[2];
     }
 
-    /* Sum: '<S390>/Sum' incorporates:
-     *  DiscreteIntegrator: '<S390>/Discrete-Time Integrator'
+    /* Sum: '<S391>/Sum' incorporates:
+     *  DiscreteIntegrator: '<S391>/Discrete-Time Integrator'
      */
     rtb_Product6[0] = rtb_Subtract_o[0] -
       controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[0];
@@ -1078,9 +1139,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Product6[2] = rtb_Subtract_o[2] -
       controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[2];
 
-    /* Sum: '<S390>/Sum1' incorporates:
-     *  DiscreteIntegrator: '<S390>/Discrete-Time Integrator'
-     *  Gain: '<S390>/Gain1'
+    /* Sum: '<S391>/Sum1' incorporates:
+     *  DiscreteIntegrator: '<S391>/Discrete-Time Integrator'
+     *  Gain: '<S391>/Gain1'
      */
     controlMCUSlugsMKIINewNav_B.Merge[0] = 3.0F * rtb_Product6[0] +
       controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[0];
@@ -1089,27 +1150,27 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_B.Merge[2] = 3.0F * rtb_Product6[2] +
       controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[2];
 
-    /* MATLAB Function: '<S399>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S400>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o(rtb_Subtract_o,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_o);
 
-    /* MATLAB Function: '<S400>/negprotect' */
+    /* MATLAB Function: '<S401>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_o.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_nu);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S400>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S401>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_fw = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_nu.zpVal);
 
-    /* SignalConversion: '<S403>/Numerical Unity' */
+    /* SignalConversion: '<S404>/Numerical Unity' */
     controlMCUSlugsMKIINewNav_B.Merge2 =
       controlMCUSlugsMKIINewNav_B.CFunctionCall_fw;
     controlMCUSlugsMKIINewNav_B.Merge1 =
       controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[1];
 
-    /* Update for DiscreteIntegrator: '<S390>/Discrete-Time Integrator' incorporates:
-     *  Inport: '<S135>/MidLvl h_c'
+    /* Update for DiscreteIntegrator: '<S391>/Discrete-Time Integrator' incorporates:
+     *  Inport: '<S136>/MidLvl h_c'
      */
     controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_IC_LOADI = 0U;
     controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[0] = 0.01F *
@@ -1122,97 +1183,95 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Product6[2] +
       controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_DSTATE[2];
 
-    /* End of Outputs for SubSystem: '<S127>/RTB//Follow Mobile Navigation' */
+    /* End of Outputs for SubSystem: '<S128>/RTB//Follow Mobile Navigation' */
   } else if (controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c == 3) {
-    /* Outputs for IfAction SubSystem: '<S127>/Normal WP  Navigation' incorporates:
-     *  ActionPort: '<S134>/Action Port'
+    /* Outputs for IfAction SubSystem: '<S128>/Normal WP  Navigation' incorporates:
+     *  ActionPort: '<S135>/Action Port'
      */
-    /* Product: '<S134>/Product' */
+    /* Product: '<S135>/Product' */
     Product = controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_k[0] *
       controlMCUSlugsMKIINewNav_B.CFunctionCall_a;
 
-    /* Outputs for Enabled SubSystem: '<S134>/On WP Enable' incorporates:
-     *  EnablePort: '<S250>/Enable'
+    /* Outputs for Enabled SubSystem: '<S135>/On WP Enable' incorporates:
+     *  EnablePort: '<S252>/Enable'
      */
-    /* Gain: '<S352>/Deg2R' */
-    rtb_Deg2R_m_idx_0 = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-    rtb_Deg2R_m_idx = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
+    /* Gain: '<S353>/Deg2R' */
+    rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+    rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S330>/Get Waypoint Coordinates [navSupport.c] */
+    /* S-Function "dsPIC_C_function_Call" Block: <S331>/Get Waypoint Coordinates [navSupport.c] */
     getWP(((uint8_T)1U),
           &controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSuppor[0]);
 
-    /* Gain: '<S353>/Deg2R' */
+    /* Gain: '<S354>/Deg2R' */
     rtb_cosphi = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSuppor[0];
 
-    /* Trigonometry: '<S353>/sin(phi)' */
+    /* Trigonometry: '<S354>/sin(phi)' */
     rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-    /* Sum: '<S353>/Sum1' incorporates:
-     *  Constant: '<S353>/const'
-     *  Product: '<S353>/Product1'
-     *  Product: '<S353>/sin(phi)^2'
+    /* Sum: '<S354>/Sum1' incorporates:
+     *  Constant: '<S354>/const'
+     *  Product: '<S354>/Product1'
+     *  Product: '<S354>/sin(phi)^2'
      */
     rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
       controlMCUSlugsMKIINewNa_ConstB.Sum5_c;
 
-    /* Fcn: '<S353>/f' */
+    /* Fcn: '<S354>/f' */
     if (rtb_Merge_idx < 0.0F) {
       rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
     } else {
       rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
     }
 
-    /* End of Fcn: '<S353>/f' */
+    /* End of Fcn: '<S354>/f' */
 
-    /* Product: '<S353>/Rh' incorporates:
-     *  Constant: '<S353>/Re=equatorial radius'
+    /* Product: '<S354>/Rh' incorporates:
+     *  Constant: '<S354>/Re=equatorial radius'
      */
     rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-    /* Sum: '<S353>/Sum2' */
+    /* Sum: '<S354>/Sum2' */
     rtb_RhhcosphisinlambYe =
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSuppor[2] +
       rtb_Merge_idx;
 
-    /* Trigonometry: '<S353>/cos(phi)' */
+    /* Trigonometry: '<S354>/cos(phi)' */
     rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-    /* Gain: '<S353>/Deg2R1' */
+    /* Gain: '<S354>/Deg2R1' */
     rtb_Deg2R1 = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSuppor[1];
 
-    /* Product: '<S353>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-     *  Trigonometry: '<S353>/cos(lamb)'
+    /* Product: '<S354>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+     *  Trigonometry: '<S354>/cos(lamb)'
      */
     rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)cos
       (rtb_Deg2R1);
 
-    /* Product: '<S353>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-     *  Trigonometry: '<S353>/sin(lamb)'
+    /* Product: '<S354>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+     *  Trigonometry: '<S354>/sin(lamb)'
      */
     rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)sin
       (rtb_Deg2R1);
 
-    /* Product: '<S353>/Ze' incorporates:
-     *  Product: '<S353>/Rh(1-e^2)'
-     *  Sum: '<S353>/Sum4'
+    /* Product: '<S354>/Ze' incorporates:
+     *  Product: '<S354>/Rh(1-e^2)'
+     *  Sum: '<S354>/Sum4'
      */
     rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_b * rtb_Merge_idx +
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSuppor[2];
 
-    /* SignalConversion: '<S352>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-     *  Fcn: '<S355>/11'
-     *  Fcn: '<S355>/12'
-     *  Fcn: '<S355>/13'
-     *  Fcn: '<S355>/21'
-     *  Fcn: '<S355>/22'
-     *  Fcn: '<S355>/31'
-     *  Fcn: '<S355>/32'
-     *  Fcn: '<S355>/33'
+    /* SignalConversion: '<S353>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+     *  Fcn: '<S356>/11'
+     *  Fcn: '<S356>/12'
+     *  Fcn: '<S356>/13'
+     *  Fcn: '<S356>/21'
+     *  Fcn: '<S356>/22'
+     *  Fcn: '<S356>/31'
+     *  Fcn: '<S356>/32'
+     *  Fcn: '<S356>/33'
      */
     rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)
       cos(rtb_Deg2R_m_idx);
@@ -1228,7 +1287,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_VectorConcatenate_i[7L] = 0.0F;
     rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
 
-    /* Sum: '<S350>/Sum1' */
+    /* Sum: '<S351>/Sum1' */
     rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
     rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
@@ -1236,8 +1295,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Product3_p4_idx = rtb_Ze -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
 
-    /* Product: '<S352>/Product1' incorporates:
-     *  Gain: '<S350>/UEN 2 NEU'
+    /* Product: '<S353>/Product1' incorporates:
+     *  Gain: '<S351>/UEN 2 NEU'
      */
     for (i = 0; i < 3; i++) {
       tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
@@ -1245,94 +1304,92 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
          rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
     }
 
-    /* End of Product: '<S352>/Product1' */
+    /* End of Product: '<S353>/Product1' */
 
-    /* Gain: '<S350>/UEN 2 NEU' */
+    /* Gain: '<S351>/UEN 2 NEU' */
     for (i = 0; i < 3; i++) {
       rtb_Product6[i] = controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 6] * tmp[2]
         + (controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 3] * tmp[1] +
            controlMCUSlugsMKIINewNa_ConstP.pooled45[i] * tmp[0]);
     }
 
-    /* Gain: '<S369>/Deg2R' */
-    rtb_Deg2R_m_idx_0 = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-    rtb_Deg2R_m_idx = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
+    /* Gain: '<S370>/Deg2R' */
+    rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+    rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S331>/Get Waypoint Coordinates [navSupport.c] */
+    /* S-Function "dsPIC_C_function_Call" Block: <S332>/Get Waypoint Coordinates [navSupport.c] */
     getWP(((uint8_T)2U),
           &controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_j[0]);
 
-    /* Gain: '<S370>/Deg2R' */
+    /* Gain: '<S371>/Deg2R' */
     rtb_cosphi = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_j[0];
 
-    /* Trigonometry: '<S370>/sin(phi)' */
+    /* Trigonometry: '<S371>/sin(phi)' */
     rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-    /* Sum: '<S370>/Sum1' incorporates:
-     *  Constant: '<S370>/const'
-     *  Product: '<S370>/Product1'
-     *  Product: '<S370>/sin(phi)^2'
+    /* Sum: '<S371>/Sum1' incorporates:
+     *  Constant: '<S371>/const'
+     *  Product: '<S371>/Product1'
+     *  Product: '<S371>/sin(phi)^2'
      */
     rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
       controlMCUSlugsMKIINewNa_ConstB.Sum5_l;
 
-    /* Fcn: '<S370>/f' */
+    /* Fcn: '<S371>/f' */
     if (rtb_Merge_idx < 0.0F) {
       rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
     } else {
       rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
     }
 
-    /* End of Fcn: '<S370>/f' */
+    /* End of Fcn: '<S371>/f' */
 
-    /* Product: '<S370>/Rh' incorporates:
-     *  Constant: '<S370>/Re=equatorial radius'
+    /* Product: '<S371>/Rh' incorporates:
+     *  Constant: '<S371>/Re=equatorial radius'
      */
     rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-    /* Sum: '<S370>/Sum2' */
+    /* Sum: '<S371>/Sum2' */
     rtb_RhhcosphisinlambYe =
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_j[2] +
       rtb_Merge_idx;
 
-    /* Trigonometry: '<S370>/cos(phi)' */
+    /* Trigonometry: '<S371>/cos(phi)' */
     rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-    /* Gain: '<S370>/Deg2R1' */
+    /* Gain: '<S371>/Deg2R1' */
     rtb_Deg2R1 = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_j[1];
 
-    /* Product: '<S370>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-     *  Trigonometry: '<S370>/cos(lamb)'
+    /* Product: '<S371>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+     *  Trigonometry: '<S371>/cos(lamb)'
      */
     rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)cos
       (rtb_Deg2R1);
 
-    /* Product: '<S370>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-     *  Trigonometry: '<S370>/sin(lamb)'
+    /* Product: '<S371>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+     *  Trigonometry: '<S371>/sin(lamb)'
      */
     rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)sin
       (rtb_Deg2R1);
 
-    /* Product: '<S370>/Ze' incorporates:
-     *  Product: '<S370>/Rh(1-e^2)'
-     *  Sum: '<S370>/Sum4'
+    /* Product: '<S371>/Ze' incorporates:
+     *  Product: '<S371>/Rh(1-e^2)'
+     *  Sum: '<S371>/Sum4'
      */
     rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_h * rtb_Merge_idx +
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_j[2];
 
-    /* SignalConversion: '<S369>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-     *  Fcn: '<S372>/11'
-     *  Fcn: '<S372>/12'
-     *  Fcn: '<S372>/13'
-     *  Fcn: '<S372>/21'
-     *  Fcn: '<S372>/22'
-     *  Fcn: '<S372>/31'
-     *  Fcn: '<S372>/32'
-     *  Fcn: '<S372>/33'
+    /* SignalConversion: '<S370>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+     *  Fcn: '<S373>/11'
+     *  Fcn: '<S373>/12'
+     *  Fcn: '<S373>/13'
+     *  Fcn: '<S373>/21'
+     *  Fcn: '<S373>/22'
+     *  Fcn: '<S373>/31'
+     *  Fcn: '<S373>/32'
+     *  Fcn: '<S373>/33'
      */
     rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)
       cos(rtb_Deg2R_m_idx);
@@ -1348,7 +1405,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_VectorConcatenate_i[7L] = 0.0F;
     rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
 
-    /* Sum: '<S367>/Sum1' */
+    /* Sum: '<S368>/Sum1' */
     rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
     rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
@@ -1356,8 +1413,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Product3_p4_idx = rtb_Ze -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
 
-    /* Product: '<S369>/Product1' incorporates:
-     *  Gain: '<S367>/UEN 2 NEU'
+    /* Product: '<S370>/Product1' incorporates:
+     *  Gain: '<S368>/UEN 2 NEU'
      */
     for (i = 0; i < 3; i++) {
       tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
@@ -1365,97 +1422,97 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
          rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
     }
 
-    /* End of Product: '<S369>/Product1' */
+    /* End of Product: '<S370>/Product1' */
 
-    /* Gain: '<S367>/UEN 2 NEU' */
+    /* Gain: '<S368>/UEN 2 NEU' */
     for (i = 0; i < 3; i++) {
       tmp_0[i] = controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 6] * tmp[2] +
         (controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 3] * tmp[1] +
          controlMCUSlugsMKIINewNa_ConstP.pooled45[i] * tmp[0]);
     }
 
-    /* Sum: '<S329>/Add' incorporates:
-     *  Gain: '<S367>/UEN 2 NEU'
+    /* Sum: '<S330>/Add' incorporates:
+     *  Gain: '<S368>/UEN 2 NEU'
      */
     rtb_Add_e[0] = tmp_0[0] - rtb_Product6[0];
     rtb_Add_e[1] = tmp_0[1] - rtb_Product6[1];
     rtb_Add_e[2] = tmp_0[2] - rtb_Product6[2];
 
-    /* MATLAB Function: '<S336>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S337>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o(rtb_Add_e,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_f);
 
-    /* MATLAB Function: '<S337>/negprotect' */
+    /* MATLAB Function: '<S338>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_f.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_l);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S337>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S338>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_kc = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_l.zpVal);
 
-    /* Saturate: '<S332>/Zero Bound' */
+    /* Saturate: '<S333>/Zero Bound' */
     rtb_Merge_idx = controlMCUSlugsMKIINewNav_B.CFunctionCall_kc >= 0.001F ?
       controlMCUSlugsMKIINewNav_B.CFunctionCall_kc : 0.001F;
 
-    /* Product: '<S332>/Divide' */
+    /* Product: '<S333>/Divide' */
     rtb_Divide_d[0] = rtb_Add_e[0] / rtb_Merge_idx;
     rtb_Divide_d[1] = rtb_Add_e[1] / rtb_Merge_idx;
     rtb_Divide_d[2] = rtb_Add_e[2] / rtb_Merge_idx;
 
-    /* Product: '<S250>/Product' incorporates:
-     *  Constant: '<S250>/Constant5'
+    /* Product: '<S252>/Product' incorporates:
+     *  Constant: '<S252>/Constant5'
      */
     rtb_Product5[0] = Product * rtb_Divide_d[0] * 2.0F;
     rtb_Product5[1] = Product * rtb_Divide_d[1] * 2.0F;
     rtb_Product5[2] = Product * rtb_Divide_d[2] * 2.0F;
 
-    /* MATLAB Function: '<S329>/Select N  Terms' */
+    /* MATLAB Function: '<S330>/Select N  Terms' */
     controlMCUSlugsMKI_SelectNTerms(rtb_Divide_d,
       &controlMCUSlugsMKIINewNav_B.sf_SelectNTerms_a);
 
-    /* MATLAB Function: '<S343>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S344>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o
       (controlMCUSlugsMKIINewNav_B.sf_SelectNTerms_a.N,
        &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_l);
 
-    /* MATLAB Function: '<S344>/negprotect' */
+    /* MATLAB Function: '<S345>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_l.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_h);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S344>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S345>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_mu = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_h.zpVal);
 
-    /* DataTypeConversion: '<S351>/Data Type Conversion' incorporates:
-     *  Constant: '<S328>/Constant'
+    /* DataTypeConversion: '<S352>/Data Type Conversion' incorporates:
+     *  Constant: '<S329>/Constant'
      */
     rtb_DataTypeConversion = 1.0;
 
-    /* MATLAB Function: '<S351>/Zero out Z1' */
-    /* MATLAB Function: '<S351>/Zero out Z2' */
-    /* MATLAB Function: '<S351>/Zero out Z3' */
-    /* DataTypeConversion: '<S368>/Data Type Conversion' incorporates:
-     *  Constant: '<S328>/Constant1'
+    /* MATLAB Function: '<S352>/Zero out Z1' */
+    /* MATLAB Function: '<S352>/Zero out Z2' */
+    /* MATLAB Function: '<S352>/Zero out Z3' */
+    /* DataTypeConversion: '<S369>/Data Type Conversion' incorporates:
+     *  Constant: '<S329>/Constant1'
      */
     rtb_DataTypeConversion_p = 2.0;
 
-    /* MATLAB Function: '<S368>/Zero out Z1' */
-    /* MATLAB Function: '<S368>/Zero out Z2' */
-    /* MATLAB Function: '<S368>/Zero out Z3' */
-    /* Sum: '<S250>/Subtract' */
+    /* MATLAB Function: '<S369>/Zero out Z1' */
+    /* MATLAB Function: '<S369>/Zero out Z2' */
+    /* MATLAB Function: '<S369>/Zero out Z3' */
+    /* Sum: '<S252>/Subtract' */
     controlMCUSlugsMKIINewNav_B.WP0L2IPT1[0] = rtb_Product6[0] - rtb_Product5[0];
     controlMCUSlugsMKIINewNav_B.WP0L2IPT1[1] = rtb_Product6[1] - rtb_Product5[1];
     controlMCUSlugsMKIINewNav_B.WP0L2IPT1[2] = rtb_Product6[2] - rtb_Product5[2];
 
-    /* End of Outputs for SubSystem: '<S134>/On WP Enable' */
+    /* End of Outputs for SubSystem: '<S135>/On WP Enable' */
 
-    /* MATLAB Function: '<S134>/Zero out Z2' */
+    /* MATLAB Function: '<S135>/Zero out Z2' */
     controlMCUSlugsMKIINe_ZerooutZ1(controlMCUSlugsMKIINewNav_B.WP0L2IPT1,
       &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_e);
 
-    /* Sum: '<S134>/Add' */
+    /* Sum: '<S135>/Add' */
     rtb_PaHPPned[0] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_e.P[0] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
     rtb_PaHPPned[1] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_e.P[1] -
@@ -1463,24 +1520,27 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_PaHPPned[2] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_e.P[2] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-    /* MATLAB Function: '<S383>/Embedded MATLAB Function' */
+    /* Delay: '<S135>/Integer Delay' */
+    rtb_IC2 = controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_p;
+
+    /* MATLAB Function: '<S384>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o(rtb_PaHPPned,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_n);
 
-    /* MATLAB Function: '<S384>/negprotect' */
+    /* MATLAB Function: '<S385>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_n.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_dg);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S384>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S385>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_f5 = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_dg.zpVal);
 
-    /* MATLAB Function: '<S134>/Embedded MATLAB Function' incorporates:
-     *  Gain: '<S134>/Gain'
-     *  RelationalOperator: '<S134>/Relational Operator'
+    /* MATLAB Function: '<S135>/Embedded MATLAB Function' incorporates:
+     *  Gain: '<S135>/Gain'
+     *  RelationalOperator: '<S135>/Relational Operator'
      */
-    /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/Normal WP  Navigation/Embedded MATLAB Function': '<S248>:1' */
+    /* MATLAB Function 'Navigation/Navigation/Normal WP  Navigation/Embedded MATLAB Function': '<S250>:1' */
     /*  This functions keeps track if the IP has been reached and if so */
     /*  it disables homing of IP until WP is reset */
     /*  initialize the persistent and the return value to 1 */
@@ -1488,23 +1548,23 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     /*  this is just turned on for one sample  */
     /*  inmediatley upon enabling the navigation. */
     /*  Reset the flag the the IP was reached */
-    if (controlMCUSlugsMKIINewNav_B.DetectRisingTransitionnavSupp_n != 0) {
-      /* '<S248>:1:19' */
+    if (rtb_DataTypeConversion2_n != 0) {
+      /* '<S250>:1:19' */
       controlMCUSlugsMKIINewNav_DWork.persistentDidReachIP = 0U;
     }
 
     /*  Once the IP is reached the the persistent variable */
     /*  preserves the values until reset */
     if (0.4F * Product > controlMCUSlugsMKIINewNav_B.CFunctionCall_f5) {
-      /* '<S248>:1:24' */
-      /* '<S248>:1:25' */
+      /* '<S250>:1:24' */
+      /* '<S250>:1:25' */
       controlMCUSlugsMKIINewNav_DWork.persistentDidReachIP = 1U;
     }
 
-    /* InitialCondition: '<S134>/IC' incorporates:
-     *  MATLAB Function: '<S134>/Embedded MATLAB Function'
+    /* InitialCondition: '<S135>/IC' incorporates:
+     *  MATLAB Function: '<S135>/Embedded MATLAB Function'
      */
-    /* '<S248>:1:28' */
+    /* '<S250>:1:28' */
     if (controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime_l) {
       controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime_l = FALSE;
       controlMCUSlugsMKIINewNav_B.IC = 0U;
@@ -1513,28 +1573,20 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         controlMCUSlugsMKIINewNav_DWork.persistentDidReachIP;
     }
 
-    /* End of InitialCondition: '<S134>/IC' */
-    /* S-Function "dsPIC_C_function_Call" Block: <S251>/Detect Rising Transition [navSupport.c] */
-    controlMCUSlugsMKIINewNav_B.DetectRisingTransitionnavSupp_g = justEnabled
-      (controlMCUSlugsMKIINewNav_B.IC,((uint8_T)1U));
+    /* End of InitialCondition: '<S135>/IC' */
 
-    /* MATLAB Function: '<S134>/computeCurrentWP' incorporates:
-     *  Delay: '<S134>/Integer Delay'
-     *  Logic: '<S134>/Logical Operator'
-     */
-    /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/Normal WP  Navigation/computeCurrentWP': '<S254>:1' */
+    /* MATLAB Function: '<S135>/computeCurrentWP' */
+    /* MATLAB Function 'Navigation/Navigation/Normal WP  Navigation/computeCurrentWP': '<S255>:1' */
     /*  This functions keeps track if the IP has been reached and if so */
     /*  it disables homing of IP until WP is reset */
     /*  initialize the persistent and the return value to 1 */
     /*  so WP, and not homing, is active by default */
-    if ((controlMCUSlugsMKIINewNav_B.DetectRisingTransitionnavSupp_g != 0) ||
-        (controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_p != 0)) {
-      /* '<S254>:1:15' */
-      /* '<S254>:1:16' */
+    if (rtb_IC2 != 0) {
+      /* '<S255>:1:16' */
       controlMCUSlugsMKIINewNav_DWork.fromWp =
         controlMCUSlugsMKIINewNav_DWork.toWp;
 
-      /* '<S254>:1:17' */
+      /* '<S255>:1:17' */
       rtb_u2deg = (uint16_T)controlMCUSlugsMKIINewNav_DWork.toWp + 1U;
       if (rtb_u2deg > 255U) {
         rtb_u2deg = 255U;
@@ -1543,112 +1595,110 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_DWork.toWp = (uint8_T)rtb_u2deg;
       if (controlMCUSlugsMKIINewNav_DWork.toWp >
           controlMCUSlugsMKIINewNav_B.GetMaxWPnavSupportc) {
-        /* '<S254>:1:18' */
-        /* '<S254>:1:19' */
+        /* '<S255>:1:18' */
+        /* '<S255>:1:19' */
         controlMCUSlugsMKIINewNav_DWork.toWp = 1U;
       }
     }
 
     /*  this is jturned on long as we have not reached IP  */
     if (!(controlMCUSlugsMKIINewNav_B.IC != 0)) {
-      /* '<S254>:1:25' */
-      /* '<S254>:1:26' */
+      /* '<S255>:1:25' */
+      /* '<S255>:1:26' */
       controlMCUSlugsMKIINewNav_DWork.fromWp = 1U;
 
-      /* '<S254>:1:27' */
+      /* '<S255>:1:27' */
       controlMCUSlugsMKIINewNav_DWork.toWp = 2U;
     }
 
-    /* '<S254>:1:32' */
+    /* '<S255>:1:32' */
     controlMCUSlugsMKIINewNav_B.WP0 = controlMCUSlugsMKIINewNav_DWork.fromWp;
 
-    /* '<S254>:1:33' */
+    /* '<S255>:1:33' */
     controlMCUSlugsMKIINewNav_B.WP1 = controlMCUSlugsMKIINewNav_DWork.toWp;
 
-    /* End of MATLAB Function: '<S134>/computeCurrentWP' */
+    /* End of MATLAB Function: '<S135>/computeCurrentWP' */
 
-    /* Outputs for Enabled SubSystem: '<S134>/Get Frenet' incorporates:
-     *  EnablePort: '<S249>/Enable'
+    /* Outputs for Enabled SubSystem: '<S135>/Get Frenet' incorporates:
+     *  EnablePort: '<S251>/Enable'
      */
-    /* Gain: '<S297>/Deg2R' */
-    rtb_Deg2R_m_idx_0 = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-    rtb_Deg2R_m_idx = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
+    /* Gain: '<S298>/Deg2R' */
+    rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+    rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S275>/Get Waypoint Coordinates [navSupport.c] */
+    /* S-Function "dsPIC_C_function_Call" Block: <S276>/Get Waypoint Coordinates [navSupport.c] */
     getWP(controlMCUSlugsMKIINewNav_B.WP0,
           &controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_n[0]);
 
-    /* Gain: '<S298>/Deg2R' */
+    /* Gain: '<S299>/Deg2R' */
     rtb_cosphi = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_n[0];
 
-    /* Trigonometry: '<S298>/sin(phi)' */
+    /* Trigonometry: '<S299>/sin(phi)' */
     rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-    /* Sum: '<S298>/Sum1' incorporates:
-     *  Constant: '<S298>/const'
-     *  Product: '<S298>/Product1'
-     *  Product: '<S298>/sin(phi)^2'
+    /* Sum: '<S299>/Sum1' incorporates:
+     *  Constant: '<S299>/const'
+     *  Product: '<S299>/Product1'
+     *  Product: '<S299>/sin(phi)^2'
      */
     rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
       controlMCUSlugsMKIINewNa_ConstB.Sum5_d;
 
-    /* Fcn: '<S298>/f' */
+    /* Fcn: '<S299>/f' */
     if (rtb_Merge_idx < 0.0F) {
       rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
     } else {
       rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
     }
 
-    /* End of Fcn: '<S298>/f' */
+    /* End of Fcn: '<S299>/f' */
 
-    /* Product: '<S298>/Rh' incorporates:
-     *  Constant: '<S298>/Re=equatorial radius'
+    /* Product: '<S299>/Rh' incorporates:
+     *  Constant: '<S299>/Re=equatorial radius'
      */
     rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-    /* Sum: '<S298>/Sum2' */
+    /* Sum: '<S299>/Sum2' */
     rtb_RhhcosphisinlambYe =
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_n[2] +
       rtb_Merge_idx;
 
-    /* Trigonometry: '<S298>/cos(phi)' */
+    /* Trigonometry: '<S299>/cos(phi)' */
     rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-    /* Gain: '<S298>/Deg2R1' */
+    /* Gain: '<S299>/Deg2R1' */
     rtb_Deg2R1 = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_n[1];
 
-    /* Product: '<S298>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-     *  Trigonometry: '<S298>/cos(lamb)'
+    /* Product: '<S299>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+     *  Trigonometry: '<S299>/cos(lamb)'
      */
     rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)cos
       (rtb_Deg2R1);
 
-    /* Product: '<S298>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-     *  Trigonometry: '<S298>/sin(lamb)'
+    /* Product: '<S299>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+     *  Trigonometry: '<S299>/sin(lamb)'
      */
     rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)sin
       (rtb_Deg2R1);
 
-    /* Product: '<S298>/Ze' incorporates:
-     *  Product: '<S298>/Rh(1-e^2)'
-     *  Sum: '<S298>/Sum4'
+    /* Product: '<S299>/Ze' incorporates:
+     *  Product: '<S299>/Rh(1-e^2)'
+     *  Sum: '<S299>/Sum4'
      */
     rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_o * rtb_Merge_idx +
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_n[2];
 
-    /* SignalConversion: '<S297>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-     *  Fcn: '<S300>/11'
-     *  Fcn: '<S300>/12'
-     *  Fcn: '<S300>/13'
-     *  Fcn: '<S300>/21'
-     *  Fcn: '<S300>/22'
-     *  Fcn: '<S300>/31'
-     *  Fcn: '<S300>/32'
-     *  Fcn: '<S300>/33'
+    /* SignalConversion: '<S298>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+     *  Fcn: '<S301>/11'
+     *  Fcn: '<S301>/12'
+     *  Fcn: '<S301>/13'
+     *  Fcn: '<S301>/21'
+     *  Fcn: '<S301>/22'
+     *  Fcn: '<S301>/31'
+     *  Fcn: '<S301>/32'
+     *  Fcn: '<S301>/33'
      */
     rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)
       cos(rtb_Deg2R_m_idx);
@@ -1664,7 +1714,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_VectorConcatenate_i[7L] = 0.0F;
     rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
 
-    /* Sum: '<S295>/Sum1' */
+    /* Sum: '<S296>/Sum1' */
     rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
     rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
@@ -1672,8 +1722,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Product3_p4_idx = rtb_Ze -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
 
-    /* Product: '<S297>/Product1' incorporates:
-     *  Gain: '<S295>/UEN 2 NEU'
+    /* Product: '<S298>/Product1' incorporates:
+     *  Gain: '<S296>/UEN 2 NEU'
      */
     for (i = 0; i < 3; i++) {
       tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
@@ -1681,104 +1731,92 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
          rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
     }
 
-    /* End of Product: '<S297>/Product1' */
+    /* End of Product: '<S298>/Product1' */
 
-    /* Gain: '<S295>/UEN 2 NEU' */
+    /* Gain: '<S296>/UEN 2 NEU' */
     for (i = 0; i < 3; i++) {
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i] = 0.0F;
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i] =
-        controlMCUSlugsMKIINewNa_ConstP.pooled45[i] * tmp[0] +
-        controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i];
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i] =
-        controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 3] * tmp[1] +
-        controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i];
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i] =
-        controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 6] * tmp[2] +
-        controlMCUSlugsMKIINewNav_B.UEN2NEU_f[i];
+      rtb_Product6[i] = controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 6] * tmp[2]
+        + (controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 3] * tmp[1] +
+           controlMCUSlugsMKIINewNa_ConstP.pooled45[i] * tmp[0]);
     }
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S249>/Log 2 [navSupport.c] */
-    setLogFloat2(controlMCUSlugsMKIINewNav_B.UEN2NEU_f);
+    /* Gain: '<S315>/Deg2R' */
+    rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+    rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
 
-    /* Gain: '<S314>/Deg2R' */
-    rtb_Deg2R_m_idx_0 = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-    rtb_Deg2R_m_idx = 0.0174532924F *
-      controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
-
-    /* S-Function "dsPIC_C_function_Call" Block: <S276>/Get Waypoint Coordinates [navSupport.c] */
+    /* S-Function "dsPIC_C_function_Call" Block: <S277>/Get Waypoint Coordinates [navSupport.c] */
     getWP(controlMCUSlugsMKIINewNav_B.WP1,
           &controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_c[0]);
 
-    /* Gain: '<S315>/Deg2R' */
+    /* Gain: '<S316>/Deg2R' */
     rtb_cosphi = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_c[0];
 
-    /* Trigonometry: '<S315>/sin(phi)' */
+    /* Trigonometry: '<S316>/sin(phi)' */
     rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-    /* Sum: '<S315>/Sum1' incorporates:
-     *  Constant: '<S315>/const'
-     *  Product: '<S315>/Product1'
-     *  Product: '<S315>/sin(phi)^2'
+    /* Sum: '<S316>/Sum1' incorporates:
+     *  Constant: '<S316>/const'
+     *  Product: '<S316>/Product1'
+     *  Product: '<S316>/sin(phi)^2'
      */
     rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
       controlMCUSlugsMKIINewNa_ConstB.Sum5_n;
 
-    /* Fcn: '<S315>/f' */
+    /* Fcn: '<S316>/f' */
     if (rtb_Merge_idx < 0.0F) {
       rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
     } else {
       rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
     }
 
-    /* End of Fcn: '<S315>/f' */
+    /* End of Fcn: '<S316>/f' */
 
-    /* Product: '<S315>/Rh' incorporates:
-     *  Constant: '<S315>/Re=equatorial radius'
+    /* Product: '<S316>/Rh' incorporates:
+     *  Constant: '<S316>/Re=equatorial radius'
      */
     rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-    /* Sum: '<S315>/Sum2' */
+    /* Sum: '<S316>/Sum2' */
     rtb_RhhcosphisinlambYe =
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_c[2] +
       rtb_Merge_idx;
 
-    /* Trigonometry: '<S315>/cos(phi)' */
+    /* Trigonometry: '<S316>/cos(phi)' */
     rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-    /* Gain: '<S315>/Deg2R1' */
+    /* Gain: '<S316>/Deg2R1' */
     rtb_Deg2R1 = 0.0174532924F *
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_c[1];
 
-    /* Product: '<S315>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-     *  Trigonometry: '<S315>/cos(lamb)'
+    /* Product: '<S316>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+     *  Trigonometry: '<S316>/cos(lamb)'
      */
     rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)cos
       (rtb_Deg2R1);
 
-    /* Product: '<S315>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-     *  Trigonometry: '<S315>/sin(lamb)'
+    /* Product: '<S316>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+     *  Trigonometry: '<S316>/sin(lamb)'
      */
     rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)sin
       (rtb_Deg2R1);
 
-    /* Product: '<S315>/Ze' incorporates:
-     *  Product: '<S315>/Rh(1-e^2)'
-     *  Sum: '<S315>/Sum4'
+    /* Product: '<S316>/Ze' incorporates:
+     *  Product: '<S316>/Rh(1-e^2)'
+     *  Sum: '<S316>/Sum4'
      */
     rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_ge * rtb_Merge_idx +
       controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_c[2];
 
-    /* SignalConversion: '<S314>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-     *  Fcn: '<S317>/11'
-     *  Fcn: '<S317>/12'
-     *  Fcn: '<S317>/13'
-     *  Fcn: '<S317>/21'
-     *  Fcn: '<S317>/22'
-     *  Fcn: '<S317>/31'
-     *  Fcn: '<S317>/32'
-     *  Fcn: '<S317>/33'
+    /* SignalConversion: '<S315>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+     *  Fcn: '<S318>/11'
+     *  Fcn: '<S318>/12'
+     *  Fcn: '<S318>/13'
+     *  Fcn: '<S318>/21'
+     *  Fcn: '<S318>/22'
+     *  Fcn: '<S318>/31'
+     *  Fcn: '<S318>/32'
+     *  Fcn: '<S318>/33'
      */
     rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)
       cos(rtb_Deg2R_m_idx);
@@ -1794,7 +1832,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_VectorConcatenate_i[7L] = 0.0F;
     rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
 
-    /* Sum: '<S312>/Sum1' */
+    /* Sum: '<S313>/Sum1' */
     rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
     rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
@@ -1802,8 +1840,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Product3_p4_idx = rtb_Ze -
       controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
 
-    /* Product: '<S314>/Product1' incorporates:
-     *  Gain: '<S312>/UEN 2 NEU'
+    /* Product: '<S315>/Product1' incorporates:
+     *  Gain: '<S313>/UEN 2 NEU'
      */
     for (i = 0; i < 3; i++) {
       tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
@@ -1811,9 +1849,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
          rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
     }
 
-    /* End of Product: '<S314>/Product1' */
+    /* End of Product: '<S315>/Product1' */
 
-    /* Gain: '<S312>/UEN 2 NEU' */
+    /* Gain: '<S313>/UEN 2 NEU' */
     for (i = 0; i < 3; i++) {
       controlMCUSlugsMKIINewNav_B.UEN2NEU_l[i] = 0.0F;
       controlMCUSlugsMKIINewNav_B.UEN2NEU_l[i] =
@@ -1827,59 +1865,56 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         controlMCUSlugsMKIINewNav_B.UEN2NEU_l[i];
     }
 
-    /* Sum: '<S271>/Add' */
-    rtb_Add_gw[0] = controlMCUSlugsMKIINewNav_B.UEN2NEU_l[0] -
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[0];
-    rtb_Add_gw[1] = controlMCUSlugsMKIINewNav_B.UEN2NEU_l[1] -
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[1];
-    rtb_Add_gw[2] = controlMCUSlugsMKIINewNav_B.UEN2NEU_l[2] -
-      controlMCUSlugsMKIINewNav_B.UEN2NEU_f[2];
+    /* Sum: '<S272>/Add' */
+    rtb_Add_gw[0] = controlMCUSlugsMKIINewNav_B.UEN2NEU_l[0] - rtb_Product6[0];
+    rtb_Add_gw[1] = controlMCUSlugsMKIINewNav_B.UEN2NEU_l[1] - rtb_Product6[1];
+    rtb_Add_gw[2] = controlMCUSlugsMKIINewNav_B.UEN2NEU_l[2] - rtb_Product6[2];
 
-    /* MATLAB Function: '<S281>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S282>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o(rtb_Add_gw,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_i4);
 
-    /* MATLAB Function: '<S282>/negprotect' */
+    /* MATLAB Function: '<S283>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_i4.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_nk);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S282>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S283>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_av = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_nk.zpVal);
 
-    /* Saturate: '<S277>/Zero Bound' */
+    /* Saturate: '<S278>/Zero Bound' */
     rtb_Merge_idx = controlMCUSlugsMKIINewNav_B.CFunctionCall_av >= 0.001F ?
       controlMCUSlugsMKIINewNav_B.CFunctionCall_av : 0.001F;
 
-    /* Product: '<S277>/Divide' */
+    /* Product: '<S278>/Divide' */
     rtb_Divide_d5[0] = rtb_Add_gw[0] / rtb_Merge_idx;
     rtb_Divide_d5[1] = rtb_Add_gw[1] / rtb_Merge_idx;
     rtb_Divide_d5[2] = rtb_Add_gw[2] / rtb_Merge_idx;
 
-    /* MATLAB Function: '<S271>/Select N  Terms' */
+    /* MATLAB Function: '<S272>/Select N  Terms' */
     controlMCUSlugsMKI_SelectNTerms(rtb_Divide_d5,
       &controlMCUSlugsMKIINewNav_B.sf_SelectNTerms);
 
-    /* MATLAB Function: '<S288>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S289>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o
       (controlMCUSlugsMKIINewNav_B.sf_SelectNTerms.N,
        &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_j5);
 
-    /* MATLAB Function: '<S289>/negprotect' */
+    /* MATLAB Function: '<S290>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_j5.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_k);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S289>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S290>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_ml = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_k.zpVal);
 
-    /* Saturate: '<S278>/Zero Bound' */
+    /* Saturate: '<S279>/Zero Bound' */
     rtb_Merge_idx = controlMCUSlugsMKIINewNav_B.CFunctionCall_ml >= 0.001F ?
       controlMCUSlugsMKIINewNav_B.CFunctionCall_ml : 0.001F;
 
-    /* Product: '<S278>/Divide' */
+    /* Product: '<S279>/Divide' */
     rtb_Divide_h[0] = controlMCUSlugsMKIINewNav_B.sf_SelectNTerms.N[0] /
       rtb_Merge_idx;
     rtb_Divide_h[1] = controlMCUSlugsMKIINewNav_B.sf_SelectNTerms.N[1] /
@@ -1887,48 +1922,45 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Divide_h[2] = controlMCUSlugsMKIINewNav_B.sf_SelectNTerms.N[2] /
       rtb_Merge_idx;
 
-    /* Delay: '<S249>/Integer Delay1' */
+    /* Delay: '<S251>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_B.Merge1 =
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_p;
 
-    /* MATLAB Function: '<S249>/Zero out Z1' */
+    /* MATLAB Function: '<S251>/Zero out Z1' */
     controlMCUSlugsMKIINe_ZerooutZ1(rtb_Divide_h,
       &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_l);
 
-    /* MATLAB Function: '<S249>/Zero out Z2' */
+    /* MATLAB Function: '<S251>/Zero out Z2' */
     controlMCUSlugsMKIINe_ZerooutZ1(rtb_Divide_d5,
       &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_k);
 
-    /* MATLAB Function: '<S249>/Zero out Z3' */
+    /* MATLAB Function: '<S251>/Zero out Z3' */
     controlMCUSlugsMKIINe_ZerooutZ1(controlMCUSlugsMKIINewNav_B.UEN2NEU_l,
       &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ3);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S275>/Log 1 [navSupport.c] */
-    setLogFloat1(controlMCUSlugsMKIINewNav_B.GetWaypointCoordinatesnavSupp_n);
-
-    /* DataTypeConversion: '<S296>/Data Type Conversion' */
+    /* DataTypeConversion: '<S297>/Data Type Conversion' */
     rtb_DataTypeConversion_i = (real_T)controlMCUSlugsMKIINewNav_B.WP0;
 
-    /* MATLAB Function: '<S296>/Zero out Z1' */
-    /* MATLAB Function: '<S296>/Zero out Z2' */
-    /* MATLAB Function: '<S296>/Zero out Z3' */
-    /* DataTypeConversion: '<S313>/Data Type Conversion' */
+    /* MATLAB Function: '<S297>/Zero out Z1' */
+    /* MATLAB Function: '<S297>/Zero out Z2' */
+    /* MATLAB Function: '<S297>/Zero out Z3' */
+    /* DataTypeConversion: '<S314>/Data Type Conversion' */
     rtb_DataTypeConversion_m = (real_T)controlMCUSlugsMKIINewNav_B.WP1;
 
-    /* MATLAB Function: '<S313>/Zero out Z1' */
-    /* MATLAB Function: '<S313>/Zero out Z2' */
-    /* Product: '<S249>/Product1' */
+    /* MATLAB Function: '<S314>/Zero out Z1' */
+    /* MATLAB Function: '<S314>/Zero out Z2' */
+    /* Product: '<S251>/Product1' */
     controlMCUSlugsMKIINewNav_B.Product1_e =
       controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_k[1] *
       controlMCUSlugsMKIINewNav_B.CFunctionCall_a;
 
-    /* Update for Delay: '<S249>/Integer Delay1' */
+    /* Update for Delay: '<S251>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_p =
       controlMCUSlugsMKIINewNav_B.UEN2NEU_l[2];
 
-    /* End of Outputs for SubSystem: '<S134>/Get Frenet' */
+    /* End of Outputs for SubSystem: '<S135>/Get Frenet' */
 
-    /* Sum: '<S247>/Subtract' */
+    /* Sum: '<S249>/Subtract' */
     rtb_Subtract_c[0] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ3.P[0];
     rtb_Subtract_c[1] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[1] -
@@ -1936,24 +1968,24 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Subtract_c[2] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ3.P[2];
 
-    /* MATLAB Function: '<S256>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S257>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_d(rtb_Subtract_c,
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_l.P,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_bh);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S257>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S258>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_bg = myAbs
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_bh.xDoty);
 
-    /* Sum: '<S247>/Add' incorporates:
-     *  Product: '<S247>/Product'
-     *  Product: '<S247>/Product1'
+    /* Sum: '<S249>/Add' incorporates:
+     *  Product: '<S249>/Product'
+     *  Product: '<S249>/Product1'
      */
     rtb_Add_cj = Product * Product -
       controlMCUSlugsMKIINewNav_B.CFunctionCall_bg *
       controlMCUSlugsMKIINewNav_B.CFunctionCall_bg;
 
-    /* Sum: '<S255>/Subtract' */
+    /* Sum: '<S256>/Subtract' */
     rtb_Subtract_d[0] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ3.P[0] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
     rtb_Subtract_d[1] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ3.P[1] -
@@ -1961,14 +1993,14 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Subtract_d[2] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ3.P[2] -
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-    /* MATLAB Function: '<S263>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S264>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_d(rtb_Subtract_d,
       controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_k.P,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_do);
 
-    /* Switch: '<S262>/Switch3' incorporates:
-     *  Delay: '<S262>/Integer Delay3'
-     *  RelationalOperator: '<S262>/Relational Operator2'
+    /* Switch: '<S263>/Switch3' incorporates:
+     *  Delay: '<S263>/Integer Delay3'
+     *  RelationalOperator: '<S263>/Relational Operator2'
      */
     if ((controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_do.xDoty ==
          controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_do.xDoty) > 0) {
@@ -1978,64 +2010,64 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Deg2R1 = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_l;
     }
 
-    /* End of Switch: '<S262>/Switch3' */
+    /* End of Switch: '<S263>/Switch3' */
 
-    /* Product: '<S247>/Divide1' */
+    /* Product: '<S249>/Divide1' */
     rtb_Merge_idx = Product;
 
-    /* Product: '<S247>/Divide' incorporates:
-     *  Constant: '<S247>/Constant4'
+    /* Product: '<S249>/Divide' incorporates:
+     *  Constant: '<S249>/Constant4'
      */
     rtb_RhhcosphisinlambYe = controlMCUSlugsMKIINewNav_B.CFunctionCall_bg /
       0.577350259F;
 
-    /* Switch: '<S261>/Switch' incorporates:
-     *  Product: '<S247>/Divide1'
-     *  RelationalOperator: '<S261>/Relational Operator'
+    /* Switch: '<S262>/Switch' incorporates:
+     *  Product: '<S249>/Divide1'
+     *  RelationalOperator: '<S262>/Relational Operator'
      */
     if (!(Product < rtb_RhhcosphisinlambYe)) {
       rtb_Merge_idx = rtb_RhhcosphisinlambYe;
     }
 
-    /* End of Switch: '<S261>/Switch' */
+    /* End of Switch: '<S262>/Switch' */
 
-    /* MATLAB Function: '<S258>/negprotect' */
+    /* MATLAB Function: '<S259>/negprotect' */
     controlMCUSlugsMKIIN_negprotect(rtb_Add_cj,
       &controlMCUSlugsMKIINewNav_B.sf_negprotect_d0);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S258>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S259>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_b2 = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_d0.zpVal);
 
-    /* Switch: '<S134>/Switch' incorporates:
-     *  Product: '<S247>/Product2'
-     *  Sum: '<S247>/Add3'
+    /* Switch: '<S135>/Switch' incorporates:
+     *  Product: '<S249>/Product2'
+     *  Sum: '<S249>/Add3'
      */
     if (controlMCUSlugsMKIINewNav_B.IC > 0) {
-      /* Switch: '<S260>/Switch' incorporates:
-       *  RelationalOperator: '<S247>/Relational Operator'
-       *  RelationalOperator: '<S260>/Relational Operator'
-       *  Switch: '<S247>/Switch1'
+      /* Switch: '<S261>/Switch' incorporates:
+       *  RelationalOperator: '<S249>/Relational Operator'
+       *  RelationalOperator: '<S261>/Relational Operator'
+       *  Switch: '<S249>/Switch1'
        */
       if ((!(controlMCUSlugsMKIINewNav_B.CFunctionCall_bg > Product)) &&
           (!(rtb_Merge_idx > controlMCUSlugsMKIINewNav_B.CFunctionCall_b2))) {
         rtb_Merge_idx = controlMCUSlugsMKIINewNav_B.CFunctionCall_b2;
       }
 
-      /* End of Switch: '<S260>/Switch' */
+      /* End of Switch: '<S261>/Switch' */
 
-      /* Sum: '<S247>/Add1' */
+      /* Sum: '<S249>/Add1' */
       rtb_Merge_idx = rtb_Deg2R1 - rtb_Merge_idx;
 
-      /* Switch: '<S259>/Switch' incorporates:
-       *  Constant: '<S247>/Constant1'
-       *  RelationalOperator: '<S259>/Relational Operator'
+      /* Switch: '<S260>/Switch' incorporates:
+       *  Constant: '<S249>/Constant1'
+       *  RelationalOperator: '<S260>/Relational Operator'
        */
       if (!(rtb_Merge_idx > 0.0F)) {
         rtb_Merge_idx = 0.0F;
       }
 
-      /* End of Switch: '<S259>/Switch' */
+      /* End of Switch: '<S260>/Switch' */
       controlMCUSlugsMKIINewNav_B.Merge[0] = (0.0F - rtb_Merge_idx *
         controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_k.P[0]) - rtb_Subtract_c[0];
       controlMCUSlugsMKIINewNav_B.Merge[1] = (0.0F - rtb_Merge_idx *
@@ -2048,9 +2080,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_B.Merge[2] = rtb_PaHPPned[2];
     }
 
-    /* End of Switch: '<S134>/Switch' */
+    /* End of Switch: '<S135>/Switch' */
 
-    /* Switch: '<S134>/Switch1' */
+    /* Switch: '<S135>/Switch1' */
     if (controlMCUSlugsMKIINewNav_B.IC > 0) {
       controlMCUSlugsMKIINewNav_B.Merge2 = rtb_Deg2R1;
     } else {
@@ -2058,23 +2090,23 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         controlMCUSlugsMKIINewNav_B.CFunctionCall_f5;
     }
 
-    /* End of Switch: '<S134>/Switch1' */
+    /* End of Switch: '<S135>/Switch1' */
 
-    /* Update for Delay: '<S134>/Integer Delay' incorporates:
-     *  RelationalOperator: '<S247>/Switch Distance Less than?'
+    /* Update for Delay: '<S135>/Integer Delay' incorporates:
+     *  RelationalOperator: '<S249>/Switch Distance Less than?'
      */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_p = (rtb_Deg2R1 <
       controlMCUSlugsMKIINewNav_B.Product1_e);
 
-    /* Update for Delay: '<S262>/Integer Delay3' */
+    /* Update for Delay: '<S263>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_l = rtb_Deg2R1;
 
-    /* End of Outputs for SubSystem: '<S127>/Normal WP  Navigation' */
+    /* End of Outputs for SubSystem: '<S128>/Normal WP  Navigation' */
   } else if (controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c == 10) {
-    /* Outputs for IfAction SubSystem: '<S127>/Line Segment' incorporates:
-     *  ActionPort: '<S132>/Action Port'
+    /* Outputs for IfAction SubSystem: '<S128>/Line Segment' incorporates:
+     *  ActionPort: '<S133>/Action Port'
      */
-    /* Gain: '<S132>/Gain' */
+    /* Gain: '<S133>/Gain' */
     controlMCUSlugsMKIINewNav_B.Merge[0] =
       -controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
     controlMCUSlugsMKIINewNav_B.Merge[1] =
@@ -2082,110 +2114,108 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_B.Merge[2] =
       -controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-    /* Gain: '<S132>/Gain1' */
+    /* Gain: '<S133>/Gain1' */
     rtb_Gain1[0] = -controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
     rtb_Gain1[1] = -controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[1];
     rtb_Gain1[2] = -controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-    /* MATLAB Function: '<S241>/Embedded MATLAB Function' */
+    /* MATLAB Function: '<S243>/Embedded MATLAB Function' */
     contro_EmbeddedMATLABFunction_o(rtb_Gain1,
       &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_dr);
 
-    /* MATLAB Function: '<S242>/negprotect' */
+    /* MATLAB Function: '<S244>/negprotect' */
     controlMCUSlugsMKIIN_negprotect
       (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_dr.xDoty,
        &controlMCUSlugsMKIINewNav_B.sf_negprotect_a);
 
-    /* S-Function "dsPIC_C_function_Call" Block: <S242>/C Function Call */
+    /* S-Function "dsPIC_C_function_Call" Block: <S244>/C Function Call */
     controlMCUSlugsMKIINewNav_B.CFunctionCall_b = mySqrt
       (controlMCUSlugsMKIINewNav_B.sf_negprotect_a.zpVal);
 
-    /* SignalConversion: '<S245>/Numerical Unity' */
+    /* SignalConversion: '<S247>/Numerical Unity' */
     controlMCUSlugsMKIINewNav_B.Merge2 =
       controlMCUSlugsMKIINewNav_B.CFunctionCall_b;
     controlMCUSlugsMKIINewNav_B.Merge1 =
       controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[1];
 
-    /* End of Outputs for SubSystem: '<S127>/Line Segment' */
+    /* End of Outputs for SubSystem: '<S128>/Line Segment' */
   } else {
     if (controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c == 9) {
-      /* Outputs for IfAction SubSystem: '<S127>/Circle Navigation' incorporates:
-       *  ActionPort: '<S128>/Action Port'
+      /* Outputs for IfAction SubSystem: '<S128>/Circle Navigation' incorporates:
+       *  ActionPort: '<S129>/Action Port'
        */
-      /* Gain: '<S152>/Deg2R' */
-      rtb_Deg2R_m_idx_0 = 0.0174532924F *
-        controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-      rtb_Deg2R_m_idx = 0.0174532924F *
-        controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
+      /* Gain: '<S154>/Deg2R' */
+      rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+      rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
 
-      /* Gain: '<S153>/Deg2R' */
+      /* Gain: '<S155>/Deg2R' */
       rtb_cosphi = 0.0174532924F *
         controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[0];
 
-      /* Trigonometry: '<S153>/sin(phi)' */
+      /* Trigonometry: '<S155>/sin(phi)' */
       rtb_Ze = (real32_T)sin(rtb_cosphi);
 
-      /* Sum: '<S153>/Sum1' incorporates:
-       *  Constant: '<S153>/const'
-       *  Product: '<S153>/Product1'
-       *  Product: '<S153>/sin(phi)^2'
+      /* Sum: '<S155>/Sum1' incorporates:
+       *  Constant: '<S155>/const'
+       *  Product: '<S155>/Product1'
+       *  Product: '<S155>/sin(phi)^2'
        */
       rtb_Merge_idx = 1.0F - rtb_Ze * rtb_Ze *
         controlMCUSlugsMKIINewNa_ConstB.Sum5_h;
 
-      /* Fcn: '<S153>/f' */
+      /* Fcn: '<S155>/f' */
       if (rtb_Merge_idx < 0.0F) {
         rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
       } else {
         rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
       }
 
-      /* End of Fcn: '<S153>/f' */
+      /* End of Fcn: '<S155>/f' */
 
-      /* Product: '<S153>/Rh' incorporates:
-       *  Constant: '<S153>/Re=equatorial radius'
+      /* Product: '<S155>/Rh' incorporates:
+       *  Constant: '<S155>/Re=equatorial radius'
        */
       rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
 
-      /* Sum: '<S153>/Sum2' */
+      /* Sum: '<S155>/Sum2' */
       rtb_RhhcosphisinlambYe =
         controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[2] + rtb_Merge_idx;
 
-      /* Trigonometry: '<S153>/cos(phi)' */
+      /* Trigonometry: '<S155>/cos(phi)' */
       rtb_cosphi = (real32_T)cos(rtb_cosphi);
 
-      /* Gain: '<S153>/Deg2R1' */
+      /* Gain: '<S155>/Deg2R1' */
       rtb_Deg2R1 = 0.0174532924F *
         controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[1];
 
-      /* Product: '<S153>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-       *  Trigonometry: '<S153>/cos(lamb)'
+      /* Product: '<S155>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+       *  Trigonometry: '<S155>/cos(lamb)'
        */
       rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)
         cos(rtb_Deg2R1);
 
-      /* Product: '<S153>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-       *  Trigonometry: '<S153>/sin(lamb)'
+      /* Product: '<S155>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+       *  Trigonometry: '<S155>/sin(lamb)'
        */
       rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_cosphi * (real32_T)
         sin(rtb_Deg2R1);
 
-      /* Product: '<S153>/Ze' incorporates:
-       *  Product: '<S153>/Rh(1-e^2)'
-       *  Sum: '<S153>/Sum4'
+      /* Product: '<S155>/Ze' incorporates:
+       *  Product: '<S155>/Rh(1-e^2)'
+       *  Sum: '<S155>/Sum4'
        */
       rtb_Ze *= controlMCUSlugsMKIINewNa_ConstB.e2_n * rtb_Merge_idx +
         controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[2];
 
-      /* SignalConversion: '<S152>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-       *  Fcn: '<S155>/11'
-       *  Fcn: '<S155>/12'
-       *  Fcn: '<S155>/13'
-       *  Fcn: '<S155>/21'
-       *  Fcn: '<S155>/22'
-       *  Fcn: '<S155>/31'
-       *  Fcn: '<S155>/32'
-       *  Fcn: '<S155>/33'
+      /* SignalConversion: '<S154>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+       *  Fcn: '<S157>/11'
+       *  Fcn: '<S157>/12'
+       *  Fcn: '<S157>/13'
+       *  Fcn: '<S157>/21'
+       *  Fcn: '<S157>/22'
+       *  Fcn: '<S157>/31'
+       *  Fcn: '<S157>/32'
+       *  Fcn: '<S157>/33'
        */
       rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)
         cos(rtb_Deg2R_m_idx);
@@ -2201,7 +2231,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_VectorConcatenate_i[7L] = 0.0F;
       rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
 
-      /* Sum: '<S150>/Sum1' */
+      /* Sum: '<S152>/Sum1' */
       rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
       rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
@@ -2209,8 +2239,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Product3_p4_idx = rtb_Ze -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
 
-      /* Product: '<S152>/Product1' incorporates:
-       *  Gain: '<S150>/UEN 2 NEU'
+      /* Product: '<S154>/Product1' incorporates:
+       *  Gain: '<S152>/UEN 2 NEU'
        */
       for (i = 0; i < 3; i++) {
         tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
@@ -2218,9 +2248,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
            rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
       }
 
-      /* End of Product: '<S152>/Product1' */
+      /* End of Product: '<S154>/Product1' */
 
-      /* Gain: '<S150>/UEN 2 NEU' */
+      /* Gain: '<S152>/UEN 2 NEU' */
       for (i = 0; i < 3; i++) {
         controlMCUSlugsMKIINewNav_B.UEN2NEU[i] = 0.0F;
         controlMCUSlugsMKIINewNav_B.UEN2NEU[i] =
@@ -2234,15 +2264,15 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
           controlMCUSlugsMKIINewNav_B.UEN2NEU[i];
       }
 
-      /* Delay: '<S144>/Integer Delay1' */
+      /* Delay: '<S146>/Integer Delay1' */
       controlMCUSlugsMKIINewNav_B.Merge1 =
         controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE;
 
-      /* MATLAB Function: '<S144>/Zero out Z2' */
+      /* MATLAB Function: '<S146>/Zero out Z2' */
       controlMCUSlugsMKIINe_ZerooutZ1(controlMCUSlugsMKIINewNav_B.UEN2NEU,
         &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a);
 
-      /* Sum: '<S128>/Sum1' */
+      /* Sum: '<S129>/Sum1' */
       rtb_Sum1_a[0] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0] -
         controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[0];
       rtb_Sum1_a[1] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[1] -
@@ -2250,41 +2280,41 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Sum1_a[2] = controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2] -
         controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[2];
 
-      /* MATLAB Function: '<S196>/Embedded MATLAB Function' */
+      /* MATLAB Function: '<S198>/Embedded MATLAB Function' */
       contro_EmbeddedMATLABFunction_o(rtb_Sum1_a,
         &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_p);
 
-      /* MATLAB Function: '<S197>/negprotect' */
+      /* MATLAB Function: '<S199>/negprotect' */
       controlMCUSlugsMKIIN_negprotect
         (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_p.xDoty,
          &controlMCUSlugsMKIINewNav_B.sf_negprotect_dl);
 
-      /* S-Function "dsPIC_C_function_Call" Block: <S197>/C Function Call */
+      /* S-Function "dsPIC_C_function_Call" Block: <S199>/C Function Call */
       controlMCUSlugsMKIINewNav_B.CFunctionCall_mk = mySqrt
         (controlMCUSlugsMKIINewNav_B.sf_negprotect_dl.zpVal);
 
-      /* Product: '<S128>/Product' */
+      /* Product: '<S129>/Product' */
       rtb_Merge_idx = controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_k
         [0] * controlMCUSlugsMKIINewNav_B.CFunctionCall_a;
 
-      /* Sum: '<S128>/Sum2' */
+      /* Sum: '<S129>/Sum2' */
       controlMCUSlugsMKIINewNav_B.Sum2 = Product - rtb_Merge_idx;
 
-      /* S-Function "dsPIC_C_function_Call" Block: <S149>/C Function Call */
+      /* S-Function "dsPIC_C_function_Call" Block: <S151>/C Function Call */
       controlMCUSlugsMKIINewNav_B.CFunctionCall_ox = myAbs
         (controlMCUSlugsMKIINewNav_B.Sum2);
 
-      /* If: '<S128>/If' incorporates:
-       *  Product: '<S146>/Product7'
-       *  Sum: '<S128>/Sum'
-       *  Sum: '<S146>/Subtract3'
+      /* If: '<S129>/If' incorporates:
+       *  Product: '<S148>/Product7'
+       *  Sum: '<S129>/Sum'
+       *  Sum: '<S148>/Subtract3'
        */
       if (controlMCUSlugsMKIINewNav_B.CFunctionCall_mk > rtb_Merge_idx + Product)
       {
-        /* Outputs for IfAction SubSystem: '<S128>/No intersection,  Navigate to ISR' incorporates:
-         *  ActionPort: '<S147>/Action Port'
+        /* Outputs for IfAction SubSystem: '<S129>/No intersection,  Navigate to ISR' incorporates:
+         *  ActionPort: '<S149>/Action Port'
          */
-        /* Sum: '<S147>/Subtract' */
+        /* Sum: '<S149>/Subtract' */
         controlMCUSlugsMKIINewNav_B.Merge[0] =
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[0] -
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
@@ -2295,26 +2325,26 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[2] -
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-        /* End of Outputs for SubSystem: '<S128>/No intersection,  Navigate to ISR' */
+        /* End of Outputs for SubSystem: '<S129>/No intersection,  Navigate to ISR' */
       } else if (controlMCUSlugsMKIINewNav_B.CFunctionCall_mk <
                  controlMCUSlugsMKIINewNav_B.CFunctionCall_ox) {
-        /* Outputs for IfAction SubSystem: '<S128>/Inside the Circle,  Keep Straight until  intersection' incorporates:
-         *  ActionPort: '<S145>/Action Port'
+        /* Outputs for IfAction SubSystem: '<S129>/Inside the Circle,  Keep Straight until  intersection' incorporates:
+         *  ActionPort: '<S147>/Action Port'
          */
-        /* Sum: '<S145>/Subtract' incorporates:
-         *  MATLAB Function: '<S145>/Compute Head of Circle'
+        /* Sum: '<S147>/Subtract' incorporates:
+         *  MATLAB Function: '<S147>/Compute Head of Circle'
          */
-        /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/Circle Navigation/Inside the Circle,  Keep Straight until  intersection/Compute Head of Circle': '<S157>:1' */
+        /* MATLAB Function 'Navigation/Navigation/Circle Navigation/Inside the Circle,  Keep Straight until  intersection/Compute Head of Circle': '<S159>:1' */
         /* % Compute the top coordinate of the circle */
         /*  using the circle's parametric equations: */
         /*   x = a + r cos (t) */
         /*   y = b + r sin (t) */
         /*  */
         /*  @ t =0 */
-        /* '<S157>:1:9' */
-        /* '<S157>:1:11' */
-        /* '<S157>:1:12' */
-        /* '<S157>:1:13' */
+        /* '<S159>:1:9' */
+        /* '<S159>:1:11' */
+        /* '<S159>:1:12' */
+        /* '<S159>:1:13' */
         controlMCUSlugsMKIINewNav_B.Merge[0] = (real32_T)((real_T)
           (controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[0] + Product) - (real_T)
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0]);
@@ -2325,53 +2355,53 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[2] - (real_T)
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2]);
 
-        /* End of Outputs for SubSystem: '<S128>/Inside the Circle,  Keep Straight until  intersection' */
+        /* End of Outputs for SubSystem: '<S129>/Inside the Circle,  Keep Straight until  intersection' */
       } else {
-        /* Outputs for IfAction SubSystem: '<S128>/Intersection. Circular Navigation' incorporates:
-         *  ActionPort: '<S146>/Action Port'
+        /* Outputs for IfAction SubSystem: '<S129>/Intersection. Circular Navigation' incorporates:
+         *  ActionPort: '<S148>/Action Port'
          */
-        /* Product: '<S146>/Product' */
+        /* Product: '<S148>/Product' */
         rtb_Deg2R1 = Product * Product;
 
-        /* Product: '<S146>/Product2' */
+        /* Product: '<S148>/Product2' */
         rtb_RhhcosphisinlambYe = controlMCUSlugsMKIINewNav_B.CFunctionCall_mk *
           controlMCUSlugsMKIINewNav_B.CFunctionCall_mk;
 
-        /* Sum: '<S146>/Subtract1' */
+        /* Sum: '<S148>/Subtract1' */
         rtb_Subtract1_o = controlMCUSlugsMKIINewNav_B.CFunctionCall_mk +
           controlMCUSlugsMKIINewNav_B.CFunctionCall_mk;
 
-        /* MATLAB Function: '<S146>/negprotect2' */
+        /* MATLAB Function: '<S148>/negprotect2' */
         controlMCUSlugsMKII_negprotect3(rtb_Subtract1_o,
           &controlMCUSlugsMKIINewNav_B.sf_negprotect2);
 
-        /* Product: '<S146>/Product3' incorporates:
-         *  Product: '<S146>/Product1'
-         *  Sum: '<S146>/Subtract'
+        /* Product: '<S148>/Product3' incorporates:
+         *  Product: '<S148>/Product1'
+         *  Sum: '<S148>/Subtract'
          */
         rtb_Merge_idx = ((rtb_Deg2R1 - rtb_Merge_idx * rtb_Merge_idx) +
                          rtb_RhhcosphisinlambYe) /
           controlMCUSlugsMKIINewNav_B.sf_negprotect2.zpVal;
 
-        /* Sum: '<S146>/Subtract2' incorporates:
-         *  Product: '<S146>/Product4'
+        /* Sum: '<S148>/Subtract2' incorporates:
+         *  Product: '<S148>/Product4'
          */
         rtb_h = rtb_Deg2R1 - rtb_Merge_idx * rtb_Merge_idx;
 
-        /* MATLAB Function: '<S163>/negprotect' */
+        /* MATLAB Function: '<S165>/negprotect' */
         controlMCUSlugsMKIIN_negprotect(rtb_h,
           &controlMCUSlugsMKIINewNav_B.sf_negprotect_dz);
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S163>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S165>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_p5 = mySqrt
           (controlMCUSlugsMKIINewNav_B.sf_negprotect_dz.zpVal);
 
-        /* MATLAB Function: '<S146>/negprotect1' */
+        /* MATLAB Function: '<S148>/negprotect1' */
         controlMCUSlugsMKII_negprotect3
           (controlMCUSlugsMKIINewNav_B.CFunctionCall_mk,
            &controlMCUSlugsMKIINewNav_B.sf_negprotect1);
 
-        /* Product: '<S146>/Product6' */
+        /* Product: '<S148>/Product6' */
         rtb_Product6[0] = rtb_Sum1_a[0] /
           controlMCUSlugsMKIINewNav_B.sf_negprotect1.zpVal;
         rtb_Product6[1] = rtb_Sum1_a[1] /
@@ -2379,7 +2409,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         rtb_Product6[2] = rtb_Sum1_a[2] /
           controlMCUSlugsMKIINewNav_B.sf_negprotect1.zpVal;
 
-        /* Product: '<S146>/Product5' */
+        /* Product: '<S148>/Product5' */
         rtb_Product5[0] = controlMCUSlugsMKIINewNav_B.CFunctionCall_p5 *
           rtb_Product6[0];
         rtb_Product5[1] = controlMCUSlugsMKIINewNav_B.CFunctionCall_p5 *
@@ -2393,67 +2423,67 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         rtb_Product6[2] = rtb_Product6[2] * rtb_Merge_idx +
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2_a.P[2];
 
-        /* Sum: '<S146>/Subtract6' incorporates:
-         *  MATLAB Function: '<S146>/Embedded MATLAB Function'
-         *  Product: '<S146>/Product7'
-         *  Sum: '<S146>/Subtract3'
+        /* Sum: '<S148>/Subtract6' incorporates:
+         *  MATLAB Function: '<S148>/Embedded MATLAB Function'
+         *  Product: '<S148>/Product7'
+         *  Sum: '<S148>/Subtract3'
          */
-        /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/Circle Navigation/Intersection. Circular Navigation/Embedded MATLAB Function': '<S160>:1' */
+        /* MATLAB Function 'Navigation/Navigation/Circle Navigation/Intersection. Circular Navigation/Embedded MATLAB Function': '<S162>:1' */
         /*  This block supports an embeddable subset of the MATLAB language. */
         /*  See the help menu for details.  */
-        /* '<S160>:1:5' */
-        /* '<S160>:1:6' */
-        /* '<S160>:1:8' */
-        /* '<S160>:1:9' */
-        /* '<S160>:1:11' */
-        /* '<S160>:1:12' */
+        /* '<S162>:1:5' */
+        /* '<S162>:1:6' */
+        /* '<S162>:1:8' */
+        /* '<S162>:1:9' */
+        /* '<S162>:1:11' */
+        /* '<S162>:1:12' */
         rtb_Subtract6[0] = (rtb_Product6[0] - rtb_Product5[1]) -
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
         rtb_Subtract6[1] = (rtb_Product6[1] + rtb_Product5[0]) -
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[1];
         rtb_Subtract6[2] = 0.0F - controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-        /* MATLAB Function: '<S167>/Embedded MATLAB Function' */
+        /* MATLAB Function: '<S169>/Embedded MATLAB Function' */
         contro_EmbeddedMATLABFunction_d
           (controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1.P, rtb_Subtract6,
            &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_ls);
 
-        /* MATLAB Function: '<S170>/Embedded MATLAB Function' */
+        /* MATLAB Function: '<S172>/Embedded MATLAB Function' */
         contro_EmbeddedMATLABFunction_o(rtb_Subtract6,
           &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_eq);
 
-        /* MATLAB Function: '<S171>/negprotect' */
+        /* MATLAB Function: '<S173>/negprotect' */
         controlMCUSlugsMKIIN_negprotect
           (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_eq.xDoty,
            &controlMCUSlugsMKIINewNav_B.sf_negprotect_ht);
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S171>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S173>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_op = mySqrt
           (controlMCUSlugsMKIINewNav_B.sf_negprotect_ht.zpVal);
 
-        /* Product: '<S158>/Product9' */
+        /* Product: '<S160>/Product9' */
         rtb_Product9 = controlMCUSlugsMKIINewNav_B.CFunctionCall_op *
           controlMCUSlugsMKIINewNav_B.CFunctionCall_a;
 
-        /* MATLAB Function: '<S158>/negprotect3' */
+        /* MATLAB Function: '<S160>/negprotect3' */
         controlMCUSlugsMKII_negprotect3(rtb_Product9,
           &controlMCUSlugsMKIINewNav_B.sf_negprotect3);
 
-        /* Product: '<S158>/Product8' */
+        /* Product: '<S160>/Product8' */
         rtb_Product3_p4_idx =
           controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_ls.xDoty /
           controlMCUSlugsMKIINewNav_B.sf_negprotect3.zpVal;
 
-        /* Saturate: '<S158>/[-1 1]' */
+        /* Saturate: '<S160>/[-1 1]' */
         controlMCUSlugsMKIINewNav_B.u1_h = rtb_Product3_p4_idx >= 1.0F ? 1.0F :
           rtb_Product3_p4_idx <= -1.0F ? -1.0F : rtb_Product3_p4_idx;
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S168>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S170>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_l = myAcos
           (controlMCUSlugsMKIINewNav_B.u1_h);
 
-        /* Sum: '<S146>/Subtract5' incorporates:
-         *  MATLAB Function: '<S146>/Embedded MATLAB Function'
+        /* Sum: '<S148>/Subtract5' incorporates:
+         *  MATLAB Function: '<S148>/Embedded MATLAB Function'
          */
         rtb_Subtract5[0] = (rtb_Product6[0] + rtb_Product5[1]) -
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[0];
@@ -2461,55 +2491,55 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
           controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[1];
         rtb_Subtract5[2] = 0.0F - controlMCUSlugsMKIINewNav_B.sf_ZerooutZ2.P[2];
 
-        /* MATLAB Function: '<S180>/Embedded MATLAB Function' */
+        /* MATLAB Function: '<S182>/Embedded MATLAB Function' */
         contro_EmbeddedMATLABFunction_d
           (controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1.P, rtb_Subtract5,
            &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_ip);
 
-        /* MATLAB Function: '<S183>/Embedded MATLAB Function' */
+        /* MATLAB Function: '<S185>/Embedded MATLAB Function' */
         contro_EmbeddedMATLABFunction_o(rtb_Subtract5,
           &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_py);
 
-        /* MATLAB Function: '<S184>/negprotect' */
+        /* MATLAB Function: '<S186>/negprotect' */
         controlMCUSlugsMKIIN_negprotect
           (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_py.xDoty,
            &controlMCUSlugsMKIINewNav_B.sf_negprotect_l0);
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S184>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S186>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_aw = mySqrt
           (controlMCUSlugsMKIINewNav_B.sf_negprotect_l0.zpVal);
 
-        /* Product: '<S159>/Product9' */
+        /* Product: '<S161>/Product9' */
         rtb_Product9_j = controlMCUSlugsMKIINewNav_B.CFunctionCall_aw *
           controlMCUSlugsMKIINewNav_B.CFunctionCall_a;
 
-        /* MATLAB Function: '<S159>/negprotect3' */
+        /* MATLAB Function: '<S161>/negprotect3' */
         controlMCUSlugsMKII_negprotect3(rtb_Product9_j,
           &controlMCUSlugsMKIINewNav_B.sf_negprotect3_b);
 
-        /* Product: '<S159>/Product8' */
+        /* Product: '<S161>/Product8' */
         rtb_Product3_p4_idx =
           controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_ip.xDoty /
           controlMCUSlugsMKIINewNav_B.sf_negprotect3_b.zpVal;
 
-        /* Saturate: '<S159>/[-1 1]' */
+        /* Saturate: '<S161>/[-1 1]' */
         controlMCUSlugsMKIINewNav_B.u1_m = rtb_Product3_p4_idx >= 1.0F ? 1.0F :
           rtb_Product3_p4_idx <= -1.0F ? -1.0F : rtb_Product3_p4_idx;
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S181>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S183>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_j = myAcos
           (controlMCUSlugsMKIINewNav_B.u1_m);
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S162>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S164>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_pg = myAbs
           (controlMCUSlugsMKIINewNav_B.CFunctionCall_j);
 
-        /* S-Function "dsPIC_C_function_Call" Block: <S161>/C Function Call */
+        /* S-Function "dsPIC_C_function_Call" Block: <S163>/C Function Call */
         controlMCUSlugsMKIINewNav_B.CFunctionCall_n = myAbs
           (controlMCUSlugsMKIINewNav_B.CFunctionCall_l);
 
-        /* Switch: '<S146>/Switch1' incorporates:
-         *  RelationalOperator: '<S146>/Relational Operator'
+        /* Switch: '<S148>/Switch1' incorporates:
+         *  RelationalOperator: '<S148>/Relational Operator'
          */
         if (controlMCUSlugsMKIINewNav_B.CFunctionCall_pg <=
             controlMCUSlugsMKIINewNav_B.CFunctionCall_n) {
@@ -2522,226 +2552,55 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
           controlMCUSlugsMKIINewNav_B.Merge[2] = rtb_Subtract6[2];
         }
 
-        /* End of Switch: '<S146>/Switch1' */
-        /* End of Outputs for SubSystem: '<S128>/Intersection. Circular Navigation' */
+        /* End of Switch: '<S148>/Switch1' */
+        /* End of Outputs for SubSystem: '<S129>/Intersection. Circular Navigation' */
       }
 
-      /* End of If: '<S128>/If' */
+      /* End of If: '<S129>/If' */
 
-      /* Delay: '<S128>/Integer Delay' */
+      /* Delay: '<S129>/Integer Delay' */
       controlMCUSlugsMKIINewNav_B.Merge2 =
         controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE;
 
-      /* Update for Delay: '<S144>/Integer Delay1' */
+      /* Update for Delay: '<S146>/Integer Delay1' */
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE =
         controlMCUSlugsMKIINewNav_B.UEN2NEU[2];
 
-      /* Update for Delay: '<S128>/Integer Delay' */
+      /* Update for Delay: '<S129>/Integer Delay' */
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE = Product;
 
-      /* End of Outputs for SubSystem: '<S127>/Circle Navigation' */
+      /* End of Outputs for SubSystem: '<S128>/Circle Navigation' */
     }
   }
 
-  /* End of If: '<S127>/Determine Overall Nav by the Nav Mode' */
+  /* End of If: '<S128>/Determine Overall Nav by the Nav Mode' */
 
-  /* MATLAB Function: '<S127>/myMux Fun2' incorporates:
-   *  Constant: '<S127>/Constant2'
-   */
-  /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/myMux Fun2': '<S140>:1' */
-  /*  This block supports an embeddable subset of the MATLAB language. */
-  /*  See the help menu for details.  */
-  /* '<S140>:1:5' */
-  controlMCUSlugsMKIINewNav_B.y_d[0] = 1.0F;
-  controlMCUSlugsMKIINewNav_B.y_d[1] = controlMCUSlugsMKIINewNav_B.Merge2;
-  controlMCUSlugsMKIINewNav_B.y_d[2] = controlMCUSlugsMKIINewNav_B.Merge1;
-
-  /* S-Function "dsPIC_C_function_Call" Block: <S127>/Diagnostics Float [navSupport.c] */
-  setDiagnosticFloat(controlMCUSlugsMKIINewNav_B.y_d);
-
-  /* Delay: '<S127>/Integer Delay' */
-  rtb_IC2 = controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_d;
-
-  /* Delay: '<S127>/Integer Delay1' */
-  Merge = controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j2;
-
-  /* MATLAB Function: '<S127>/myMux Fun4' incorporates:
-   *  DataTypeConversion: '<S127>/Data Type Conversion7'
-   *  Delay: '<S127>/Integer Delay'
-   *  Delay: '<S127>/Integer Delay1'
-   */
-  /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/myMux Fun4': '<S142>:1' */
-  /*  This block supports an embeddable subset of the MATLAB language. */
-  /*  See the help menu for details.  */
-  /* '<S142>:1:5' */
-  controlMCUSlugsMKIINewNav_B.y_e[0] =
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_d;
-  controlMCUSlugsMKIINewNav_B.y_e[1] =
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j2;
-  controlMCUSlugsMKIINewNav_B.y_e[2] =
-    controlMCUSlugsMKIINewNav_B.NavigationModenavSupportc_c;
-
-  /* S-Function "dsPIC_C_function_Call" Block: <S127>/Diagnostics Short [navSupport.c] */
-  setDiagnosticShort(controlMCUSlugsMKIINewNav_B.y_e);
-
-  /* MATLAB Function: '<S127>/myMux Fun1' incorporates:
-   *  Constant: '<S127>/Constant2'
-   *  DataTypeConversion: '<S127>/Data Type Conversion5'
-   *  DataTypeConversion: '<S127>/Data Type Conversion6'
-   */
-  /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/myMux Fun1': '<S139>:1' */
-  /*  This block supports an embeddable subset of the MATLAB language. */
-  /*  See the help menu for details.  */
-  /* '<S139>:1:4' */
-  controlMCUSlugsMKIINewNav_B.y_k[0] = 1.0F;
-  controlMCUSlugsMKIINewNav_B.y_k[1] = controlMCUSlugsMKIINewNav_B.Merge2;
-  controlMCUSlugsMKIINewNav_B.y_k[2] = (real32_T)rtb_IC2;
-  controlMCUSlugsMKIINewNav_B.y_k[3] = (real32_T)Merge;
-
-  /* S-Function "dsPIC_C_function_Call" Block: <S127>/Get XYZ [navSupport.c] */
-  setNavNav(controlMCUSlugsMKIINewNav_B.y_k);
-
-  /* Gain: '<S203>/Deg2R' */
-  rtb_Deg2R_m_idx_0 = 0.0174532924F *
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[0];
-  rtb_Deg2R_m_idx = 0.0174532924F *
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion_ks[1];
-
-  /* Gain: '<S204>/Deg2R' */
-  rtb_Ze = 0.0174532924F *
-    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[0];
-
-  /* Trigonometry: '<S204>/sin(phi)' */
-  rtb_cosphi = (real32_T)sin(rtb_Ze);
-
-  /* Sum: '<S204>/Sum1' incorporates:
-   *  Constant: '<S204>/const'
-   *  Product: '<S204>/Product1'
-   *  Product: '<S204>/sin(phi)^2'
-   */
-  rtb_Merge_idx = 1.0F - rtb_cosphi * rtb_cosphi *
-    controlMCUSlugsMKIINewNa_ConstB.Sum5;
-
-  /* Fcn: '<S204>/f' */
-  if (rtb_Merge_idx < 0.0F) {
-    rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
-  } else {
-    rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
-  }
-
-  /* End of Fcn: '<S204>/f' */
-
-  /* Product: '<S204>/Rh' incorporates:
-   *  Constant: '<S204>/Re=equatorial radius'
-   */
-  rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
-
-  /* Sum: '<S204>/Sum2' */
-  rtb_RhhcosphisinlambYe =
-    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[2] + rtb_Merge_idx;
-
-  /* Trigonometry: '<S204>/cos(phi)' */
-  rtb_Ze = (real32_T)cos(rtb_Ze);
-
-  /* Gain: '<S204>/Deg2R1' */
-  rtb_Deg2R1 = 0.0174532924F *
-    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[1];
-
-  /* Product: '<S204>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
-   *  Trigonometry: '<S204>/cos(lamb)'
-   */
-  rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_Ze * (real32_T)cos
-    (rtb_Deg2R1);
-
-  /* Product: '<S204>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
-   *  Trigonometry: '<S204>/sin(lamb)'
-   */
-  rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_Ze * (real32_T)sin
-    (rtb_Deg2R1);
-
-  /* Product: '<S204>/Ze' incorporates:
-   *  Product: '<S204>/Rh(1-e^2)'
-   *  Sum: '<S204>/Sum4'
-   */
-  rtb_cosphi *= controlMCUSlugsMKIINewNa_ConstB.e2 * rtb_Merge_idx +
-    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[2];
-
-  /* SignalConversion: '<S203>/TmpSignal ConversionAtProduct1Inport1' incorporates:
-   *  Fcn: '<S206>/11'
-   *  Fcn: '<S206>/12'
-   *  Fcn: '<S206>/13'
-   *  Fcn: '<S206>/21'
-   *  Fcn: '<S206>/22'
-   *  Fcn: '<S206>/31'
-   *  Fcn: '<S206>/32'
-   *  Fcn: '<S206>/33'
-   */
-  rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)cos
-    (rtb_Deg2R_m_idx);
-  rtb_VectorConcatenate_i[1L] = -(real32_T)sin(rtb_Deg2R_m_idx_0);
-  rtb_VectorConcatenate_i[2L] = -(real32_T)sin(rtb_Deg2R_m_idx) * (real32_T)cos
-    (rtb_Deg2R_m_idx_0);
-  rtb_VectorConcatenate_i[3L] = (real32_T)sin(rtb_Deg2R_m_idx_0) * (real32_T)cos
-    (rtb_Deg2R_m_idx);
-  rtb_VectorConcatenate_i[4L] = (real32_T)cos(rtb_Deg2R_m_idx_0);
-  rtb_VectorConcatenate_i[5L] = -(real32_T)sin(rtb_Deg2R_m_idx_0) * (real32_T)
-    sin(rtb_Deg2R_m_idx);
-  rtb_VectorConcatenate_i[6L] = (real32_T)sin(rtb_Deg2R_m_idx);
-  rtb_VectorConcatenate_i[7L] = 0.0F;
-  rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
-
-  /* Sum: '<S129>/Sum1' */
-  rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
-  rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion1[1];
-  rtb_Product3_p4_idx = rtb_cosphi -
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
-
-  /* Product: '<S203>/Product1' incorporates:
-   *  Gain: '<S129>/UEN 2 NEU'
-   */
-  for (i = 0; i < 3; i++) {
-    tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
-      (rtb_VectorConcatenate_i[i + 3] * rtb_Deg2R_m_idx_0 +
-       rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
-  }
-
-  /* End of Product: '<S203>/Product1' */
-
-  /* Gain: '<S129>/UEN 2 NEU' */
-  for (i = 0; i < 3; i++) {
-    rtb_Product6[i] = controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 6] * tmp[2] +
-      (controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 3] * tmp[1] +
-       controlMCUSlugsMKIINewNa_ConstP.pooled45[i] * tmp[0]);
-  }
-
-  /* MATLAB Function: '<S223>/Zero out Z1' */
+  /* MATLAB Function: '<S225>/Zero out Z1' */
   controlMCUSlugsMKIINe_ZerooutZ1(controlMCUSlugsMKIINewNav_B.Merge,
     &controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_g);
 
-  /* MATLAB Function: '<S228>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S230>/Embedded MATLAB Function' */
   contro_EmbeddedMATLABFunction_o(controlMCUSlugsMKIINewNav_B.sf_ZerooutZ1_g.P,
-    &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_d);
+    &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_dv);
 
-  /* MATLAB Function: '<S229>/negprotect' */
+  /* MATLAB Function: '<S231>/negprotect' */
   controlMCUSlugsMKIIN_negprotect
-    (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_d.xDoty,
+    (controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_dv.xDoty,
      &controlMCUSlugsMKIINewNav_B.sf_negprotect_i);
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S229>/C Function Call */
+  /* S-Function "dsPIC_C_function_Call" Block: <S231>/C Function Call */
   controlMCUSlugsMKIINewNav_B.CFunctionCall_p = mySqrt
     (controlMCUSlugsMKIINewNav_B.sf_negprotect_i.zpVal);
 
-  /* Product: '<S215>/Product1' */
+  /* Product: '<S217>/Product1' */
   rtb_Product1_l = controlMCUSlugsMKIINewNav_B.CFunctionCall_p *
     controlMCUSlugsMKIINewNav_B.CFunctionCall_a;
 
-  /* MATLAB Function: '<S215>/negprotect' */
+  /* MATLAB Function: '<S217>/negprotect' */
   controlMCUSlugsMKII_negprotect3(rtb_Product1_l,
     &controlMCUSlugsMKIINewNav_B.sf_negprotect_d);
 
-  /* DeadZone: '<S215>/Dead Zone' */
+  /* DeadZone: '<S217>/Dead Zone' */
   if (controlMCUSlugsMKIINewNav_B.sf_negprotect_d.zpVal > 0.1F) {
     rtb_Product3_p4_idx = controlMCUSlugsMKIINewNav_B.sf_negprotect_d.zpVal -
       0.1F;
@@ -2752,22 +2611,22 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       -0.1F;
   }
 
-  /* End of DeadZone: '<S215>/Dead Zone' */
+  /* End of DeadZone: '<S217>/Dead Zone' */
 
-  /* Switch: '<S215>/Switch' incorporates:
-   *  Constant: '<S215>/cos(pi//2)'
-   *  Constant: '<S215>/sin(pi//2)'
-   *  Constant: '<S222>/Constant'
-   *  Product: '<S215>/Divide1'
-   *  Product: '<S215>/Divide2'
-   *  Product: '<S221>/Product'
-   *  Product: '<S221>/Product1'
-   *  Product: '<S224>/Product'
-   *  Product: '<S224>/Product1'
-   *  RelationalOperator: '<S222>/Compare'
-   *  Sum: '<S221>/Subtract'
-   *  Sum: '<S224>/Subtract'
-   *  Switch: '<S215>/Switch2'
+  /* Switch: '<S217>/Switch' incorporates:
+   *  Constant: '<S217>/cos(pi//2)'
+   *  Constant: '<S217>/sin(pi//2)'
+   *  Constant: '<S224>/Constant'
+   *  Product: '<S217>/Divide1'
+   *  Product: '<S217>/Divide2'
+   *  Product: '<S223>/Product'
+   *  Product: '<S223>/Product1'
+   *  Product: '<S226>/Product'
+   *  Product: '<S226>/Product1'
+   *  RelationalOperator: '<S224>/Compare'
+   *  Sum: '<S223>/Subtract'
+   *  Sum: '<S226>/Subtract'
+   *  Switch: '<S217>/Switch2'
    */
   if ((rtb_Product3_p4_idx == 0.0F) > 0) {
     controlMCUSlugsMKIINewNav_B.Switch = 1.0F;
@@ -2785,41 +2644,184 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_B.sf_negprotect_d.zpVal);
   }
 
-  /* End of Switch: '<S215>/Switch' */
-
-  /* MATLAB Function: '<S216>/negprotect' */
-  controlMCUSlugsMKII_negprotect3
-    (controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_k[0],
-     &controlMCUSlugsMKIINewNav_B.sf_negprotect_n4);
-
-  /* Gain: '<S216>/Gain' incorporates:
-   *  Product: '<S216>/Divide'
-   */
-  rtb_Ze = controlMCUSlugsMKIINewNav_B.Switch *
-    controlMCUSlugsMKIINewNav_B.CFunctionCall_a /
-    controlMCUSlugsMKIINewNav_B.sf_negprotect_n4.zpVal * 2.0F;
-
-  /* S-Function "dsPIC_C_function_Call" Block: <S219>/C Function Call */
+  /* End of Switch: '<S217>/Switch' */
+  /* S-Function "dsPIC_C_function_Call" Block: <S221>/C Function Call */
   controlMCUSlugsMKIINewNav_B.CFunctionCall_k = myAtan2
     (controlMCUSlugsMKIINewNav_B.Switch,controlMCUSlugsMKIINewNav_B.Switch2);
 
-  /* Gain: '<S131>/Rad2Deg' */
-  rtb_Rad2Deg = 57.2957802F * controlMCUSlugsMKIINewNav_B.CFunctionCall_k;
+  /* MATLAB Function: '<S128>/myMux Fun1' incorporates:
+   *  DataTypeConversion: '<S128>/Data Type Conversion5'
+   *  DataTypeConversion: '<S128>/Data Type Conversion6'
+   *  Delay: '<S128>/Integer Delay'
+   *  Delay: '<S128>/Integer Delay1'
+   *  Gain: '<S132>/Rad2Deg'
+   */
+  /* MATLAB Function 'Navigation/Navigation/myMux Fun1': '<S140>:1' */
+  /*  This block supports an embeddable subset of the MATLAB language. */
+  /*  See the help menu for details.  */
+  /* '<S140>:1:4' */
+  controlMCUSlugsMKIINewNav_B.y_k[0] = 57.2957802F *
+    controlMCUSlugsMKIINewNav_B.CFunctionCall_k;
+  controlMCUSlugsMKIINewNav_B.y_k[1] = controlMCUSlugsMKIINewNav_B.Merge2;
+  controlMCUSlugsMKIINewNav_B.y_k[2] = (real32_T)
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_d;
+  controlMCUSlugsMKIINewNav_B.y_k[3] = (real32_T)
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j2;
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S218>/C Function Call */
+  /* S-Function "dsPIC_C_function_Call" Block: <S128>/Get XYZ [navSupport.c] */
+  setNavNav(controlMCUSlugsMKIINewNav_B.y_k);
+
+  /* MATLAB Function: '<S128>/myMux Fun5' */
+  /* MATLAB Function 'Navigation/Navigation/myMux Fun5': '<S144>:1' */
+  /*  This block supports an embeddable subset of the MATLAB language. */
+  /*  See the help menu for details.  */
+  /* '<S144>:1:5' */
+  controlMCUSlugsMKIINewNav_B.y_e[0] = controlMCUSlugsMKIINewNav_B.IC4[0];
+  controlMCUSlugsMKIINewNav_B.y_e[1] = controlMCUSlugsMKIINewNav_B.IC4[1];
+  controlMCUSlugsMKIINewNav_B.y_e[2] = (real32_T)0.0;
+
+  /* S-Function "dsPIC_C_function_Call" Block: <S128>/Log 1 [navSupport.c] */
+  setLogFloat1(controlMCUSlugsMKIINewNav_B.y_e);
+
+  /* Gain: '<S205>/Deg2R' */
+  rtb_Deg2R_m_idx_0 = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[0];
+  rtb_Deg2R_m_idx = 0.0174532924F * controlMCUSlugsMKIINewNav_B.IC4[1];
+
+  /* Gain: '<S206>/Deg2R' */
+  rtb_Ze = 0.0174532924F *
+    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[0];
+
+  /* Trigonometry: '<S206>/sin(phi)' */
+  rtb_cosphi = (real32_T)sin(rtb_Ze);
+
+  /* Sum: '<S206>/Sum1' incorporates:
+   *  Constant: '<S206>/const'
+   *  Product: '<S206>/Product1'
+   *  Product: '<S206>/sin(phi)^2'
+   */
+  rtb_Merge_idx = 1.0F - rtb_cosphi * rtb_cosphi *
+    controlMCUSlugsMKIINewNa_ConstB.Sum5;
+
+  /* Fcn: '<S206>/f' */
+  if (rtb_Merge_idx < 0.0F) {
+    rtb_Product3_p4_idx = -(real32_T)sqrt(-rtb_Merge_idx);
+  } else {
+    rtb_Product3_p4_idx = (real32_T)sqrt(rtb_Merge_idx);
+  }
+
+  /* End of Fcn: '<S206>/f' */
+
+  /* Product: '<S206>/Rh' incorporates:
+   *  Constant: '<S206>/Re=equatorial radius'
+   */
+  rtb_Merge_idx = 6.378137E+6F / rtb_Product3_p4_idx;
+
+  /* Sum: '<S206>/Sum2' */
+  rtb_RhhcosphisinlambYe =
+    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[2] + rtb_Merge_idx;
+
+  /* Trigonometry: '<S206>/cos(phi)' */
+  rtb_Ze = (real32_T)cos(rtb_Ze);
+
+  /* Gain: '<S206>/Deg2R1' */
+  rtb_Deg2R1 = 0.0174532924F *
+    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[1];
+
+  /* Product: '<S206>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
+   *  Trigonometry: '<S206>/cos(lamb)'
+   */
+  rtb_RhhcosphicoslambXe = rtb_RhhcosphisinlambYe * rtb_Ze * (real32_T)cos
+    (rtb_Deg2R1);
+
+  /* Product: '<S206>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
+   *  Trigonometry: '<S206>/sin(lamb)'
+   */
+  rtb_RhhcosphisinlambYe = rtb_RhhcosphisinlambYe * rtb_Ze * (real32_T)sin
+    (rtb_Deg2R1);
+
+  /* Product: '<S206>/Ze' incorporates:
+   *  Product: '<S206>/Rh(1-e^2)'
+   *  Sum: '<S206>/Sum4'
+   */
+  rtb_cosphi *= controlMCUSlugsMKIINewNa_ConstB.e2 * rtb_Merge_idx +
+    controlMCUSlugsMKIINewNav_B.GetISRLocationnavSupportc[2];
+
+  /* SignalConversion: '<S205>/TmpSignal ConversionAtProduct1Inport1' incorporates:
+   *  Fcn: '<S208>/11'
+   *  Fcn: '<S208>/12'
+   *  Fcn: '<S208>/13'
+   *  Fcn: '<S208>/21'
+   *  Fcn: '<S208>/22'
+   *  Fcn: '<S208>/31'
+   *  Fcn: '<S208>/32'
+   *  Fcn: '<S208>/33'
+   */
+  rtb_VectorConcatenate_i[0L] = (real32_T)cos(rtb_Deg2R_m_idx_0) * (real32_T)cos
+    (rtb_Deg2R_m_idx);
+  rtb_VectorConcatenate_i[1L] = -(real32_T)sin(rtb_Deg2R_m_idx_0);
+  rtb_VectorConcatenate_i[2L] = -(real32_T)sin(rtb_Deg2R_m_idx) * (real32_T)cos
+    (rtb_Deg2R_m_idx_0);
+  rtb_VectorConcatenate_i[3L] = (real32_T)sin(rtb_Deg2R_m_idx_0) * (real32_T)cos
+    (rtb_Deg2R_m_idx);
+  rtb_VectorConcatenate_i[4L] = (real32_T)cos(rtb_Deg2R_m_idx_0);
+  rtb_VectorConcatenate_i[5L] = -(real32_T)sin(rtb_Deg2R_m_idx_0) * (real32_T)
+    sin(rtb_Deg2R_m_idx);
+  rtb_VectorConcatenate_i[6L] = (real32_T)sin(rtb_Deg2R_m_idx);
+  rtb_VectorConcatenate_i[7L] = 0.0F;
+  rtb_VectorConcatenate_i[8L] = (real32_T)cos(rtb_Deg2R_m_idx);
+
+  /* Sum: '<S130>/Sum1' */
+  rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe -
+    controlMCUSlugsMKIINewNav_B.DataTypeConversion1[0];
+  rtb_Deg2R_m_idx_0 = rtb_RhhcosphisinlambYe -
+    controlMCUSlugsMKIINewNav_B.DataTypeConversion1[1];
+  rtb_Product3_p4_idx = rtb_cosphi -
+    controlMCUSlugsMKIINewNav_B.DataTypeConversion1[2];
+
+  /* Product: '<S205>/Product1' incorporates:
+   *  Gain: '<S130>/UEN 2 NEU'
+   */
+  for (i = 0; i < 3; i++) {
+    tmp[i] = rtb_VectorConcatenate_i[i + 6] * rtb_Product3_p4_idx +
+      (rtb_VectorConcatenate_i[i + 3] * rtb_Deg2R_m_idx_0 +
+       rtb_VectorConcatenate_i[i] * rtb_Deg2R_m_idx);
+  }
+
+  /* End of Product: '<S205>/Product1' */
+
+  /* Gain: '<S130>/UEN 2 NEU' */
+  for (i = 0; i < 3; i++) {
+    rtb_Product6[i] = controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 6] * tmp[2] +
+      (controlMCUSlugsMKIINewNa_ConstP.pooled45[i + 3] * tmp[1] +
+       controlMCUSlugsMKIINewNa_ConstP.pooled45[i] * tmp[0]);
+  }
+
+  /* MATLAB Function: '<S218>/negprotect' */
+  controlMCUSlugsMKII_negprotect3
+    (controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_k[0],
+     &controlMCUSlugsMKIINewNav_B.sf_negprotect_n);
+
+  /* Gain: '<S218>/Gain' incorporates:
+   *  Product: '<S218>/Divide'
+   */
+  rtb_Ze = controlMCUSlugsMKIINewNav_B.Switch *
+    controlMCUSlugsMKIINewNav_B.CFunctionCall_a /
+    controlMCUSlugsMKIINewNav_B.sf_negprotect_n.zpVal * 2.0F;
+
+  /* S-Function "dsPIC_C_function_Call" Block: <S220>/C Function Call */
   controlMCUSlugsMKIINewNav_B.CFunctionCall_i = myAbs
     (controlMCUSlugsMKIINewNav_B.CFunctionCall_k);
 
-  /* Switch: '<S131>/Switch' incorporates:
-   *  Constant: '<S131>/Constant10'
-   *  RelationalOperator: '<S131>/Relational Operator'
+  /* Switch: '<S132>/Switch' incorporates:
+   *  Constant: '<S132>/Constant10'
+   *  RelationalOperator: '<S132>/Relational Operator'
    */
   if (!(controlMCUSlugsMKIINewNav_B.CFunctionCall_i <= 1.57079637F)) {
-    /* Switch: '<S220>/Switch1' incorporates:
-     *  Constant: '<S220>/Constant1'
-     *  Constant: '<S220>/Constant9'
-     *  Constant: '<S239>/Constant'
-     *  RelationalOperator: '<S239>/Compare'
+    /* Switch: '<S222>/Switch1' incorporates:
+     *  Constant: '<S222>/Constant1'
+     *  Constant: '<S222>/Constant9'
+     *  Constant: '<S241>/Constant'
+     *  RelationalOperator: '<S241>/Compare'
      */
     if ((controlMCUSlugsMKIINewNav_B.Switch < 0.0F) > 0) {
       rtb_Ze = -4.57681F;
@@ -2827,44 +2829,56 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Ze = 4.57681F;
     }
 
-    /* End of Switch: '<S220>/Switch1' */
+    /* End of Switch: '<S222>/Switch1' */
   }
 
-  /* End of Switch: '<S131>/Switch' */
+  /* End of Switch: '<S132>/Switch' */
 
-  /* Product: '<S217>/Product' incorporates:
-   *  Constant: '<S217>/Constant'
+  /* Product: '<S219>/Product' incorporates:
+   *  Constant: '<S219>/Constant'
    */
   controlMCUSlugsMKIINewNav_B.Product = rtb_Ze / 9.815F;
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S235>/C Function Call */
+  /* S-Function "dsPIC_C_function_Call" Block: <S237>/C Function Call */
   controlMCUSlugsMKIINewNav_B.CFunctionCall_pf = myAtan
     (controlMCUSlugsMKIINewNav_B.Product);
 
-  /* Saturate: '<S217>/Bank  Limit Command' */
+  /* Saturate: '<S219>/Bank  Limit Command' */
   rtb_BankLimitCommand = controlMCUSlugsMKIINewNav_B.CFunctionCall_pf >=
     0.436332315F ? 0.436332315F : controlMCUSlugsMKIINewNav_B.CFunctionCall_pf <=
     -0.436332315F ? -0.436332315F : controlMCUSlugsMKIINewNav_B.CFunctionCall_pf;
 
-  /* MATLAB Function: '<S127>/myMux Fun3' */
-  /* MATLAB Function 'Inner Loop/ Navigation/Navigation Encaps/Navigation/myMux Fun3': '<S141>:1' */
+  /* MATLAB Function: '<S128>/myMux Fun3' */
+  /* MATLAB Function 'Navigation/Navigation/myMux Fun3': '<S142>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
-  /* '<S141>:1:5' */
+  /* '<S142>:1:5' */
   rtb_Product5[0] = rtb_Product6[0];
   rtb_Product5[1] = rtb_Product6[1];
-  rtb_Product5[2] = controlMCUSlugsMKIINewNav_B.NumericalUnity[0];
+  rtb_Product5[2] = controlMCUSlugsMKIINewNav_B.IC3;
 
-  /* MATLAB Function: '<S127>/myMux Fun5' */
-  controlMCUSlugsMKIINe_myMuxFun1(rtb_Rad2Deg,
-    controlMCUSlugsMKIINewNav_B.Merge[0], controlMCUSlugsMKIINewNav_B.Merge[1],
-    &controlMCUSlugsMKIINewNav_B.sf_myMuxFun5_e);
+  /* DataTypeConversion: '<S128>/Data Type Conversion9' incorporates:
+   *  MATLAB Function: '<S128>/myMux Fun6'
+   */
+  /* MATLAB Function 'Navigation/Navigation/myMux Fun6': '<S145>:1' */
+  /*  This block supports an embeddable subset of the MATLAB language. */
+  /*  See the help menu for details.  */
+  /* '<S145>:1:5' */
+  controlMCUSlugsMKIINewNav_B.DataTypeConversion9[0] = (real32_T)0.0;
+  controlMCUSlugsMKIINewNav_B.DataTypeConversion9[1] = (real32_T)0.0;
+  controlMCUSlugsMKIINewNav_B.DataTypeConversion9[2] = (real32_T)0.0;
 
-  /* Update for Delay: '<S127>/Integer Delay' */
+  /* S-Function "dsPIC_C_function_Call" Block: <S128>/Log 2 [navSupport.c] */
+  setLogFloat2(controlMCUSlugsMKIINewNav_B.DataTypeConversion9);
+
+  /* Update for Delay: '<S412>/Delay' */
+  controlMCUSlugsMKIINewNav_DWork.Delay_DSTATE = rtb_IC1;
+
+  /* Update for Delay: '<S128>/Integer Delay' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_d =
     controlMCUSlugsMKIINewNav_B.WP0;
 
-  /* Update for Delay: '<S127>/Integer Delay1' */
+  /* Update for Delay: '<S128>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j2 =
     controlMCUSlugsMKIINewNav_B.WP1;
 
@@ -3150,216 +3164,216 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     (((uint8_T)15U));
 
   /* Outputs for Atomic SubSystem: '<S3>/Longitudinal Channel Encaps' */
-  /* Sum: '<S91>/Add' incorporates:
-   *  Constant: '<S91>/Constant'
-   *  Constant: '<S91>/Constant from Model'
-   *  Gain: '<S106>/Unit Conversion'
-   *  Product: '<S91>/Divide'
-   *  Saturate: '<S91>/[0 1000]'
+  /* Sum: '<S114>/Add' incorporates:
+   *  Constant: '<S114>/Constant'
+   *  Constant: '<S114>/Constant from Model'
+   *  Gain: '<S119>/Unit Conversion'
+   *  Product: '<S114>/Divide'
+   *  Saturate: '<S114>/[0 1000]'
    */
-  controlMCUSlugsMKIINewNav_B.Add_c = 1.0F - (Switch >= 1000.0F ? 1000.0F :
+  controlMCUSlugsMKIINewNav_B.Add_m = 1.0F - (Switch >= 1000.0F ? 1000.0F :
     Switch <= 0.0F ? 0.0F : Switch) * 3.28084F / 145442.0F;
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S107>/C Function Call */
-  controlMCUSlugsMKIINewNav_B.CFunctionCall_mj = myPow
-    (controlMCUSlugsMKIINewNav_B.Add_c,4.25587606F);
+  /* S-Function "dsPIC_C_function_Call" Block: <S120>/C Function Call */
+  controlMCUSlugsMKIINewNav_B.CFunctionCall_nt = myPow
+    (controlMCUSlugsMKIINewNav_B.Add_m,4.25587606F);
 
-  /* Product: '<S91>/Divide1' incorporates:
-   *  Constant: '<S91>/Rho_0 (Kg//m^3)'
+  /* Product: '<S114>/Divide1' incorporates:
+   *  Constant: '<S114>/Rho_0 (Kg//m^3)'
    */
-  rtb_Product3_p4_idx = controlMCUSlugsMKIINewNav_B.CFunctionCall_mj * 1.225F;
+  rtb_Product3_p4_idx = controlMCUSlugsMKIINewNav_B.CFunctionCall_nt * 1.225F;
 
-  /* Product: '<S93>/Divide2' incorporates:
-   *  Constant: '<S93>/a'
-   *  Saturate: '<S93>/[ 0.01 50000]'
+  /* Product: '<S115>/Divide2' incorporates:
+   *  Constant: '<S115>/a'
+   *  Saturate: '<S115>/[ 0.01 50000]'
    */
-  rtb_Divide2_i = 2.0F * controlMCUSlugsMKIINewNav_B.GetDynamicPnavSupportc /
+  rtb_Divide2_m = 2.0F * controlMCUSlugsMKIINewNav_B.GetDynamicPnavSupportc /
     (rtb_Product3_p4_idx >= 50000.0F ? 50000.0F : rtb_Product3_p4_idx <= 0.01F ?
      0.01F : rtb_Product3_p4_idx);
 
-  /* MATLAB Function: '<S113>/negprotect' */
-  controlMCUSlugsMKIIN_negprotect(rtb_Divide2_i,
-    &controlMCUSlugsMKIINewNav_B.sf_negprotect_n);
+  /* MATLAB Function: '<S122>/negprotect' */
+  controlMCUSlugsMKIIN_negprotect(rtb_Divide2_m,
+    &controlMCUSlugsMKIINewNav_B.sf_negprotect_e);
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S113>/C Function Call */
-  controlMCUSlugsMKIINewNav_B.CFunctionCall_d = mySqrt
-    (controlMCUSlugsMKIINewNav_B.sf_negprotect_n.zpVal);
+  /* S-Function "dsPIC_C_function_Call" Block: <S122>/C Function Call */
+  controlMCUSlugsMKIINewNav_B.CFunctionCall_lc = mySqrt
+    (controlMCUSlugsMKIINewNav_B.sf_negprotect_e.zpVal);
 
-  /* Switch: '<S99>/Switch3' incorporates:
-   *  Delay: '<S99>/Integer Delay3'
-   *  RelationalOperator: '<S99>/Relational Operator2'
+  /* Switch: '<S116>/Switch3' incorporates:
+   *  Delay: '<S116>/Integer Delay3'
+   *  RelationalOperator: '<S116>/Relational Operator2'
    */
-  if ((controlMCUSlugsMKIINewNav_B.CFunctionCall_d ==
-       controlMCUSlugsMKIINewNav_B.CFunctionCall_d) > 0) {
-    controlMCUSlugsMKIINewNav_B.Switch3_as =
-      controlMCUSlugsMKIINewNav_B.CFunctionCall_d;
+  if ((controlMCUSlugsMKIINewNav_B.CFunctionCall_lc ==
+       controlMCUSlugsMKIINewNav_B.CFunctionCall_lc) > 0) {
+    controlMCUSlugsMKIINewNav_B.Switch3_o =
+      controlMCUSlugsMKIINewNav_B.CFunctionCall_lc;
   } else {
-    controlMCUSlugsMKIINewNav_B.Switch3_as =
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_k;
+    controlMCUSlugsMKIINewNav_B.Switch3_o =
+      controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_g;
   }
 
-  /* End of Switch: '<S99>/Switch3' */
+  /* End of Switch: '<S116>/Switch3' */
 
-  /* RelationalOperator: '<S103>/Compare' incorporates:
-   *  Constant: '<S103>/Constant'
+  /* RelationalOperator: '<S117>/Compare' incorporates:
+   *  Constant: '<S117>/Constant'
    */
-  rtb_IC2 = (controlMCUSlugsMKIINewNav_B.Switch3_as <= 5.0F);
+  rtb_IC2 = (controlMCUSlugsMKIINewNav_B.Switch3_o <= 5.0F);
 
-  /* MATLAB Function: '<S89>/Embedded MATLAB Function' */
-  controlM_EmbeddedMATLABFunction(controlMCUSlugsMKIINewNav_B.Switch3_as, 0.01,
-    1.0, &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_e,
-    &controlMCUSlugsMKIINewNav_DWork.sf_EmbeddedMATLABFunction_e);
+  /* MATLAB Function: '<S113>/Embedded MATLAB Function' */
+  controlM_EmbeddedMATLABFunction(controlMCUSlugsMKIINewNav_B.Switch3_o, 0.01,
+    1.0, &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_d,
+    &controlMCUSlugsMKIINewNav_DWork.sf_EmbeddedMATLABFunction_d);
 
-  /* Switch: '<S87>/Schedule LPF' */
+  /* Switch: '<S93>/Schedule LPF' */
   if (rtb_IC2 > 0) {
-    rtb_ScheduleLPF = controlMCUSlugsMKIINewNav_B.Switch3_as;
+    rtb_ScheduleLPF = controlMCUSlugsMKIINewNav_B.Switch3_o;
   } else {
-    rtb_ScheduleLPF = controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_e.y;
+    rtb_ScheduleLPF = controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_d.y;
   }
 
-  /* End of Switch: '<S87>/Schedule LPF' */
+  /* End of Switch: '<S93>/Schedule LPF' */
 
-  /* Product: '<S101>/delta rise limit' */
-  rtb_Add1_am = 0.02F;
+  /* Product: '<S98>/delta rise limit' */
+  rtb_Product3_p4_idx = 0.02F;
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S17>/Get the GS Location [updateControlMCUState.c] */
-  getGSLocation(&controlMCUSlugsMKIINewNav_B.GettheGSLocationupdateControl_g[0]);
-
-  /* Switch: '<S125>/Init' incorporates:
-   *  UnitDelay: '<S125>/FixPt Unit Delay1'
-   *  UnitDelay: '<S125>/FixPt Unit Delay2'
+  /* Switch: '<S126>/Init' incorporates:
+   *  Constant: '<S17>/Constant3'
+   *  UnitDelay: '<S126>/FixPt Unit Delay1'
+   *  UnitDelay: '<S126>/FixPt Unit Delay2'
    */
   if (controlMCUSlugsMKIINewNav_DWork.FixPtUnitDelay2_DSTATE != 0) {
-    rtb_Product3_p4_idx =
-      controlMCUSlugsMKIINewNav_B.GettheGSLocationupdateControl_g[0];
+    rtb_Add4_l = 100.0F;
   } else {
-    rtb_Product3_p4_idx = controlMCUSlugsMKIINewNav_DWork.FixPtUnitDelay1_DSTATE;
+    rtb_Add4_l = controlMCUSlugsMKIINewNav_DWork.FixPtUnitDelay1_DSTATE;
   }
 
-  /* End of Switch: '<S125>/Init' */
+  /* End of Switch: '<S126>/Init' */
 
-  /* Sum: '<S101>/Difference Inputs1' */
-  rtb_RhhcosphisinlambYe -= rtb_Product3_p4_idx;
+  /* Sum: '<S98>/Difference Inputs1' */
+  rtb_RhhcosphisinlambYe -= rtb_Add4_l;
 
-  /* Switch: '<S124>/Switch2' incorporates:
-   *  RelationalOperator: '<S124>/LowerRelop1'
+  /* Switch: '<S125>/Switch2' incorporates:
+   *  RelationalOperator: '<S125>/LowerRelop1'
    */
   if (!(rtb_RhhcosphisinlambYe > 0.02F)) {
-    /* Switch: '<S124>/Switch' incorporates:
-     *  RelationalOperator: '<S124>/UpperRelop'
+    /* Switch: '<S125>/Switch' incorporates:
+     *  RelationalOperator: '<S125>/UpperRelop'
      */
     if (rtb_RhhcosphisinlambYe < -0.03F) {
-      rtb_Add1_am = -0.03F;
+      rtb_Product3_p4_idx = -0.03F;
     } else {
-      rtb_Add1_am = rtb_RhhcosphisinlambYe;
+      rtb_Product3_p4_idx = rtb_RhhcosphisinlambYe;
     }
 
-    /* End of Switch: '<S124>/Switch' */
+    /* End of Switch: '<S125>/Switch' */
   }
 
-  /* End of Switch: '<S124>/Switch2' */
+  /* End of Switch: '<S125>/Switch2' */
 
-  /* Sum: '<S101>/Difference Inputs2' */
-  rtb_DifferenceInputs2 = rtb_Add1_am + rtb_Product3_p4_idx;
+  /* Sum: '<S98>/Difference Inputs2' */
+  rtb_DifferenceInputs2 = rtb_Product3_p4_idx + rtb_Add4_l;
 
   /* Sum: '<S87>/Add2' */
-  rtb_Product3_p4_idx = rtb_DifferenceInputs2 - Switch;
+  rtb_Add4_l = rtb_DifferenceInputs2 - Switch;
 
-  /* Switch: '<S97>/Switch3' incorporates:
-   *  Delay: '<S97>/Integer Delay3'
-   *  RelationalOperator: '<S97>/Relational Operator2'
+  /* Switch: '<S95>/Switch3' incorporates:
+   *  Delay: '<S95>/Integer Delay3'
+   *  RelationalOperator: '<S95>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    Switch3_m = rtb_Product3_p4_idx;
+  if ((rtb_Add4_l == rtb_Add4_l) > 0) {
+    Switch3_m = rtb_Add4_l;
   } else {
     Switch3_m = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_c;
   }
 
-  /* End of Switch: '<S97>/Switch3' */
+  /* End of Switch: '<S95>/Switch3' */
 
-  /* Product: '<S94>/Product1' */
+  /* Product: '<S91>/Product1' */
   rtb_Merge_idx = Switch3_m *
     controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_g[0];
 
-  /* Sum: '<S94>/Sum2' incorporates:
-   *  Gain: '<S94>/Gain'
-   *  Memory: '<S94>/Memory1'
-   *  Product: '<S94>/Product4'
+  /* Sum: '<S91>/Sum2' incorporates:
+   *  Gain: '<S91>/Gain'
+   *  Memory: '<S91>/Memory1'
+   *  Product: '<S91>/Product4'
    */
-  rtb_Product3_p4_idx = (0.01F * Switch3_m *
-    controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_g[1] +
-    controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput) + rtb_Merge_idx;
+  rtb_Add4_l = (0.01F * Switch3_m *
+                controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_g[1] +
+                controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput) +
+    rtb_Merge_idx;
 
-  /* Switch: '<S94>/AntiWindup' incorporates:
-   *  Constant: '<S94>/Constant5'
-   *  Logic: '<S94>/Logical Operator'
-   *  RelationalOperator: '<S94>/Relational Operator'
-   *  RelationalOperator: '<S94>/Relational Operator1'
+  /* Switch: '<S91>/AntiWindup' incorporates:
+   *  Constant: '<S91>/Constant5'
+   *  Logic: '<S91>/Logical Operator'
+   *  RelationalOperator: '<S91>/Relational Operator'
+   *  RelationalOperator: '<S91>/Relational Operator1'
    */
-  if ((rtb_Product3_p4_idx > controlMCUSlugsMKIINewNa_ConstB.Add4) &&
-      (rtb_Product3_p4_idx < controlMCUSlugsMKIINewNa_ConstB.Add3)) {
-    rtb_Product3_p4_idx = Switch3_m;
+  if ((rtb_Add4_l > controlMCUSlugsMKIINewNa_ConstB.Add4) && (rtb_Add4_l <
+       controlMCUSlugsMKIINewNa_ConstB.Add3)) {
+    rtb_Add4_l = Switch3_m;
   } else {
-    rtb_Product3_p4_idx = 0.0F;
+    rtb_Add4_l = 0.0F;
   }
 
-  /* End of Switch: '<S94>/AntiWindup' */
+  /* End of Switch: '<S91>/AntiWindup' */
 
-  /* Switch: '<S119>/Switch3' incorporates:
-   *  Delay: '<S119>/Integer Delay3'
-   *  RelationalOperator: '<S119>/Relational Operator2'
+  /* Switch: '<S108>/Switch3' incorporates:
+   *  Delay: '<S108>/Integer Delay3'
+   *  RelationalOperator: '<S108>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    Switch3_l = rtb_Product3_p4_idx;
+  if ((rtb_Add4_l == rtb_Add4_l) > 0) {
+    Switch3_l = rtb_Add4_l;
   } else {
     Switch3_l = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_o;
   }
 
-  /* End of Switch: '<S119>/Switch3' */
+  /* End of Switch: '<S108>/Switch3' */
 
-  /* Switch: '<S117>/Switch1' incorporates:
-   *  Constant: '<S117>/Constant'
-   *  Constant: '<S117>/Constant1'
-   *  Constant: '<S117>/Constant2'
-   *  Constant: '<S117>/Constant3'
-   *  Constant: '<S117>/Constant5'
-   *  Delay: '<S117>/Integer Delay'
-   *  Delay: '<S117>/Integer Delay1'
-   *  Delay: '<S117>/Integer Delay2'
-   *  Product: '<S117>/Product'
-   *  Product: '<S117>/Product1'
-   *  Product: '<S117>/Product2'
-   *  Product: '<S117>/Product3'
-   *  Sum: '<S117>/Subtract'
-   *  Sum: '<S117>/Subtract1'
+  /* Switch: '<S106>/Switch1' incorporates:
+   *  Constant: '<S106>/Constant'
+   *  Constant: '<S106>/Constant1'
+   *  Constant: '<S106>/Constant2'
+   *  Constant: '<S106>/Constant3'
+   *  Constant: '<S106>/Constant5'
+   *  Delay: '<S106>/Integer Delay'
+   *  Delay: '<S106>/Integer Delay1'
+   *  Delay: '<S106>/Integer Delay2'
+   *  Product: '<S106>/Product'
+   *  Product: '<S106>/Product1'
+   *  Product: '<S106>/Product2'
+   *  Product: '<S106>/Product3'
+   *  Sum: '<S106>/Subtract'
+   *  Sum: '<S106>/Subtract1'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
-    rtb_Product3_p4_idx = 0.0F;
+    rtb_Add4_l = 0.0F;
   } else {
-    rtb_Product3_p4_idx = ((Switch3_l * 0.333333343F +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_c * 1.33333337F) +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[0] * 0.333333343F) *
-      0.005F + controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE;
+    rtb_Add4_l = ((Switch3_l * 0.333333343F +
+                   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_c *
+                   1.33333337F) +
+                  controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[0] *
+                  0.333333343F) * 0.005F +
+      controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE;
   }
 
-  /* End of Switch: '<S117>/Switch1' */
+  /* End of Switch: '<S106>/Switch1' */
 
-  /* Switch: '<S118>/Switch3' incorporates:
-   *  Delay: '<S118>/Integer Delay3'
-   *  RelationalOperator: '<S118>/Relational Operator2'
+  /* Switch: '<S107>/Switch3' incorporates:
+   *  Delay: '<S107>/Integer Delay3'
+   *  RelationalOperator: '<S107>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    Switch3_ae = rtb_Product3_p4_idx;
+  if ((rtb_Add4_l == rtb_Add4_l) > 0) {
+    Switch3_ae = rtb_Add4_l;
   } else {
     Switch3_ae = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_lo;
   }
 
-  /* End of Switch: '<S118>/Switch3' */
+  /* End of Switch: '<S107>/Switch3' */
 
-  /* Switch: '<S94>/On//Off' incorporates:
-   *  Constant: '<S94>/Constant1'
-   *  Product: '<S94>/Product'
-   *  Sum: '<S94>/Add2'
+  /* Switch: '<S91>/On//Off' incorporates:
+   *  Constant: '<S91>/Constant1'
+   *  Product: '<S91>/Product'
+   *  Sum: '<S91>/Add2'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
     rtb_OnOff = 0.0F;
@@ -3369,27 +3383,27 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_Merge_idx;
   }
 
-  /* End of Switch: '<S94>/On//Off' */
+  /* End of Switch: '<S91>/On//Off' */
 
-  /* Switch: '<S116>/Switch2' incorporates:
-   *  RelationalOperator: '<S116>/LowerRelop1'
-   *  RelationalOperator: '<S116>/UpperRelop'
-   *  Switch: '<S116>/Switch'
+  /* Switch: '<S105>/Switch2' incorporates:
+   *  RelationalOperator: '<S105>/LowerRelop1'
+   *  RelationalOperator: '<S105>/UpperRelop'
+   *  Switch: '<S105>/Switch'
    */
   if (rtb_OnOff > controlMCUSlugsMKIINewNa_ConstB.Add3) {
-    rtb_Product3_p4_idx = controlMCUSlugsMKIINewNa_ConstB.Add3;
+    rtb_Add4_l = controlMCUSlugsMKIINewNa_ConstB.Add3;
   } else if (rtb_OnOff < controlMCUSlugsMKIINewNa_ConstB.Add4) {
-    /* Switch: '<S116>/Switch' */
-    rtb_Product3_p4_idx = controlMCUSlugsMKIINewNa_ConstB.Add4;
+    /* Switch: '<S105>/Switch' */
+    rtb_Add4_l = controlMCUSlugsMKIINewNa_ConstB.Add4;
   } else {
-    rtb_Product3_p4_idx = rtb_OnOff;
+    rtb_Add4_l = rtb_OnOff;
   }
 
-  /* End of Switch: '<S116>/Switch2' */
+  /* End of Switch: '<S105>/Switch2' */
 
   /* Saturate: '<S87>/Theta_c Limit' */
-  rtb_Theta_cLimit = rtb_Product3_p4_idx >= 0.261799395F ? 0.261799395F :
-    rtb_Product3_p4_idx <= -0.261799395F ? -0.261799395F : rtb_Product3_p4_idx;
+  rtb_Theta_cLimit = rtb_Add4_l >= 0.261799395F ? 0.261799395F : rtb_Add4_l <=
+    -0.261799395F ? -0.261799395F : rtb_Add4_l;
 
   /* MATLAB Function: '<S17>/myMux Fun1' */
   controlMCUSlugsMKIINe_myMuxFun1(rtb_ScheduleLPF, rtb_Theta_cLimit,
@@ -3398,9 +3412,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   /* S-Function "dsPIC_C_function_Call" Block: <S17>/update Longitud Channel Commands [navSupport.c] */
   setNavLong(controlMCUSlugsMKIINewNav_B.sf_myMuxFun1_i.y);
 
-  /* Switch: '<S100>/Switch3' incorporates:
-   *  Delay: '<S100>/Integer Delay3'
-   *  RelationalOperator: '<S100>/Relational Operator2'
+  /* Switch: '<S97>/Switch3' incorporates:
+   *  Delay: '<S97>/Integer Delay3'
+   *  RelationalOperator: '<S97>/Relational Operator2'
    */
   if ((controlMCUSlugsMKIINewNav_B.y[0] == controlMCUSlugsMKIINewNav_B.y[0]) > 0)
   {
@@ -3410,31 +3424,189 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_i4;
   }
 
-  /* End of Switch: '<S100>/Switch3' */
+  /* End of Switch: '<S97>/Switch3' */
 
-  /* MATLAB Function: '<S90>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S89>/Embedded MATLAB Function' */
   controlM_EmbeddedMATLABFunction(controlMCUSlugsMKIINewNav_B.Switch3_bm, 0.01,
     0.32, &controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_a,
     &controlMCUSlugsMKIINewNav_DWork.sf_EmbeddedMATLABFunction_a);
 
   /* Sum: '<S87>/Add' */
-  rtb_Product3_p4_idx =
-    controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[0] -
+  rtb_Add4_l = controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[0] -
     rtb_ScheduleLPF;
+
+  /* Sum: '<S90>/Add3' incorporates:
+   *  Constant: '<S90>/SaturationLimit'
+   */
+  rtb_Product3_p4_idx = 0.95F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j;
+
+  /* Switch: '<S94>/Switch3' incorporates:
+   *  Delay: '<S94>/Integer Delay3'
+   *  RelationalOperator: '<S94>/Relational Operator2'
+   */
+  if ((rtb_Add4_l == rtb_Add4_l) > 0) {
+    Switch3_lh = rtb_Add4_l;
+  } else {
+    Switch3_lh = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gy;
+  }
+
+  /* End of Switch: '<S94>/Switch3' */
+
+  /* Sum: '<S90>/Add1' incorporates:
+   *  Constant: '<S90>/delayTime'
+   *  Delay: '<S90>/NDelays'
+   *  Product: '<S90>/Product1'
+   *  Product: '<S90>/Product2'
+   *  Product: '<S90>/Product3'
+   *  Sum: '<S90>/Sum'
+   */
+  rtb_Merge_idx = (Switch3_lh - controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[0])
+    / 0.05F * controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[2] +
+    Switch3_lh * controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[0];
+
+  /* Sum: '<S90>/Sum2' incorporates:
+   *  Gain: '<S90>/Gain'
+   *  Memory: '<S90>/Memory1'
+   *  Product: '<S90>/Product4'
+   */
+  rtb_Deg2R1 = (0.01F * Switch3_lh *
+                controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[1] +
+                controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_c) +
+    rtb_Merge_idx;
+
+  /* Switch: '<S90>/AntiWindup' incorporates:
+   *  Constant: '<S90>/Constant5'
+   *  Constant: '<S90>/SaturationLimit'
+   *  Constant: '<S90>/SaturationLimit1'
+   *  Logic: '<S90>/Logical Operator'
+   *  RelationalOperator: '<S90>/Relational Operator'
+   *  RelationalOperator: '<S90>/Relational Operator1'
+   *  Sum: '<S90>/Add3'
+   *  Sum: '<S90>/Add4'
+   */
+  if ((rtb_Deg2R1 > 0.0F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j) &&
+      (rtb_Deg2R1 < 0.95F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j)) {
+    rtb_Deg2R1 = Switch3_lh;
+  } else {
+    rtb_Deg2R1 = 0.0F;
+  }
+
+  /* End of Switch: '<S90>/AntiWindup' */
+
+  /* Switch: '<S103>/Switch3' incorporates:
+   *  Delay: '<S103>/Integer Delay3'
+   *  RelationalOperator: '<S103>/Relational Operator2'
+   */
+  if ((rtb_Deg2R1 == rtb_Deg2R1) > 0) {
+    rtb_Deg2R_m_idx_0 = rtb_Deg2R1;
+  } else {
+    rtb_Deg2R_m_idx_0 = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oy;
+  }
+
+  /* End of Switch: '<S103>/Switch3' */
+
+  /* Switch: '<S102>/Switch1' incorporates:
+   *  Constant: '<S102>/Constant'
+   *  Constant: '<S102>/Constant1'
+   *  Constant: '<S102>/Constant2'
+   *  Constant: '<S102>/Constant3'
+   *  Constant: '<S102>/Constant5'
+   *  Delay: '<S102>/Integer Delay'
+   *  Delay: '<S102>/Integer Delay1'
+   *  Delay: '<S102>/Integer Delay2'
+   *  Product: '<S102>/Product'
+   *  Product: '<S102>/Product1'
+   *  Product: '<S102>/Product2'
+   *  Product: '<S102>/Product3'
+   *  Sum: '<S102>/Subtract'
+   *  Sum: '<S102>/Subtract1'
+   */
+  if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
+    rtb_Deg2R1 = 0.0F;
+  } else {
+    rtb_Deg2R1 = ((rtb_Deg2R_m_idx_0 * 0.333333343F +
+                   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_o *
+                   1.33333337F) +
+                  controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[0] *
+                  0.333333343F) * 0.005F +
+      controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_b;
+  }
+
+  /* End of Switch: '<S102>/Switch1' */
+
+  /* Switch: '<S104>/Switch3' incorporates:
+   *  Delay: '<S104>/Integer Delay3'
+   *  RelationalOperator: '<S104>/Relational Operator2'
+   */
+  if ((rtb_Deg2R1 == rtb_Deg2R1) > 0) {
+    rtb_Deg2R_m_idx = rtb_Deg2R1;
+  } else {
+    rtb_Deg2R_m_idx = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_d;
+  }
+
+  /* End of Switch: '<S104>/Switch3' */
+
+  /* Switch: '<S90>/On//Off' incorporates:
+   *  Constant: '<S90>/Constant1'
+   *  Product: '<S90>/Product'
+   *  Sum: '<S90>/Add2'
+   */
+  if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
+    Product = 0.0F;
+  } else {
+    Product = rtb_Deg2R_m_idx *
+      controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[1] + rtb_Merge_idx;
+  }
+
+  /* End of Switch: '<S90>/On//Off' */
+
+  /* Switch: '<S101>/Switch2' incorporates:
+   *  Constant: '<S90>/SaturationLimit'
+   *  RelationalOperator: '<S101>/LowerRelop1'
+   *  Sum: '<S90>/Add3'
+   */
+  if (!(Product > 0.95F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j)) {
+    /* Switch: '<S101>/Switch' incorporates:
+     *  Constant: '<S90>/SaturationLimit1'
+     *  RelationalOperator: '<S101>/UpperRelop'
+     *  Sum: '<S90>/Add4'
+     */
+    if (Product < 0.0F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j) {
+      rtb_Product3_p4_idx = 0.0F -
+        controlMCUSlugsMKIINewNav_B.DataTypeConversion_j;
+    } else {
+      rtb_Product3_p4_idx = Product;
+    }
+
+    /* End of Switch: '<S101>/Switch' */
+  }
+
+  /* End of Switch: '<S101>/Switch2' */
+
+  /* Sum: '<S87>/Add1' incorporates:
+   *  Product: '<S87>/Product2'
+   */
+  rtb_Product3_p4_idx = (rtb_Product3_p4_idx +
+    controlMCUSlugsMKIINewNav_B.DataTypeConversion_j) +
+    controlMCUSlugsMKIINewNav_B.GetasingleParamnavSupportc1 *
+    controlMCUSlugsMKIINewNav_B.y[1];
+
+  /* Sum: '<S87>/Add3' */
+  rtb_Deg2R1 = rtb_Theta_cLimit - controlMCUSlugsMKIINewNav_B.y[1];
 
   /* Sum: '<S92>/Add3' incorporates:
    *  Constant: '<S92>/SaturationLimit'
    */
-  rtb_Add1_am = 0.95F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j;
+  rtb_Add4_l = 0.401425719F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_h;
 
   /* Switch: '<S96>/Switch3' incorporates:
    *  Delay: '<S96>/Integer Delay3'
    *  RelationalOperator: '<S96>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    Switch3_lh = rtb_Product3_p4_idx;
+  if ((rtb_Deg2R1 == rtb_Deg2R1) > 0) {
+    rtb_cosphi = rtb_Deg2R1;
   } else {
-    Switch3_lh = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_g;
+    rtb_cosphi = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_cv;
   }
 
   /* End of Switch: '<S96>/Switch3' */
@@ -3447,19 +3619,20 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Product: '<S92>/Product3'
    *  Sum: '<S92>/Sum'
    */
-  rtb_Merge_idx = (Switch3_lh - controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[0])
-    / 0.05F * controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[2] +
-    Switch3_lh * controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[0];
+  rtb_RhhcosphisinlambYe = (rtb_cosphi -
+    controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[0]) / 0.05F *
+    controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_md[2] + rtb_cosphi *
+    controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_md[0];
 
   /* Sum: '<S92>/Sum2' incorporates:
    *  Gain: '<S92>/Gain'
    *  Memory: '<S92>/Memory1'
    *  Product: '<S92>/Product4'
    */
-  rtb_Deg2R1 = (0.01F * Switch3_lh *
-                controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[1] +
-                controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_c) +
-    rtb_Merge_idx;
+  rtb_Merge_idx = (0.01F * rtb_cosphi *
+                   controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_md[1]
+                   + controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_b) +
+    rtb_RhhcosphisinlambYe;
 
   /* Switch: '<S92>/AntiWindup' incorporates:
    *  Constant: '<S92>/Constant5'
@@ -3471,11 +3644,12 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Sum: '<S92>/Add3'
    *  Sum: '<S92>/Add4'
    */
-  if ((rtb_Deg2R1 > 0.0F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j) &&
-      (rtb_Deg2R1 < 0.95F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j)) {
-    rtb_Deg2R1 = Switch3_lh;
+  if ((rtb_Merge_idx > -0.401425719F -
+       controlMCUSlugsMKIINewNav_B.DataTypeConversion_h) && (rtb_Merge_idx <
+       0.401425719F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_h)) {
+    rtb_Merge_idx = rtb_cosphi;
   } else {
-    rtb_Deg2R1 = 0.0F;
+    rtb_Merge_idx = 0.0F;
   }
 
   /* End of Switch: '<S92>/AntiWindup' */
@@ -3484,10 +3658,10 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Delay: '<S111>/Integer Delay3'
    *  RelationalOperator: '<S111>/Relational Operator2'
    */
-  if ((rtb_Deg2R1 == rtb_Deg2R1) > 0) {
-    rtb_Deg2R_m_idx_0 = rtb_Deg2R1;
+  if ((rtb_Merge_idx == rtb_Merge_idx) > 0) {
+    rtb_Ze = rtb_Merge_idx;
   } else {
-    rtb_Deg2R_m_idx_0 = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oy;
+    rtb_Ze = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_f;
   }
 
   /* End of Switch: '<S111>/Switch3' */
@@ -3509,166 +3683,6 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Sum: '<S110>/Subtract1'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
-    rtb_Deg2R1 = 0.0F;
-  } else {
-    rtb_Deg2R1 = ((rtb_Deg2R_m_idx_0 * 0.333333343F +
-                   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_o *
-                   1.33333337F) +
-                  controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[0] *
-                  0.333333343F) * 0.005F +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_b;
-  }
-
-  /* End of Switch: '<S110>/Switch1' */
-
-  /* Switch: '<S112>/Switch3' incorporates:
-   *  Delay: '<S112>/Integer Delay3'
-   *  RelationalOperator: '<S112>/Relational Operator2'
-   */
-  if ((rtb_Deg2R1 == rtb_Deg2R1) > 0) {
-    rtb_Deg2R_m_idx = rtb_Deg2R1;
-  } else {
-    rtb_Deg2R_m_idx = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_d;
-  }
-
-  /* End of Switch: '<S112>/Switch3' */
-
-  /* Switch: '<S92>/On//Off' incorporates:
-   *  Constant: '<S92>/Constant1'
-   *  Product: '<S92>/Product'
-   *  Sum: '<S92>/Add2'
-   */
-  if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
-    Product = 0.0F;
-  } else {
-    Product = rtb_Deg2R_m_idx *
-      controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc[1] + rtb_Merge_idx;
-  }
-
-  /* End of Switch: '<S92>/On//Off' */
-
-  /* Switch: '<S109>/Switch2' incorporates:
-   *  Constant: '<S92>/SaturationLimit'
-   *  RelationalOperator: '<S109>/LowerRelop1'
-   *  Sum: '<S92>/Add3'
-   */
-  if (!(Product > 0.95F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j)) {
-    /* Switch: '<S109>/Switch' incorporates:
-     *  Constant: '<S92>/SaturationLimit1'
-     *  RelationalOperator: '<S109>/UpperRelop'
-     *  Sum: '<S92>/Add4'
-     */
-    if (Product < 0.0F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j) {
-      rtb_Add1_am = 0.0F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_j;
-    } else {
-      rtb_Add1_am = Product;
-    }
-
-    /* End of Switch: '<S109>/Switch' */
-  }
-
-  /* End of Switch: '<S109>/Switch2' */
-
-  /* Sum: '<S87>/Add1' incorporates:
-   *  Product: '<S87>/Product2'
-   */
-  rtb_Add1_am = (rtb_Add1_am + controlMCUSlugsMKIINewNav_B.DataTypeConversion_j)
-    + controlMCUSlugsMKIINewNav_B.GetasingleParamnavSupportc1 *
-    controlMCUSlugsMKIINewNav_B.y[1];
-
-  /* Sum: '<S87>/Add3' */
-  rtb_Deg2R1 = rtb_Theta_cLimit - controlMCUSlugsMKIINewNav_B.y[1];
-
-  /* Sum: '<S95>/Add3' incorporates:
-   *  Constant: '<S95>/SaturationLimit'
-   */
-  rtb_Product3_p4_idx = 0.401425719F -
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion_h;
-
-  /* Switch: '<S98>/Switch3' incorporates:
-   *  Delay: '<S98>/Integer Delay3'
-   *  RelationalOperator: '<S98>/Relational Operator2'
-   */
-  if ((rtb_Deg2R1 == rtb_Deg2R1) > 0) {
-    rtb_cosphi = rtb_Deg2R1;
-  } else {
-    rtb_cosphi = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_cv;
-  }
-
-  /* End of Switch: '<S98>/Switch3' */
-
-  /* Sum: '<S95>/Add1' incorporates:
-   *  Constant: '<S95>/delayTime'
-   *  Delay: '<S95>/NDelays'
-   *  Product: '<S95>/Product1'
-   *  Product: '<S95>/Product2'
-   *  Product: '<S95>/Product3'
-   *  Sum: '<S95>/Sum'
-   */
-  rtb_RhhcosphisinlambYe = (rtb_cosphi -
-    controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[0]) / 0.05F *
-    controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_md[2] + rtb_cosphi *
-    controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_md[0];
-
-  /* Sum: '<S95>/Sum2' incorporates:
-   *  Gain: '<S95>/Gain'
-   *  Memory: '<S95>/Memory1'
-   *  Product: '<S95>/Product4'
-   */
-  rtb_Merge_idx = (0.01F * rtb_cosphi *
-                   controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_md[1]
-                   + controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_b) +
-    rtb_RhhcosphisinlambYe;
-
-  /* Switch: '<S95>/AntiWindup' incorporates:
-   *  Constant: '<S95>/Constant5'
-   *  Constant: '<S95>/SaturationLimit'
-   *  Constant: '<S95>/SaturationLimit1'
-   *  Logic: '<S95>/Logical Operator'
-   *  RelationalOperator: '<S95>/Relational Operator'
-   *  RelationalOperator: '<S95>/Relational Operator1'
-   *  Sum: '<S95>/Add3'
-   *  Sum: '<S95>/Add4'
-   */
-  if ((rtb_Merge_idx > -0.401425719F -
-       controlMCUSlugsMKIINewNav_B.DataTypeConversion_h) && (rtb_Merge_idx <
-       0.401425719F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_h)) {
-    rtb_Merge_idx = rtb_cosphi;
-  } else {
-    rtb_Merge_idx = 0.0F;
-  }
-
-  /* End of Switch: '<S95>/AntiWindup' */
-
-  /* Switch: '<S122>/Switch3' incorporates:
-   *  Delay: '<S122>/Integer Delay3'
-   *  RelationalOperator: '<S122>/Relational Operator2'
-   */
-  if ((rtb_Merge_idx == rtb_Merge_idx) > 0) {
-    rtb_Ze = rtb_Merge_idx;
-  } else {
-    rtb_Ze = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_f;
-  }
-
-  /* End of Switch: '<S122>/Switch3' */
-
-  /* Switch: '<S121>/Switch1' incorporates:
-   *  Constant: '<S121>/Constant'
-   *  Constant: '<S121>/Constant1'
-   *  Constant: '<S121>/Constant2'
-   *  Constant: '<S121>/Constant3'
-   *  Constant: '<S121>/Constant5'
-   *  Delay: '<S121>/Integer Delay'
-   *  Delay: '<S121>/Integer Delay1'
-   *  Delay: '<S121>/Integer Delay2'
-   *  Product: '<S121>/Product'
-   *  Product: '<S121>/Product1'
-   *  Product: '<S121>/Product2'
-   *  Product: '<S121>/Product3'
-   *  Sum: '<S121>/Subtract'
-   *  Sum: '<S121>/Subtract1'
-   */
-  if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
     rtb_Merge_idx = 0.0F;
   } else {
     rtb_Merge_idx = ((rtb_Ze * 0.333333343F +
@@ -3679,11 +3693,11 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_g;
   }
 
-  /* End of Switch: '<S121>/Switch1' */
+  /* End of Switch: '<S110>/Switch1' */
 
-  /* Switch: '<S123>/Switch3' incorporates:
-   *  Delay: '<S123>/Integer Delay3'
-   *  RelationalOperator: '<S123>/Relational Operator2'
+  /* Switch: '<S112>/Switch3' incorporates:
+   *  Delay: '<S112>/Integer Delay3'
+   *  RelationalOperator: '<S112>/Relational Operator2'
    */
   if ((rtb_Merge_idx == rtb_Merge_idx) > 0) {
     rtb_RhhcosphicoslambXe = rtb_Merge_idx;
@@ -3692,12 +3706,12 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_n;
   }
 
-  /* End of Switch: '<S123>/Switch3' */
+  /* End of Switch: '<S112>/Switch3' */
 
-  /* Switch: '<S95>/On//Off' incorporates:
-   *  Constant: '<S95>/Constant1'
-   *  Product: '<S95>/Product'
-   *  Sum: '<S95>/Add2'
+  /* Switch: '<S92>/On//Off' incorporates:
+   *  Constant: '<S92>/Constant1'
+   *  Product: '<S92>/Product'
+   *  Sum: '<S92>/Add2'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
     rtb_Merge_idx = 0.0F;
@@ -3707,32 +3721,32 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       rtb_RhhcosphisinlambYe;
   }
 
-  /* End of Switch: '<S95>/On//Off' */
+  /* End of Switch: '<S92>/On//Off' */
 
-  /* Switch: '<S120>/Switch2' incorporates:
-   *  Constant: '<S95>/SaturationLimit'
-   *  RelationalOperator: '<S120>/LowerRelop1'
-   *  Sum: '<S95>/Add3'
+  /* Switch: '<S109>/Switch2' incorporates:
+   *  Constant: '<S92>/SaturationLimit'
+   *  RelationalOperator: '<S109>/LowerRelop1'
+   *  Sum: '<S92>/Add3'
    */
   if (!(rtb_Merge_idx > 0.401425719F -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion_h)) {
-    /* Switch: '<S120>/Switch' incorporates:
-     *  Constant: '<S95>/SaturationLimit1'
-     *  RelationalOperator: '<S120>/UpperRelop'
-     *  Sum: '<S95>/Add4'
+    /* Switch: '<S109>/Switch' incorporates:
+     *  Constant: '<S92>/SaturationLimit1'
+     *  RelationalOperator: '<S109>/UpperRelop'
+     *  Sum: '<S92>/Add4'
      */
     if (rtb_Merge_idx < -0.401425719F -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion_h) {
-      rtb_Product3_p4_idx = -0.401425719F -
+      rtb_Add4_l = -0.401425719F -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion_h;
     } else {
-      rtb_Product3_p4_idx = rtb_Merge_idx;
+      rtb_Add4_l = rtb_Merge_idx;
     }
 
-    /* End of Switch: '<S120>/Switch' */
+    /* End of Switch: '<S109>/Switch' */
   }
 
-  /* End of Switch: '<S120>/Switch2' */
+  /* End of Switch: '<S109>/Switch2' */
 
   /* Saturate: '<S87>/[-60 60]' */
   controlMCUSlugsMKIINewNav_B.u060 =
@@ -3740,7 +3754,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_a.y <= -60.0F ? -60.0F
     : controlMCUSlugsMKIINewNav_B.sf_EmbeddedMATLABFunction_a.y;
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S102>/[apUtils.c] */
+  /* S-Function "dsPIC_C_function_Call" Block: <S99>/[apUtils.c] */
   controlMCUSlugsMKIINewNav_B.apUtilsc_b = myCos
     (controlMCUSlugsMKIINewNav_B.u060);
 
@@ -3751,61 +3765,61 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Product: '<S87>/Product1'
    *  Sum: '<S87>/Add5'
    */
-  rtb_Product3_p4_idx = (1.0F / controlMCUSlugsMKIINewNav_B.apUtilsc_b - 1.0F) *
-    controlMCUSlugsMKIINewNav_B.GetasingleParamnavSupportc +
-    (rtb_Product3_p4_idx + controlMCUSlugsMKIINewNav_B.DataTypeConversion_h);
+  rtb_Add4_l = (1.0F / controlMCUSlugsMKIINewNav_B.apUtilsc_b - 1.0F) *
+    controlMCUSlugsMKIINewNav_B.GetasingleParamnavSupportc + (rtb_Add4_l +
+    controlMCUSlugsMKIINewNav_B.DataTypeConversion_h);
 
   /* Saturate: '<S87>/Elevator  Limit' */
-  rtb_ElevatorLimit = rtb_Product3_p4_idx >= 0.401425719F ? 0.401425719F :
-    rtb_Product3_p4_idx <= -0.401425719F ? -0.401425719F : rtb_Product3_p4_idx;
+  rtb_ElevatorLimit = rtb_Add4_l >= 0.401425719F ? 0.401425719F : rtb_Add4_l <=
+    -0.401425719F ? -0.401425719F : rtb_Add4_l;
 
   /* Saturate: '<S87>/Throttle  Limit' */
-  rtb_ThrottleLimit = rtb_Add1_am >= 0.95F ? 0.95F : rtb_Add1_am <= 0.0F ? 0.0F :
-    rtb_Add1_am;
+  rtb_ThrottleLimit = rtb_Product3_p4_idx >= 0.95F ? 0.95F : rtb_Product3_p4_idx
+    <= 0.0F ? 0.0F : rtb_Product3_p4_idx;
 
-  /* Update for Delay: '<S99>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_k =
-    controlMCUSlugsMKIINewNav_B.Switch3_as;
+  /* Update for Delay: '<S116>/Integer Delay3' */
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_g =
+    controlMCUSlugsMKIINewNav_B.Switch3_o;
 
-  /* Update for UnitDelay: '<S125>/FixPt Unit Delay2' incorporates:
-   *  Constant: '<S125>/FixPt Constant'
+  /* Update for UnitDelay: '<S126>/FixPt Unit Delay2' incorporates:
+   *  Constant: '<S126>/FixPt Constant'
    */
   controlMCUSlugsMKIINewNav_DWork.FixPtUnitDelay2_DSTATE = 0U;
 
-  /* Update for UnitDelay: '<S125>/FixPt Unit Delay1' */
+  /* Update for UnitDelay: '<S126>/FixPt Unit Delay1' */
   controlMCUSlugsMKIINewNav_DWork.FixPtUnitDelay1_DSTATE = rtb_DifferenceInputs2;
 
-  /* Update for Delay: '<S97>/Integer Delay3' */
+  /* Update for Delay: '<S95>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_c = Switch3_m;
 
-  /* Update for Delay: '<S117>/Integer Delay2' */
+  /* Update for Delay: '<S106>/Integer Delay2' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE = Switch3_ae;
 
-  /* Update for Memory: '<S94>/Memory1' */
+  /* Update for Memory: '<S91>/Memory1' */
   controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput = rtb_OnOff;
 
-  /* Update for Delay: '<S119>/Integer Delay3' */
+  /* Update for Delay: '<S108>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_o = Switch3_l;
 
-  /* Update for Delay: '<S117>/Integer Delay' */
+  /* Update for Delay: '<S106>/Integer Delay' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_c = Switch3_l;
 
-  /* Update for Delay: '<S117>/Integer Delay1' */
+  /* Update for Delay: '<S106>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[0] =
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[1];
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[1] = Switch3_l;
 
-  /* Update for Delay: '<S118>/Integer Delay3' */
+  /* Update for Delay: '<S107>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_lo = Switch3_ae;
 
-  /* Update for Delay: '<S100>/Integer Delay3' */
+  /* Update for Delay: '<S97>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_i4 =
     controlMCUSlugsMKIINewNav_B.Switch3_bm;
 
-  /* Update for Delay: '<S96>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_g = Switch3_lh;
+  /* Update for Delay: '<S94>/Integer Delay3' */
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gy = Switch3_lh;
 
-  /* Update for Delay: '<S92>/NDelays' */
+  /* Update for Delay: '<S90>/NDelays' */
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[0] =
     controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[1];
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[1] =
@@ -3816,30 +3830,30 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[4];
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[4] = Switch3_lh;
 
-  /* Update for Delay: '<S110>/Integer Delay2' */
+  /* Update for Delay: '<S102>/Integer Delay2' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_b = rtb_Deg2R_m_idx;
 
-  /* Update for Memory: '<S92>/Memory1' */
+  /* Update for Memory: '<S90>/Memory1' */
   controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_c = Product;
 
-  /* Update for Delay: '<S111>/Integer Delay3' */
+  /* Update for Delay: '<S103>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oy = rtb_Deg2R_m_idx_0;
 
-  /* Update for Delay: '<S110>/Integer Delay' */
+  /* Update for Delay: '<S102>/Integer Delay' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_o = rtb_Deg2R_m_idx_0;
 
-  /* Update for Delay: '<S110>/Integer Delay1' */
+  /* Update for Delay: '<S102>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[0] =
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[1];
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[1] = rtb_Deg2R_m_idx_0;
 
-  /* Update for Delay: '<S112>/Integer Delay3' */
+  /* Update for Delay: '<S104>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_d = rtb_Deg2R_m_idx;
 
-  /* Update for Delay: '<S98>/Integer Delay3' */
+  /* Update for Delay: '<S96>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_cv = rtb_cosphi;
 
-  /* Update for Delay: '<S95>/NDelays' */
+  /* Update for Delay: '<S92>/NDelays' */
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[0] =
     controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[1];
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[1] =
@@ -3850,25 +3864,25 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[4];
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[4] = rtb_cosphi;
 
-  /* Update for Delay: '<S121>/Integer Delay2' */
+  /* Update for Delay: '<S110>/Integer Delay2' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_g =
     rtb_RhhcosphicoslambXe;
 
-  /* Update for Memory: '<S95>/Memory1' */
+  /* Update for Memory: '<S92>/Memory1' */
   controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_b = rtb_Merge_idx;
 
-  /* Update for Delay: '<S122>/Integer Delay3' */
+  /* Update for Delay: '<S111>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_f = rtb_Ze;
 
-  /* Update for Delay: '<S121>/Integer Delay' */
+  /* Update for Delay: '<S110>/Integer Delay' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_i = rtb_Ze;
 
-  /* Update for Delay: '<S121>/Integer Delay1' */
+  /* Update for Delay: '<S110>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_g[0] =
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_g[1];
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_g[1] = rtb_Ze;
 
-  /* Update for Delay: '<S123>/Integer Delay3' */
+  /* Update for Delay: '<S112>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_n =
     rtb_RhhcosphicoslambXe;
 
@@ -4034,9 +4048,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
      *  RelationalOperator: '<S27>/Relational Operator2'
      */
     if ((Switch3_a == Switch3_a) > 0) {
-      controlMCUSlugsMKIINewNav_B.Switch3_o = Switch3_a;
+      controlMCUSlugsMKIINewNav_B.Switch3_ob = Switch3_a;
     } else {
-      controlMCUSlugsMKIINewNav_B.Switch3_o =
+      controlMCUSlugsMKIINewNav_B.Switch3_ob =
         controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_nd;
     }
 
@@ -4071,12 +4085,12 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
         controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_n[1];
 
       /* S-Function "dsPIC_C_function_Call" Block: <S43>/C Function Call */
-      controlMCUSlugsMKIINewNav_B.CFunctionCall_dv = myExp
+      controlMCUSlugsMKIINewNav_B.CFunctionCall_d = myExp
         (controlMCUSlugsMKIINewNav_B.T);
 
       /* SignalConversion: '<S44>/Numerical Unity' */
       controlMCUSlugsMKIINewNav_B.NumericalUnity_f =
-        controlMCUSlugsMKIINewNav_B.CFunctionCall_dv;
+        controlMCUSlugsMKIINewNav_B.CFunctionCall_d;
 
       /* Sum: '<S41>/1-c' incorporates:
        *  Constant: '<S41>/Constant'
@@ -4102,7 +4116,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
      *  Sum: '<S15>/Sum3'
      */
     rtb_Merge_idx = -(controlMCUSlugsMKIINewNav_B.Subtract_f -
-                      controlMCUSlugsMKIINewNav_B.Switch3_o);
+                      controlMCUSlugsMKIINewNav_B.Switch3_ob);
 
     /* Product: '<S40>/Divide4' incorporates:
      *  Constant: '<S40>/Constant'
@@ -4300,19 +4314,19 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  RelationalOperator: '<S83>/Relational Operator2'
    */
   if ((rtb_BankLimitCommand == rtb_BankLimitCommand) > 0) {
-    Switch3_l = rtb_BankLimitCommand;
+    Switch3_m = rtb_BankLimitCommand;
   } else {
-    Switch3_l = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oh;
+    Switch3_m = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_m;
   }
 
   /* End of Switch: '<S83>/Switch3' */
 
   /* Saturate: '<S82>/bank Limit' */
-  controlMCUSlugsMKIINewNav_B.bankLimit = Switch3_l >= 0.436332315F ?
-    0.436332315F : Switch3_l <= -0.436332315F ? -0.436332315F : Switch3_l;
+  controlMCUSlugsMKIINewNav_B.bankLimit = Switch3_m >= 0.436332315F ?
+    0.436332315F : Switch3_m <= -0.436332315F ? -0.436332315F : Switch3_m;
 
   /* S-Function "dsPIC_C_function_Call" Block: <S85>/C Function Call */
-  controlMCUSlugsMKIINewNav_B.CFunctionCall_nj = myTan
+  controlMCUSlugsMKIINewNav_B.CFunctionCall_ao = myTan
     (controlMCUSlugsMKIINewNav_B.bankLimit);
 
   /* Switch: '<S84>/Switch3' incorporates:
@@ -4320,9 +4334,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  RelationalOperator: '<S84>/Relational Operator2'
    */
   if ((rtb_ScheduleLPF == rtb_ScheduleLPF) > 0) {
-    Switch3_ae = rtb_ScheduleLPF;
+    Switch3_l = rtb_ScheduleLPF;
   } else {
-    Switch3_ae = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_a;
+    Switch3_l = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_k;
   }
 
   /* End of Switch: '<S84>/Switch3' */
@@ -4334,11 +4348,11 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Saturate: '<S82>/[0 40]'
    */
   if (controlMCUSlugsMKIINewNav_B.isitinMidLevelPtorSPTnavSupport > 0) {
-    rtb_Add1_am = controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[2];
+    Switch3_ae = controlMCUSlugsMKIINewNav_B.GetMidLevelCommandsnavSupportc[2];
   } else {
-    rtb_Add1_am = 1.0F / (Switch3_ae >= 40.0F ? 40.0F : Switch3_ae <= 0.0F ?
-                          0.0F : Switch3_ae) * 9.80665F *
-      controlMCUSlugsMKIINewNav_B.CFunctionCall_nj;
+    Switch3_ae = 1.0F / (Switch3_l >= 40.0F ? 40.0F : Switch3_l <= 0.0F ? 0.0F :
+                         Switch3_l) * 9.80665F *
+      controlMCUSlugsMKIINewNav_B.CFunctionCall_ao;
   }
 
   /* End of Switch: '<S50>/Switch1' */
@@ -4347,7 +4361,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   if (controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_n[3] > 0.3F) {
     rtb_Product3_p4_idx = controlMCUSlugsMKIINewNav_B.PsiDotLimit;
   } else {
-    rtb_Product3_p4_idx = rtb_Add1_am;
+    rtb_Product3_p4_idx = Switch3_ae;
   }
 
   /* End of Switch: '<S50>/Switch' */
@@ -4528,16 +4542,16 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  RelationalOperator: '<S54>/Relational Operator2'
    */
   if ((rtb_Product6[1] == rtb_Product6[1]) > 0) {
-    Switch3_lh = rtb_Product6[1];
+    rtb_OnOff = rtb_Product6[1];
   } else {
-    Switch3_lh = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_h;
+    rtb_OnOff = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_h;
   }
 
   /* End of Switch: '<S54>/Switch3' */
 
   /* Saturate: '<S48>/[-20 20]' */
-  rtb_u020 = Switch3_lh >= 20.0F ? 20.0F : Switch3_lh <= -20.0F ? -20.0F :
-    Switch3_lh;
+  rtb_u020 = rtb_OnOff >= 20.0F ? 20.0F : rtb_OnOff <= -20.0F ? -20.0F :
+    rtb_OnOff;
 
   /* MATLAB Function: '<S51>/Embedded MATLAB Function' */
   controlM_EmbeddedMATLABFunction(rtb_u020, 0.01, 10.0,
@@ -4559,8 +4573,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   /* Sum: '<S57>/Add3' incorporates:
    *  Constant: '<S57>/SaturationLimit'
    */
-  rtb_Deg2R_m_idx_0 = 0.17453292F -
-    controlMCUSlugsMKIINewNav_B.DataTypeConversion_k;
+  Switch3_lh = 0.17453292F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_k;
 
   /* Sum: '<S57>/Add1' incorporates:
    *  Constant: '<S57>/delayTime'
@@ -4611,9 +4624,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  RelationalOperator: '<S78>/Relational Operator2'
    */
   if ((Product == Product) > 0) {
-    rtb_Deg2R_m_idx = Product;
+    rtb_Deg2R_m_idx_0 = Product;
   } else {
-    rtb_Deg2R_m_idx = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_m;
+    rtb_Deg2R_m_idx_0 = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_mx;
   }
 
   /* End of Switch: '<S78>/Switch3' */
@@ -4635,12 +4648,14 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Sum: '<S77>/Subtract1'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
-    rtb_Product3_p4_idx = 0.0F;
+    rtb_Deg2R_m_idx = 0.0F;
   } else {
-    rtb_Product3_p4_idx = ((rtb_Deg2R_m_idx * 0.333333343F +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_ie * 1.33333337F) +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_jy[0] * 0.333333343F)
-      * 0.005F + controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_o;
+    rtb_Deg2R_m_idx = ((rtb_Deg2R_m_idx_0 * 0.333333343F +
+                        controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_ie *
+                        1.33333337F) +
+                       controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_jy[0]
+                       * 0.333333343F) * 0.005F +
+      controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_o;
   }
 
   /* End of Switch: '<S77>/Switch1' */
@@ -4649,10 +4664,11 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Delay: '<S79>/Integer Delay3'
    *  RelationalOperator: '<S79>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    Switch3_m = rtb_Product3_p4_idx;
+  if ((rtb_Deg2R_m_idx == rtb_Deg2R_m_idx) > 0) {
+    rtb_Product3_p4_idx = rtb_Deg2R_m_idx;
   } else {
-    Switch3_m = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gf;
+    rtb_Product3_p4_idx =
+      controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gf;
   }
 
   /* End of Switch: '<S79>/Switch3' */
@@ -4663,9 +4679,9 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Sum: '<S57>/Add2'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
-    rtb_OnOff = 0.0F;
+    rtb_Add4_l = 0.0F;
   } else {
-    rtb_OnOff = Switch3_m *
+    rtb_Add4_l = rtb_Product3_p4_idx *
       controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_d[1] +
       rtb_Merge_idx;
   }
@@ -4677,19 +4693,19 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  RelationalOperator: '<S76>/LowerRelop1'
    *  Sum: '<S57>/Add3'
    */
-  if (!(rtb_OnOff > 0.17453292F -
+  if (!(rtb_Add4_l > 0.17453292F -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion_k)) {
     /* Switch: '<S76>/Switch' incorporates:
      *  Constant: '<S57>/SaturationLimit1'
      *  RelationalOperator: '<S76>/UpperRelop'
      *  Sum: '<S57>/Add4'
      */
-    if (rtb_OnOff < -0.17453292F -
+    if (rtb_Add4_l < -0.17453292F -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion_k) {
-      rtb_Deg2R_m_idx_0 = -0.17453292F -
+      Switch3_lh = -0.17453292F -
         controlMCUSlugsMKIINewNav_B.DataTypeConversion_k;
     } else {
-      rtb_Deg2R_m_idx_0 = rtb_OnOff;
+      Switch3_lh = rtb_Add4_l;
     }
 
     /* End of Switch: '<S76>/Switch' */
@@ -4698,7 +4714,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   /* End of Switch: '<S76>/Switch2' */
 
   /* Sum: '<S48>/Add1' */
-  rtb_Product3_p4_idx = rtb_BankLimitCommand_i - controlMCUSlugsMKIINewNav_B.y[0];
+  rtb_Deg2R_m_idx = rtb_BankLimitCommand_i - controlMCUSlugsMKIINewNav_B.y[0];
 
   /* Sum: '<S55>/Add3' incorporates:
    *  Constant: '<S55>/SaturationLimit'
@@ -4709,8 +4725,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Delay: '<S53>/Integer Delay3'
    *  RelationalOperator: '<S53>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    rtb_RhhcosphicoslambXe = rtb_Product3_p4_idx;
+  if ((rtb_Deg2R_m_idx == rtb_Deg2R_m_idx) > 0) {
+    rtb_RhhcosphicoslambXe = rtb_Deg2R_m_idx;
   } else {
     rtb_RhhcosphicoslambXe =
       controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_p;
@@ -4737,9 +4753,10 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Memory: '<S55>/Memory1'
    *  Product: '<S55>/Product4'
    */
-  rtb_Product3_p4_idx = (0.01F * rtb_RhhcosphicoslambXe *
-    controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_h[1] +
-    controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_g) + rtb_Merge_idx;
+  rtb_Deg2R_m_idx = (0.01F * rtb_RhhcosphicoslambXe *
+                     controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_h[1]
+                     + controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_g)
+    + rtb_Merge_idx;
 
   /* Switch: '<S55>/AntiWindup' incorporates:
    *  Constant: '<S55>/Constant5'
@@ -4751,13 +4768,12 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Sum: '<S55>/Add3'
    *  Sum: '<S55>/Add4'
    */
-  if ((rtb_Product3_p4_idx > -0.383972436F -
-       controlMCUSlugsMKIINewNav_B.DataTypeConversion_je) &&
-      (rtb_Product3_p4_idx < 0.383972436F -
-       controlMCUSlugsMKIINewNav_B.DataTypeConversion_je)) {
-    rtb_Product3_p4_idx = rtb_RhhcosphicoslambXe;
+  if ((rtb_Deg2R_m_idx > -0.383972436F -
+       controlMCUSlugsMKIINewNav_B.DataTypeConversion_je) && (rtb_Deg2R_m_idx <
+       0.383972436F - controlMCUSlugsMKIINewNav_B.DataTypeConversion_je)) {
+    rtb_Deg2R_m_idx = rtb_RhhcosphicoslambXe;
   } else {
-    rtb_Product3_p4_idx = 0.0F;
+    rtb_Deg2R_m_idx = 0.0F;
   }
 
   /* End of Switch: '<S55>/AntiWindup' */
@@ -4766,8 +4782,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Delay: '<S62>/Integer Delay3'
    *  RelationalOperator: '<S62>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    rtb_cosphi = rtb_Product3_p4_idx;
+  if ((rtb_Deg2R_m_idx == rtb_Deg2R_m_idx) > 0) {
+    rtb_cosphi = rtb_Deg2R_m_idx;
   } else {
     rtb_cosphi = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_c5;
   }
@@ -4791,12 +4807,14 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Sum: '<S61>/Subtract1'
    */
   if (controlMCUSlugsMKIINewNav_B.ManualorAutonavSupportc > 0) {
-    rtb_Product3_p4_idx = 0.0F;
+    rtb_Deg2R_m_idx = 0.0F;
   } else {
-    rtb_Product3_p4_idx = ((rtb_cosphi * 0.333333343F +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_k * 1.33333337F) +
-      controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_b[0] * 0.333333343F) *
-      0.005F + controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_g4;
+    rtb_Deg2R_m_idx = ((rtb_cosphi * 0.333333343F +
+                        controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_k *
+                        1.33333337F) +
+                       controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_b[0]
+                       * 0.333333343F) * 0.005F +
+      controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_g4;
   }
 
   /* End of Switch: '<S61>/Switch1' */
@@ -4805,8 +4823,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Delay: '<S63>/Integer Delay3'
    *  RelationalOperator: '<S63>/Relational Operator2'
    */
-  if ((rtb_Product3_p4_idx == rtb_Product3_p4_idx) > 0) {
-    rtb_Ze = rtb_Product3_p4_idx;
+  if ((rtb_Deg2R_m_idx == rtb_Deg2R_m_idx) > 0) {
+    rtb_Ze = rtb_Deg2R_m_idx;
   } else {
     rtb_Ze = controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_le;
   }
@@ -4865,11 +4883,10 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
    *  Product: '<S48>/Product'
    */
   if (controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_c[1] > 0.3F) {
-    rtb_Product3_p4_idx =
-      controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_c[2] *
-      rtb_Merge_idx;
+    rtb_Deg2R_m_idx = controlMCUSlugsMKIINewNav_B.GetRangeofValuesnavSupportc_c
+      [2] * rtb_Merge_idx;
   } else {
-    rtb_Product3_p4_idx = 0.0F;
+    rtb_Deg2R_m_idx = 0.0F;
   }
 
   /* End of Switch: '<S48>/Switch2' */
@@ -4877,17 +4894,17 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   /* Sum: '<S48>/Add4' incorporates:
    *  Sum: '<S48>/Add'
    */
-  rtb_Product3_p4_idx += rtb_Deg2R_m_idx_0 +
+  rtb_Deg2R_m_idx += Switch3_lh +
     controlMCUSlugsMKIINewNav_B.DataTypeConversion_k;
 
   /* Update for Delay: '<S83>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oh = Switch3_l;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_m = Switch3_m;
 
   /* Update for Delay: '<S84>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_a = Switch3_ae;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_k = Switch3_l;
 
   /* Update for Delay: '<S54>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_h = Switch3_lh;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_h = rtb_OnOff;
 
   /* Update for Delay: '<S57>/NDelays' */
   controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_j[0] =
@@ -4902,24 +4919,24 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     controlMCUSlugsMKIINewNav_B.NegFeedback;
 
   /* Update for Delay: '<S77>/Integer Delay2' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_o = Switch3_m;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_o = rtb_Product3_p4_idx;
 
   /* Update for Memory: '<S57>/Memory1' */
-  controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_n = rtb_OnOff;
+  controlMCUSlugsMKIINewNav_DWork.Memory1_PreviousInput_n = rtb_Add4_l;
 
   /* Update for Delay: '<S78>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_m = rtb_Deg2R_m_idx;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_mx = rtb_Deg2R_m_idx_0;
 
   /* Update for Delay: '<S77>/Integer Delay' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_ie = rtb_Deg2R_m_idx;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_ie = rtb_Deg2R_m_idx_0;
 
   /* Update for Delay: '<S77>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_jy[0] =
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_jy[1];
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_jy[1] = rtb_Deg2R_m_idx;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_jy[1] = rtb_Deg2R_m_idx_0;
 
   /* Update for Delay: '<S79>/Integer Delay3' */
-  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gf = Switch3_m;
+  controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gf = rtb_Product3_p4_idx;
 
   /* Update for Delay: '<S53>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_p =
@@ -4963,8 +4980,8 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
   /* '<S11>:1:5' */
-  rtb_Product3_p4_idx = rtb_Product3_p4_idx >= 0.17453292F ? 0.17453292F :
-    rtb_Product3_p4_idx <= -0.17453292F ? -0.17453292F : rtb_Product3_p4_idx;
+  rtb_Product3_p4_idx = rtb_Deg2R_m_idx >= 0.17453292F ? 0.17453292F :
+    rtb_Deg2R_m_idx <= -0.17453292F ? -0.17453292F : rtb_Deg2R_m_idx;
 
   /* End of Outputs for SubSystem: '<S3>/Lateral Channel Encaps' */
 
@@ -5327,12 +5344,12 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_Product3_p4_idx = (real32_T)sin(controlMCUSlugsMKIINewNav_B.y_i[0]);
     rtb_Deg2R_m_idx_0 = (real32_T)cos(controlMCUSlugsMKIINewNav_B.y_i[0]);
     rtb_Deg2R_m_idx = (real32_T)sin(controlMCUSlugsMKIINewNav_B.y_i[1]);
-    Switch3_m = (real32_T)cos(controlMCUSlugsMKIINewNav_B.y_i[1]);
+    rtb_Add4_l = (real32_T)cos(controlMCUSlugsMKIINewNav_B.y_i[1]);
     rtb_OnOff = (real32_T)sin(controlMCUSlugsMKIINewNav_B.y_i[2]);
     Switch3_lh = (real32_T)cos(controlMCUSlugsMKIINewNav_B.y_i[2]);
 
     /* Product: '<S487>/u(5)*u(6)' */
-    rtb_VectorConcatenate_i[0] = Switch3_m * Switch3_lh;
+    rtb_VectorConcatenate_i[0] = rtb_Add4_l * Switch3_lh;
 
     /* Sum: '<S490>/Sum' incorporates:
      *  Product: '<S490>/u(3)*u(4)'
@@ -5349,7 +5366,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       Switch3_lh + rtb_Product3_p4_idx * rtb_OnOff;
 
     /* Product: '<S488>/u(3)*u(5)' */
-    rtb_VectorConcatenate_i[3] = rtb_OnOff * Switch3_m;
+    rtb_VectorConcatenate_i[3] = rtb_OnOff * rtb_Add4_l;
 
     /* Sum: '<S491>/Sum' incorporates:
      *  Product: '<S491>/u(1)*u(2)*u(3)'
@@ -5369,10 +5386,10 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
     rtb_VectorConcatenate_i[6] = -rtb_Deg2R_m_idx;
 
     /* Product: '<S492>/u(1)*u(3)' */
-    rtb_VectorConcatenate_i[7] = rtb_Product3_p4_idx * Switch3_m;
+    rtb_VectorConcatenate_i[7] = rtb_Product3_p4_idx * rtb_Add4_l;
 
     /* Product: '<S495>/u(4)*u(5)' */
-    rtb_VectorConcatenate_i[8] = rtb_Deg2R_m_idx_0 * Switch3_m;
+    rtb_VectorConcatenate_i[8] = rtb_Deg2R_m_idx_0 * rtb_Add4_l;
 
     /* Sum: '<S460>/Subtract2' incorporates:
      *  Math: '<S478>/Math Function'
@@ -5717,7 +5734,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
 
     /* Update for Delay: '<S27>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_nd =
-      controlMCUSlugsMKIINewNav_B.Switch3_o;
+      controlMCUSlugsMKIINewNav_B.Switch3_ob;
 
     /* Update for UnitDelay: '<S45>/UD' */
     controlMCUSlugsMKIINewNav_DWork.UD_DSTATE_o =
@@ -5732,7 +5749,7 @@ void controlMCUSlugsMKIINewNav_step(int_T tid)
       controlMCUSlugsMKIINewNav_B.Subtract_f;
 
     /* Update for Delay: '<S15>/Integer Delay' */
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_cl = rtb_Add1_am;
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_cl = Switch3_ae;
 
     /* Update for Delay: '<S15>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_c =
@@ -5859,62 +5876,71 @@ void controlMCUSlugsMKIINewNav_initialize(boolean_T firstTime)
   controlMCUSlugsMKIINewNav_DWork.IC1_FirstOutputTime = TRUE;
 
   /* Start for Atomic SubSystem: '<S3>/Navigation Encaps' */
-  /* Start for InitialCondition: '<S136>/IC1' */
+  /* Start for InitialCondition: '<S137>/IC1' */
   controlMCUSlugsMKIINewNav_DWork.IC1_FirstOutputTime_p = TRUE;
 
-  /* Start for InitialCondition: '<S136>/IC2' */
+  /* Start for InitialCondition: '<S137>/IC2' */
   controlMCUSlugsMKIINewNav_DWork.IC2_FirstOutputTime = TRUE;
 
-  /* Start for InitialCondition: '<S133>/IC' */
-  controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime = TRUE;
+  /* Start for InitialCondition: '<S137>/IC3' */
+  controlMCUSlugsMKIINewNav_B.IC3 = 0.0F;
+  controlMCUSlugsMKIINewNav_DWork.IC3_FirstOutputTime = TRUE;
 
-  /* Start for IfAction SubSystem: '<S127>/RTB//Follow Mobile Navigation' */
-  /* InitializeConditions for DiscreteIntegrator: '<S390>/Discrete-Time Integrator' */
-  controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_IC_LOADI = 1U;
-
-  /* End of Start for SubSystem: '<S127>/RTB//Follow Mobile Navigation' */
-
-  /* Start for IfAction SubSystem: '<S127>/Normal WP  Navigation' */
+  /* Start for InitialCondition: '<S137>/IC4' */
+  controlMCUSlugsMKIINewNav_B.IC4[0] = 36.9885063F;
+  controlMCUSlugsMKIINewNav_B.IC4[1] = -122.055305F;
+  controlMCUSlugsMKIINewNav_DWork.IC4_FirstOutputTime = TRUE;
 
   /* Start for InitialCondition: '<S134>/IC' */
+  controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime = TRUE;
+
+  /* Start for IfAction SubSystem: '<S128>/RTB//Follow Mobile Navigation' */
+  /* InitializeConditions for DiscreteIntegrator: '<S391>/Discrete-Time Integrator' */
+  controlMCUSlugsMKIINewNav_DWork.DiscreteTimeIntegrator_IC_LOADI = 1U;
+
+  /* End of Start for SubSystem: '<S128>/RTB//Follow Mobile Navigation' */
+
+  /* Start for IfAction SubSystem: '<S128>/Normal WP  Navigation' */
+
+  /* Start for InitialCondition: '<S135>/IC' */
   controlMCUSlugsMKIINewNav_B.IC = 0U;
   controlMCUSlugsMKIINewNav_DWork.IC_FirstOutputTime_l = TRUE;
 
-  /* Start for Enabled SubSystem: '<S134>/Get Frenet' */
-  /* InitializeConditions for Delay: '<S249>/Integer Delay1' */
+  /* Start for Enabled SubSystem: '<S135>/Get Frenet' */
+  /* InitializeConditions for Delay: '<S251>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_p = 1.0F;
 
-  /* End of Start for SubSystem: '<S134>/Get Frenet' */
-  /* InitializeConditions for MATLAB Function: '<S134>/Embedded MATLAB Function' */
-  controlMCUSlugsMKIINewNav_DWork.persistentDidReachIP = 0U;
-
-  /* InitializeConditions for Delay: '<S134>/Integer Delay' */
+  /* End of Start for SubSystem: '<S135>/Get Frenet' */
+  /* InitializeConditions for Delay: '<S135>/Integer Delay' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_p = 1U;
 
-  /* InitializeConditions for MATLAB Function: '<S134>/computeCurrentWP' */
+  /* InitializeConditions for MATLAB Function: '<S135>/Embedded MATLAB Function' */
+  controlMCUSlugsMKIINewNav_DWork.persistentDidReachIP = 0U;
+
+  /* InitializeConditions for MATLAB Function: '<S135>/computeCurrentWP' */
   controlMCUSlugsMKIINewNav_DWork.fromWp = 1U;
   controlMCUSlugsMKIINewNav_DWork.toWp = 2U;
 
-  /* InitializeConditions for Delay: '<S262>/Integer Delay3' */
+  /* InitializeConditions for Delay: '<S263>/Integer Delay3' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_l = 0.0F;
 
-  /* VirtualOutportStart for Outport: '<S134>/FromWP' */
+  /* VirtualOutportStart for Outport: '<S135>/FromWP' */
   controlMCUSlugsMKIINewNav_B.WP0 = 1U;
 
-  /* VirtualOutportStart for Outport: '<S134>/ToWP' */
+  /* VirtualOutportStart for Outport: '<S135>/ToWP' */
   controlMCUSlugsMKIINewNav_B.WP1 = 2U;
 
-  /* End of Start for SubSystem: '<S127>/Normal WP  Navigation' */
+  /* End of Start for SubSystem: '<S128>/Normal WP  Navigation' */
 
-  /* Start for IfAction SubSystem: '<S127>/Circle Navigation' */
+  /* Start for IfAction SubSystem: '<S128>/Circle Navigation' */
 
-  /* InitializeConditions for Delay: '<S144>/Integer Delay1' */
+  /* InitializeConditions for Delay: '<S146>/Integer Delay1' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE = 0.0F;
 
-  /* InitializeConditions for Delay: '<S128>/Integer Delay' */
+  /* InitializeConditions for Delay: '<S129>/Integer Delay' */
   controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE = 0.0F;
 
-  /* End of Start for SubSystem: '<S127>/Circle Navigation' */
+  /* End of Start for SubSystem: '<S128>/Circle Navigation' */
   /* End of Start for SubSystem: '<S3>/Navigation Encaps' */
 
   /* Start for Enabled SubSystem: '<S3>/L1 Output Feedback Controller With  Projection Operator' */
@@ -6083,10 +6109,13 @@ void controlMCUSlugsMKIINewNav_initialize(boolean_T firstTime)
       (&controlMCUSlugsMKIINewNav_DWork.sf_BufferICChannel3);
 
     /* InitializeConditions for Atomic SubSystem: '<S3>/Navigation Encaps' */
-    /* InitializeConditions for Delay: '<S127>/Integer Delay' */
+    /* InitializeConditions for Delay: '<S412>/Delay' */
+    controlMCUSlugsMKIINewNav_DWork.Delay_DSTATE = FALSE;
+
+    /* InitializeConditions for Delay: '<S128>/Integer Delay' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_d = 0U;
 
-    /* InitializeConditions for Delay: '<S127>/Integer Delay1' */
+    /* InitializeConditions for Delay: '<S128>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j2 = 0U;
 
     /* End of InitializeConditions for SubSystem: '<S3>/Navigation Encaps' */
@@ -6095,85 +6124,85 @@ void controlMCUSlugsMKIINewNav_initialize(boolean_T firstTime)
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE = 0.0F;
 
     /* InitializeConditions for Atomic SubSystem: '<S3>/Longitudinal Channel Encaps' */
-    /* InitializeConditions for Delay: '<S99>/Integer Delay3' */
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_k = 0.0F;
+    /* InitializeConditions for Delay: '<S116>/Integer Delay3' */
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_g = 0.0F;
 
-    /* InitializeConditions for MATLAB Function: '<S89>/Embedded MATLAB Function' */
+    /* InitializeConditions for MATLAB Function: '<S113>/Embedded MATLAB Function' */
     con_EmbeddedMATLABFunction_Init
-      (&controlMCUSlugsMKIINewNav_DWork.sf_EmbeddedMATLABFunction_e);
+      (&controlMCUSlugsMKIINewNav_DWork.sf_EmbeddedMATLABFunction_d);
 
-    /* InitializeConditions for UnitDelay: '<S125>/FixPt Unit Delay2' */
+    /* InitializeConditions for UnitDelay: '<S126>/FixPt Unit Delay2' */
     controlMCUSlugsMKIINewNav_DWork.FixPtUnitDelay2_DSTATE = 1U;
 
-    /* InitializeConditions for Delay: '<S97>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S95>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_c = 0.0F;
 
-    /* InitializeConditions for Delay: '<S117>/Integer Delay2' */
+    /* InitializeConditions for Delay: '<S106>/Integer Delay2' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE = 0.0F;
 
-    /* InitializeConditions for Delay: '<S119>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S108>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_o = 0.0F;
 
-    /* InitializeConditions for Delay: '<S117>/Integer Delay' */
+    /* InitializeConditions for Delay: '<S106>/Integer Delay' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_c = 0.0F;
 
-    /* InitializeConditions for Delay: '<S117>/Integer Delay1' */
+    /* InitializeConditions for Delay: '<S106>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[0] = 0.0F;
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_j[1] = 0.0F;
 
-    /* InitializeConditions for Delay: '<S118>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S107>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_lo = 0.0F;
 
-    /* InitializeConditions for Delay: '<S100>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S97>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_i4 = 0.0F;
 
-    /* InitializeConditions for MATLAB Function: '<S90>/Embedded MATLAB Function' */
+    /* InitializeConditions for MATLAB Function: '<S89>/Embedded MATLAB Function' */
     con_EmbeddedMATLABFunction_Init
       (&controlMCUSlugsMKIINewNav_DWork.sf_EmbeddedMATLABFunction_a);
 
-    /* InitializeConditions for Delay: '<S96>/Integer Delay3' */
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_g = 0.0F;
+    /* InitializeConditions for Delay: '<S94>/Integer Delay3' */
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_gy = 0.0F;
 
-    /* InitializeConditions for Delay: '<S110>/Integer Delay2' */
+    /* InitializeConditions for Delay: '<S102>/Integer Delay2' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_b = 0.0F;
 
-    /* InitializeConditions for Delay: '<S111>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S103>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oy = 0.0F;
 
-    /* InitializeConditions for Delay: '<S110>/Integer Delay' */
+    /* InitializeConditions for Delay: '<S102>/Integer Delay' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_o = 0.0F;
 
-    /* InitializeConditions for Delay: '<S110>/Integer Delay1' */
+    /* InitializeConditions for Delay: '<S102>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[0] = 0.0F;
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_m[1] = 0.0F;
 
-    /* InitializeConditions for Delay: '<S112>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S104>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_d = 0.0F;
 
-    /* InitializeConditions for Delay: '<S98>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S96>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_cv = 0.0F;
     for (i = 0; i < 5; i++) {
-      /* InitializeConditions for Delay: '<S92>/NDelays' */
+      /* InitializeConditions for Delay: '<S90>/NDelays' */
       controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE[i] = 0.0F;
 
-      /* InitializeConditions for Delay: '<S95>/NDelays' */
+      /* InitializeConditions for Delay: '<S92>/NDelays' */
       controlMCUSlugsMKIINewNav_DWork.NDelays_DSTATE_n[i] = 0.0F;
     }
 
-    /* InitializeConditions for Delay: '<S121>/Integer Delay2' */
+    /* InitializeConditions for Delay: '<S110>/Integer Delay2' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_g = 0.0F;
 
-    /* InitializeConditions for Delay: '<S122>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S111>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_f = 0.0F;
 
-    /* InitializeConditions for Delay: '<S121>/Integer Delay' */
+    /* InitializeConditions for Delay: '<S110>/Integer Delay' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_i = 0.0F;
 
-    /* InitializeConditions for Delay: '<S121>/Integer Delay1' */
+    /* InitializeConditions for Delay: '<S110>/Integer Delay1' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_g[0] = 0.0F;
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay1_DSTATE_g[1] = 0.0F;
 
-    /* InitializeConditions for Delay: '<S123>/Integer Delay3' */
+    /* InitializeConditions for Delay: '<S112>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_n = 0.0F;
 
     /* End of InitializeConditions for SubSystem: '<S3>/Longitudinal Channel Encaps' */
@@ -6183,10 +6212,10 @@ void controlMCUSlugsMKIINewNav_initialize(boolean_T firstTime)
 
     /* InitializeConditions for Atomic SubSystem: '<S3>/Lateral Channel Encaps' */
     /* InitializeConditions for Delay: '<S83>/Integer Delay3' */
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_oh = 0.0F;
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_m = 0.0F;
 
     /* InitializeConditions for Delay: '<S84>/Integer Delay3' */
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_a = 0.0F;
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_k = 0.0F;
 
     /* InitializeConditions for Delay: '<S54>/Integer Delay3' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_h = 0.0F;
@@ -6199,7 +6228,7 @@ void controlMCUSlugsMKIINewNav_initialize(boolean_T firstTime)
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay2_DSTATE_o = 0.0F;
 
     /* InitializeConditions for Delay: '<S78>/Integer Delay3' */
-    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_m = 0.0F;
+    controlMCUSlugsMKIINewNav_DWork.IntegerDelay3_DSTATE_mx = 0.0F;
 
     /* InitializeConditions for Delay: '<S77>/Integer Delay' */
     controlMCUSlugsMKIINewNav_DWork.IntegerDelay_DSTATE_ie = 0.0F;

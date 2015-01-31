@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model controlMCUSlugsMKIINewNav.
  *
- * Model version                        : 1.280
+ * Model version                        : 1.315
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Thu Jun 20 11:03:39 2013
+ * Real-Time Workshop file generated on : Wed Jan 21 12:06:26 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Thu Jun 20 11:03:40 2013
+ * C source code generated on           : Wed Jan 21 12:06:28 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -19,8 +19,8 @@
  *                                                              |
  *   Written by Lubin KERHUEL -  http://www.kerhuel.eu          |
  *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
- *   Version 3.7e                              14-Sep-2012      |
- *   For Matlab 7.13            R2011b                          |
+ *   Version 3.7c                              09-Jan-2012      |
+ *   For Matlab 7.10            R2010a                          |
  *--------------------------------------------------------------
  */
 
@@ -30,73 +30,73 @@
 /* Invariant block signals (auto storage) */
 const ConstBlockIO_controlMCUSlugsMKI controlMCUSlugsMKIINewNa_ConstB = {
   0.996647239F
-  ,                                    /* '<S207>/e^1' */
+  ,                                    /* '<S209>/e^1' */
   0.993305743F
-  ,                                    /* '<S207>/ ' */
+  ,                                    /* '<S209>/ ' */
   0.00669425726F
-  ,                                    /* '<S207>/Sum5' */
+  ,                                    /* '<S209>/Sum5' */
   0.993305743F
-  ,                                    /* '<S204>/Sum3' */
+  ,                                    /* '<S206>/Sum3' */
   0.996647239F
-  ,                                    /* '<S410>/e^1' */
+  ,                                    /* '<S411>/e^1' */
   0.993305743F
-  ,                                    /* '<S410>/ ' */
+  ,                                    /* '<S411>/ ' */
   0.00669425726F
-  ,                                    /* '<S410>/Sum5' */
+  ,                                    /* '<S411>/Sum5' */
   0.993305743F
-  ,                                    /* '<S409>/Sum3' */
+  ,                                    /* '<S410>/Sum3' */
   0.996647239F
-  ,                                    /* '<S156>/e^1' */
+  ,                                    /* '<S158>/e^1' */
   0.993305743F
-  ,                                    /* '<S156>/ ' */
+  ,                                    /* '<S158>/ ' */
   0.00669425726F
-  ,                                    /* '<S156>/Sum5' */
+  ,                                    /* '<S158>/Sum5' */
   0.993305743F
-  ,                                    /* '<S153>/Sum3' */
+  ,                                    /* '<S155>/Sum3' */
   0.996647239F
-  ,                                    /* '<S356>/e^1' */
+  ,                                    /* '<S357>/e^1' */
   0.993305743F
-  ,                                    /* '<S356>/ ' */
+  ,                                    /* '<S357>/ ' */
   0.00669425726F
-  ,                                    /* '<S356>/Sum5' */
+  ,                                    /* '<S357>/Sum5' */
   0.993305743F
-  ,                                    /* '<S353>/Sum3' */
+  ,                                    /* '<S354>/Sum3' */
   0.996647239F
-  ,                                    /* '<S373>/e^1' */
+  ,                                    /* '<S374>/e^1' */
   0.993305743F
-  ,                                    /* '<S373>/ ' */
+  ,                                    /* '<S374>/ ' */
   0.00669425726F
-  ,                                    /* '<S373>/Sum5' */
+  ,                                    /* '<S374>/Sum5' */
   0.993305743F
-  ,                                    /* '<S370>/Sum3' */
+  ,                                    /* '<S371>/Sum3' */
   0.996647239F
-  ,                                    /* '<S301>/e^1' */
+  ,                                    /* '<S302>/e^1' */
   0.993305743F
-  ,                                    /* '<S301>/ ' */
+  ,                                    /* '<S302>/ ' */
   0.00669425726F
-  ,                                    /* '<S301>/Sum5' */
+  ,                                    /* '<S302>/Sum5' */
   0.993305743F
-  ,                                    /* '<S298>/Sum3' */
+  ,                                    /* '<S299>/Sum3' */
   0.996647239F
-  ,                                    /* '<S318>/e^1' */
+  ,                                    /* '<S319>/e^1' */
   0.993305743F
-  ,                                    /* '<S318>/ ' */
+  ,                                    /* '<S319>/ ' */
   0.00669425726F
-  ,                                    /* '<S318>/Sum5' */
+  ,                                    /* '<S319>/Sum5' */
   0.993305743F
-  ,                                    /* '<S315>/Sum3' */
+  ,                                    /* '<S316>/Sum3' */
   0.996647239F
-  ,                                    /* '<S398>/e^1' */
+  ,                                    /* '<S399>/e^1' */
   0.993305743F
-  ,                                    /* '<S398>/ ' */
+  ,                                    /* '<S399>/ ' */
   0.00669425726F
-  ,                                    /* '<S398>/Sum5' */
+  ,                                    /* '<S399>/Sum5' */
   0.993305743F
-  ,                                    /* '<S395>/Sum3' */
+  ,                                    /* '<S396>/Sum3' */
   0.261799395F
-  ,                                    /* '<S94>/Add3' */
+  ,                                    /* '<S91>/Add3' */
   -0.261799395F
-  ,                                    /* '<S94>/Add4' */
+  ,                                    /* '<S91>/Add4' */
   4.0F
   ,                                    /* '<S40>/Divide1' */
   4.0F
@@ -109,13 +109,13 @@ const ConstBlockIO_controlMCUSlugsMKI controlMCUSlugsMKIINewNa_ConstB = {
 const ConstParam_controlMCUSlugsMKIIN controlMCUSlugsMKIINewNa_ConstP = {
   /* Pooled Parameter (Expression: [0 0 1;0 1 0;1 0 0])
    * Referenced by:
-   *   '<S129>/UEN 2 NEU'
-   *   '<S150>/UEN 2 NEU'
-   *   '<S393>/UEN 2 NEU'
-   *   '<S295>/UEN 2 NEU'
-   *   '<S312>/UEN 2 NEU'
-   *   '<S350>/UEN 2 NEU'
-   *   '<S367>/UEN 2 NEU'
+   *   '<S130>/UEN 2 NEU'
+   *   '<S152>/UEN 2 NEU'
+   *   '<S394>/UEN 2 NEU'
+   *   '<S296>/UEN 2 NEU'
+   *   '<S313>/UEN 2 NEU'
+   *   '<S351>/UEN 2 NEU'
+   *   '<S368>/UEN 2 NEU'
    */
   { 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F, 0.0F }
 };
