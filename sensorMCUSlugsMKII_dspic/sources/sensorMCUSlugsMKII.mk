@@ -91,7 +91,7 @@ NOOP = 0
 #------------------------------ Tool Locations ---------------------------------
 #
 
-GCCPATH	= ''
+GCCPATH	= C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\bin\\
 
 CC   = $(GCCPATH)pic30-gcc 
 CPP  = $(GCCPATH)pic30-gcc
@@ -131,10 +131,10 @@ MATLAB_INCLUDES = \
 # Additional includes 
 #
 ADD_INCLUDES = \
-	-IC:\Users\User\SLUGS\apcode_Davids_Repo\sensorMCUSlugsMKII_dspic\sources \
-	-IC:\Users\User\SLUGS\apcode_Davids_Repo \
-	-IC:\Users\User\SLUGS\apcode_Davids_Repo\..\mavlink\include\slugs \
-	-IC:\Users\User\SLUGS\apcode_Davids_Repo\clib \
+	-IC:\Users\dagoodma\Documents\asl\slugs_apcode_fresh\sensorMCUSlugsMKII_dspic\sources \
+	-IC:\Users\dagoodma\Documents\asl\slugs_apcode_fresh \
+	-IC:\Users\dagoodma\Documents\asl\slugs_apcode_fresh\..\mavlink\include\slugs \
+	-IC:\Users\dagoodma\Documents\asl\slugs_apcode_fresh\clib \
 	-I$(MATLAB_ROOT)\toolbox\dsp\include \
 
 
@@ -300,19 +300,19 @@ $(RELATIVE_PATH_TO_ANCHOR)/$(MODEL).cof : $(OBJS) $(SHARED_LIB) $(MODELREF_LINK_
 %.o : $(MATLAB_ROOT)/rtw/c/src/ext_mode/custom/%.c
 	$(CC) -c $(CFLAGS) $<
 
-%.o : C:\Users\User\SLUGS\apcode_Davids_Repo\clib/%.c
+%.o : C:\Users\dagoodma\Documents\asl\slugs_apcode_fresh\clib/%.c
 	$(CC) -c $(CFLAGS) $<
 %.o : $(MATLAB_ROOT)\rtw\c\src/%.c
 	$(CC) -c $(CFLAGS) $<
 
 
-%.o : C:\Users\User\SLUGS\apcode_Davids_Repo\clib/%.cpp
+%.o : C:\Users\dagoodma\Documents\asl\slugs_apcode_fresh\clib/%.cpp
 	$(CC) -c $(CPPFLAGS) $<
 %.o : $(MATLAB_ROOT)\rtw\c\src/%.cpp
 	$(CC) -c $(CPPFLAGS) $<
 
 
-%.o : C:\Users\User\SLUGS\apcode_Davids_Repo\clib/%.s
+%.o : C:\Users\dagoodma\Documents\asl\slugs_apcode_fresh\clib/%.s
 	$(CC) -c $< -Wa,-p=$(PIC_REF),-g
 %.o : $(MATLAB_ROOT)\rtw\c\src/%.s
 	$(CC) -c $< -Wa,-p=$(PIC_REF),-g
