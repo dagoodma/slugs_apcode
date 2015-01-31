@@ -61,8 +61,10 @@ magOffset = 0;
 % Replaced on April 12th for new values
 %pitotScale  = 1.213292590242;
 %pitotOffset = -1083.881038056753;
-pitotScale  =  1.0513785;
-pitotOffset = -1.0058787e+003;
+%%pitotScale  =  1.0513785;
+%%pitotOffset = -1.0058787e+003;
+pitotScale  =  6.9214e+003;
+pitotOffset = -9.2183e+006;
 
 % Temp
 % 14.8  -> 1160
