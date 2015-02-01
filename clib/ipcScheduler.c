@@ -166,7 +166,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             // if in HIL mode then send PWM commands 
             if (PORTDbits.RD2 == 1) {//AM DBG - proper form should be (hilOn == 1)
                 mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
+                    SLUGS_SENSOR_SPI_COMPID,
                     &msg,
                     &mlPwmCommands);
 
@@ -182,7 +182,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
                     mlStatustext.severity = MAV_SEVERITY_INFO;
 
                     mavlink_msg_statustext_encode(SLUGS_SYSTEMID,
-                        SLUGS_COMPID, &msg, &mlStatustext);
+                        SLUGS_SENSOR_SPI_COMPID, &msg, &mlStatustext);
                     bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
                     sentHILMessage = true;
 
@@ -194,7 +194,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             else if (sentHILMessage) { sentHILMessage = false; }
 
             mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlSensorDiag);
             // Copy the message to the send buffer
@@ -204,7 +204,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
         case 2: // LOAD, GPS
             mavlink_msg_cpu_load_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlCpuLoadData);
             // Copy the message to the send buffer
@@ -213,7 +213,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
             // Pack the GPS message
             mavlink_msg_gps_raw_int_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlGpsData);
             // Copy the message to the send buffer
@@ -223,7 +223,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             break;
         case 3: // raw IMU	
             mavlink_msg_raw_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlRawImuData);
 
@@ -235,7 +235,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             if (mlBoot.version == 1) {
                 // Copy the message to the send buffer
                 mavlink_msg_boot_pack(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
+                    SLUGS_SENSOR_SPI_COMPID,
                     &msg,
                     1);
                 mlBoot.version = 0;
@@ -247,7 +247,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
         case 5: // Bias		
             mavlink_msg_sensor_bias_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlSensorBiasData);
             // Copy the message to the send buffer
@@ -258,14 +258,14 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 #if USE_NMEA
             //mlGpsStatus.msgsType++;
             mavlink_msg_status_gps_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlGpsStatus);
             // Copy the message to the send buffer
             bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
 #else
             mavlink_msg_novatel_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlNovatelStatus);
             // Copy the message to the send buffer
@@ -276,7 +276,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
         case 7: // Pilot Console Data
             mavlink_msg_rc_channels_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlPilotConsoleData);
 
@@ -287,7 +287,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
         case 8: // Sensor Data in meaningful units
             mavlink_msg_scaled_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlFilteredData);
             // Copy the message to the send buffer
@@ -302,7 +302,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
                     mlGSLocationFloat.lat, mlGSLocationFloat.lon, mlGSLocationFloat.alt);
                 mlStatustext.severity = MAV_SEVERITY_INFO;
                 mavlink_msg_statustext_encode(SLUGS_SYSTEMID,
-                    SLUGS_COMPID, &msg, &mlStatustext);
+                    SLUGS_SENSOR_SPI_COMPID, &msg, &mlStatustext);
                 bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
                 sendGpsOriginMessage = false;
             }
@@ -310,7 +310,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             // Raw pressure
             memset(&msg, 0, sizeof (mavlink_message_t));
             mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlRawPressureData);
             // Copy the message to the send buffer
@@ -323,7 +323,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             if (sendCommandAcknowledgement) {
 
                 mavlink_msg_command_ack_encode(SLUGS_SYSTEMID,
-                    SLUGS_COMPID,
+                    SLUGS_SENSOR_SPI_COMPID,
                     &msg,
                     &mlCommandAck);
                 // Copy the message to the send buffer
@@ -335,7 +335,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             memset(&msg, 0, sizeof (mavlink_message_t));
 
             mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
-                SLUGS_COMPID,
+                SLUGS_SENSOR_SPI_COMPID,
                 &msg,
                 &mlGpsDateTime);
 
@@ -352,7 +352,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
     memset(&msg, 0, sizeof (mavlink_message_t));
     // Air Data, Gets included every time
     mavlink_msg_scaled_pressure_encode(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
+        SLUGS_SENSOR_SPI_COMPID,
         &msg,
         &mlAirData);
     // Copy the message to the send buffer
@@ -364,7 +364,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
     // Attitude data. Gets included every sample time
     mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
+        SLUGS_SENSOR_SPI_COMPID,
         &msg,
         &mlAttitudeData);
 
@@ -375,7 +375,7 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
 
     // XYZ Position. Gets included every sample time
     mavlink_msg_local_position_ned_encode(SLUGS_SYSTEMID,
-        SLUGS_COMPID,
+        SLUGS_SENSOR_SPI_COMPID,
         &msg,
         &mlLocalPositionData);
     // Copy the message to the send buffer

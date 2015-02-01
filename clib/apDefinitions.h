@@ -61,8 +61,11 @@ typedef char BOOL;
 
     // UAV System ID
     // =============
-#define SLUGS_SYSTEMID		101
-#define SLUGS_COMPID		1
+#define SLUGS_SYSTEMID		        101
+#define SLUGS_RADIO_COMPID		    1
+#define SLUGS_LOGGER_COMPID		    2
+#define SLUGS_CONTROL_SPI_COMPID    3
+#define SLUGS_SENSOR_SPI_COMPID		4
 
 #define GS_SYSTEMID		127
 #define GS_COMPID		0
