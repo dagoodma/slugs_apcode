@@ -1402,6 +1402,9 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
             // If a REQUEST_LIST is received, reset the current mission and move into the receive
             // missions mode.
             if (event == MISSION_EVENT_REQUEST_LIST_RECEIVED) {
+                sprintf(mlStatustext.text, "WPCount = %d, MiTotal= %d", mlWpValues.wpCount, mlPending.miTotalMissions);
+                mlPending.statustext++;
+                
                 mlPending.miCurrentMission = 0;
                 nextState = MISSION_STATE_SEND_MISSION_COUNT;
             }                // Otherwise if a mission count was received, prepare to receive new missions.
@@ -1701,6 +1704,7 @@ void evaluateMissionState(enum MISSION_EVENT event, const void *data) {
 
                 // Make sure that they're coming in in the right order, and if they don't return an error in
                 // the acknowledgment response.
+
                 if (mlPending.miCurrentMission == incomingMission->seq) {
                     int8_t missionAddStatus = addMission(incomingMission);
                     // Report error, but keep saving waypoints to RAM

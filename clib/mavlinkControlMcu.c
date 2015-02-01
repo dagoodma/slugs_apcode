@@ -290,7 +290,7 @@ int8_t addMission(mavlink_mission_item_t *mission)
 
     if (index < ORIGIN_WP_INDEX) {
         mlWpValues.wpCount++;
-        mlPending.miTotalMissions = mlWpValues.wpCount;
+        //mlPending.miTotalMissions = mlWpValues.wpCount;
     }
 
     mlWpValues.lat[index] = mission->x;
