@@ -1,50 +1,79 @@
+startIndex = 1;
+endIndex = 2016;
+gpsSogIdx = 8; % gps raw int. vel
+airDynIdx = 59; % scaled pressure diff 1
+rawPitIdx = 116; % raw pressure diff 1
+airTempIdx = 60; % scaled pressure temperature
+rawTempIdx = 118; % raw pressure temperature
+timeStampIdx = 11;
+
+time = (data(1:endIndex, timeStampIdx) - data(1:endIndex,timeStampIdx))*0.001;
+
+% Plot normalized velocity, scaled, and raw pressure
 figure
-plot(time(8334:end ), (M(8334:end, gpsSogIdx)-min(M(8334:end, gpsSogIdx)))/(max(M(8334:end, gpsSogIdx))-min(M(8334:end, gpsSogIdx))));
+gpsVel = data(startIndex:endIndex, gpsSogIdx);
+scaledPress = data(startIndex:endIndex, airDynIdx);
+rawPress = data(startIndex:endIndex, rawPitIdx);
+
+plot(time(startIndex:endIndex ), (gpsVel - min(gpsVel))/(max(gpsVel)-min(gpsVel)));
 hold on
-plot(time(8334:end), (M(8334:end, airDynIdx)-min(M(8334:end, airDynIdx)))/(max(M(8334:end, airDynIdx))-min(M(8334:end, airDynIdx))), 'r');
-plot(time(8334:end), (M(8334:end, rawPitIdx)-min(M(8334:end, rawPitIdx)))/(max(M(8334:end, rawPitIdx))-min(M(8334:end, rawPitIdx))), 'g');
+plot(time(startIndex:endIndex), (scaledPress - min(scaledPress))/(max(scaledPress)-min(scaledPress)), 'r');
+plot(time(startIndex:endIndex), (rawPress - min(rawPress))/(max(rawPress)-min(rawPress)), 'g');
 
 hold off
 title('Normalized GPS SOG (blue), Norm Dynamic pressure (red), Norm dynamic P Raw');
+legend('GPS Vel','Scaled Pressure', 'Raw Pressure');
+
+% Plot un-normalized velocity, scaled, and raw pressure
+figure;
+gpsVel = data(:, gpsSogIdx);
+scaledPress = data(:, airDynIdx);
+rawPress = data(:, rawPitIdx);
+scaledTemp = data(:, airTempIdx);
+rawTemp = data(:, rawTempIdx);
 
 
+subplot(2,2,1);
+plot(time(:), rawPress, 'g');
+title('Raw Pressure');
+subplot(2,2,2);
+plot(time(:), scaledTemp);
+title('Scaled Temperature');
+subplot(2,2,3);
+plot(time(:), rawTemp);
+title('Raw Temperature');
+subplot(2,2,4);
+title('WTF');
+plotyy(time(:), scaledTemp, time(:), rawTemp);
 
-plot(time(:), data(:, rawPitIdx), 'g');
-title(' GPS SOG (blue), Dynamic pressure (red), dynamic P Raw');
-hold off
-figure
-plot(time(:), data(:, airTemIdx));
-hold on
-plot(time(:), data(:, rawTheIdx));
-figure
-plotyy(time(:), data(:, airTemIdx),time(:), data(:, rawTheIdx));
+pause;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dynPas =  sqrt(2*data(:, rawPitIdx)/1.225);
-GPS_h2Pas =  1.225*(data(:, gpsSogIdx).^2)/2;
-Raw2Pas = (data(:, rawPitIdx)-1320.5)*0.81887676;
+dynPas =  sqrt(2*rawPress/1.225);
+GPS_h2Pas =  1.225*(gpsVel.^2)/2;
+Raw2Pas = (rawPress-1320.5)*0.81887676;
 AirSpd = sqrt(2*Raw2Pas/1.225);
 figure
 subplot(2,1,1)
-plotyy(time(:), data(:, gpsSogIdx),time(:), data(:, rawPitIdx));
+plotyy(time(:), gpsVel,time(:),rawPress);
 title(' GPS SOG (blue), Dynamic pressure Raw');
 subplot(2,1,2)
-plotyy(time(:), GPS_h2Pas(:),time(:), (data(:, rawPitIdx)-1320.5)*0.81887676);
-plotyy(time(:), data(:, gpsSogIdx),time(:), dynPas(:));
+plotyy(time(:), GPS_h2Pas(:),time(:), (rawPress-1320.5)*0.81887676);
+plotyy(time(:), gpsVel, time(:), dynPas(:));
 plotyy( time(:),GPS_h2Pas(:),time(:), dynPas(:))
 figure
 plotyy( time(:),GPS_h2Pas(:),time(:), Raw2Pas(:))
-plotyy(time(:), data(:, gpsSogIdx),time(:), AirSpd(:));
-plotyy( time(:),GPS_h2Pas(:),time(:), data(:, rawPitIdx))
+plotyy(time(:), gpsVel,time(:), AirSpd(:));
+plotyy( time(:),GPS_h2Pas(:),time(:), rawPress)
 title(' GPS 2 Pascal (blue), Dynamic pressure Raw');
 
 
-figure
-plot(time(: ), data(:, gpsSogIdx));
+figure;
+plot(time(: ), gpsVel);
 hold on
-plot(time(:), data(:, airDynIdx)/10, 'r');
+plot(time(:), scaledPress/10, 'r');
 hold off
 
 figure
-plotyy(time(:), data(:, gpsSogIdx),time(:), data(:, airDynIdx)/10);
+plotyy(time(:), gpsVel,time(:), scaledPress/10);
 figure
-plotyy(time(:), data(:, gpsSogIdx),time(:), data(:, rawPitIdx));
+plotyy(time(:), gpsVel,time(:), rawPress);
