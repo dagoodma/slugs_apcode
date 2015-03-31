@@ -181,10 +181,14 @@ unsigned char getApControlType(void) {
 }
 
 unsigned char getPassValues(uint8_t* pasVals) {
-    pasVals[0] = (uint8_t) (mlPassthrough.bitfieldPt & 128);
-    pasVals[1] = (uint8_t) (mlPassthrough.bitfieldPt & 64);
-    pasVals[2] = (uint8_t) (mlPassthrough.bitfieldPt & 16);
-    pasVals[3] = (uint8_t) (mlPassthrough.bitfieldPt & 8);
+    pasVals[0] = (uint8_t) (mlPassthrough.bitfieldPt & CONTROL_SURFACE_FLAG_LEFT_ELEVATOR);
+    pasVals[1] = (uint8_t) (mlPassthrough.bitfieldPt & CONTROL_SURFACE_FLAG_LEFT_AILERON);
+    pasVals[2] = (uint8_t) (mlPassthrough.bitfieldPt & CONTROL_SURFACE_FLAG_RUDDER);
+    pasVals[3] = (uint8_t) (mlPassthrough.bitfieldPt & CONTROL_SURFACE_FLAG_THROTTLE);
+//    pasVals[0] = (uint8_t) (mlPassthrough.bitfieldPt & 128);
+//    pasVals[1] = (uint8_t) (mlPassthrough.bitfieldPt & 64);
+//    pasVals[2] = (uint8_t) (mlPassthrough.bitfieldPt & 16);
+//    pasVals[3] = (uint8_t) (mlPassthrough.bitfieldPt & 8);
     return 1;
 }
 
