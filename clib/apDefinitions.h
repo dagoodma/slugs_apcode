@@ -59,13 +59,20 @@ typedef char BOOL;
     // ====================
 #define MSIZE			180
 
+    // MAVLink Channels
+#define SLUGS_RADIO_CHANNEL     MAVLINK_COMM_0
+#define SLUGS_SPI_CHANNEL       MAVLINK_COMM_1
+#define SLUGS_LOGGER_CHANNEL    MAVLINK_COMM_2
+
     // UAV System ID
     // =============
 #define SLUGS_SYSTEMID		        101
-#define SLUGS_RADIO_COMPID		    1
-#define SLUGS_LOGGER_COMPID		    2
-#define SLUGS_CONTROL_SPI_COMPID    3
-#define SLUGS_SENSOR_SPI_COMPID		4
+#define SLUGS_CONTROL_COMPID            1
+#define SLUGS_SENSOR_COMPID             2
+//#define SLUGS_RADIO_COMPID		    1
+//#define SLUGS_LOGGER_COMPID		    2
+//#define SLUGS_CONTROL_SPI_COMPID    3
+//#define SLUGS_SENSOR_SPI_COMPID		4
 
 #define GS_SYSTEMID		127
 #define GS_COMPID		0
