@@ -109,7 +109,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="sources;controlMCUSlugsMKIINewNav_dspic/sources;.;C:/Users/User/SLUGS/apcode_2011b/controlMCUSlugsMKIINewNav_dspic/sources;C:/Users/User/SLUGS/apcode_2011b;../../mavlink/include_slugs/slugs;C:/PROGRA~2/MICROC~1/MPLABC~1/include;C:/PROGRA~1/MATLAB/R2011b/simulink/include;C:/PROGRA~1/MATLAB/R2011b/extern/include;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src;C:/PROGRA~1/MATLAB/R2011b/rtw/c/ert;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/common;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/custom;C:/PROGRA~1/MATLAB/R2011b/simulink/src;../../clib;/Users/dagoodma/Documents/ASL/slugs_apcode_goonbuild-attempt/clib"/>
+                  value="sources;controlMCUSlugsMKIINewNav_dspic/sources;.;C:/Users/User/SLUGS/apcode_2011b/controlMCUSlugsMKIINewNav_dspic/sources;C:/Users/User/SLUGS/apcode_2011b;../../mavlink/include_slugs/slugs;C:/PROGRA~2/MICROC~1/MPLABC~1/include;C:/PROGRA~1/MATLAB/R2011b/simulink/include;C:/PROGRA~1/MATLAB/R2011b/extern/include;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src;C:/PROGRA~1/MATLAB/R2011b/rtw/c/ert;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/common;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/custom;C:/PROGRA~1/MATLAB/R2011b/simulink/src;../../clib;/Users/dagoodma/Documents/ASL/slugs_apcode_goonbuild-attempt/clib;../clib"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>

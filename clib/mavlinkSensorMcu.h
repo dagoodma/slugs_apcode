@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #include <stdbool.h>
 #include "mavlink.h"
 #include "apDefinitions.h"
@@ -48,8 +49,30 @@ extern "C" {
     extern bool sendGpsOriginMessage;
 
 
+// ====================== Function Prototypes ===================
     void mavlinkInit(void);
+    
+    // -- HIL Mavlink Messages (UART) --
+    uint8_t _prepareServoOutputMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
 
+    // -- SPI Mavlink Messages --
+    uint8_t _prepareGpsMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareGpsTimeMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareCpuLoadMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareAttitudeMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareLocalPositionMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareSensorDiagnosticMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareGpsStatusMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareServoOutputMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareSensorBiasMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareRawPressureMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareScaledPressureMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareRcChannelsMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareRawImuMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareScaledImuMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareCommandAckMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareStatusTextMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
+    uint8_t _prepareBootMavlink(uint8_t compId, mavlink_channel_t chan, unsigned char *buf);
 
 #ifdef __cplusplus
 }

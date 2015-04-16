@@ -94,6 +94,7 @@ static uint8_t _prepareStatusTextMavlink(uint8_t compId, mavlink_channel_t chan,
 static void _sendSpiSetGpsOriginMavlink(void);
 static void _sendSpiServoOutputMavlink(void);
 
+
 // **** Public functions ****
 /**
  * Initializes UART1 and DMA1 for logging data to an SD Card.
@@ -721,17 +722,14 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
     if (mlPending.spiSendOrigin) {
         _sendSpiSetGpsOriginMavlink();
         mlPending.spiSendOrigin = 0;
-
-        memset(vr_message,0,sizeof(vr_message));
-        sprintf(vr_message, "Sensor DSC Reboot.");
-        bytes2Send += sendQGCDebugMessage(vr_message, 255, dataOut, bytes2Send + 1);
-
+        bytes2Send += sendQGCDebugMessage("Sensor DSC Reboot.", MAV_SEVERITY_INFO,
+            dataOut, bytes2Send + 1);
     }
 
     // == Connection Warning ==
     if (mlPending.connectionWarning && !mlPending.connectionWarningSent) {
          bytes2Send += sendQGCDebugMessage ("Connection failing. Pleaser restart GS radio.",
-            0, dataOut, bytes2Send+1);
+            MAV_SEVERITY_WARNING, dataOut, bytes2Send+1);
          mlPending.connectionWarningSent = TRUE;
     }
 

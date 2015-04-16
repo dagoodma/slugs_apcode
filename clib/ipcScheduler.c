@@ -143,204 +143,109 @@ void copyBufferToDMA(unsigned char size) {
  */
 
 void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
-
+    // HIL mode enabled message
     static bool sentHILMessage = false;
-
-    // Generic message container used to pack the messages
-    mavlink_message_t msg;
 
     // Buffer to send data to HIL Sim
     uint8_t hilBuf[MAXSEND];
 
-    // Cycles from 1 to 10 to decide which 
-    // message's turn is to be sent
+    // Cycles from 1 to 10 to decide which message's turn is to be sent (round robin)
     static uint8_t samplePeriod = 1;
 
     // Contains the total bytes to send via the serial port
     uint8_t bytes2Send = 0;
 
-    memset(&msg, 0, sizeof (mavlink_message_t));
-
     switch (samplePeriod) {
-        case 1: //servo commands in HIL, sensor diag
-            // if in HIL mode then send PWM commands 
-            if (PORTDbits.RD2 == 1) {//AM DBG - proper form should be (hilOn == 1)
-                mavlink_msg_servo_output_raw_encode(SLUGS_SYSTEMID,
-                    SLUGS_SENSOR_SPI_COMPID,
-                    &msg,
-                    &mlPwmCommands);
-
-                hilBuf[0] = mavlink_msg_to_send_buffer(hilBuf + 1, &msg);
-
+        case 1: // Servo output (HIL only), Sensor diagnostic
+            // HIL mode (should be: hilOn == 1)
+            if (PORTDbits.RD2 == 1) {
+                // == Servo Output ==
+                hilBuf[0] = _prepareServoOutputMavlink(SLUGS_SENSOR_COMPID, SLUGS_HIL_CHANNEL, hilBuf + 1);
                 send2DebugPort(hilBuf, 1);
 
-                memset(&msg, 0, sizeof (mavlink_message_t));
-
-                // Send HIL statustext message
+                // == Status text ==
                 if (!sentHILMessage) {
-                    strncpy(mlStatustext.text,"Sensor DSC in HIL Mode.",35);
+                    sprintf(mlStatustext.text,"Sensor DSC in HIL Mode.");
                     mlStatustext.severity = MAV_SEVERITY_INFO;
-
-                    mavlink_msg_statustext_encode(SLUGS_SYSTEMID,
-                        SLUGS_SENSOR_SPI_COMPID, &msg, &mlStatustext);
-                    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                    bytes2Send += _prepareStatusTextMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
                     sentHILMessage = true;
-
-                    memset(&msg, 0, sizeof (mavlink_message_t));
                 }
-                
-
             }
-            else if (sentHILMessage) { sentHILMessage = false; }
+            else if (sentHILMessage) { sentHILMessage = false; } // clear flag if set from last time
 
-            mavlink_msg_sensor_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlSensorDiag);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            // == Sensor Diagnostic ==
+            bytes2Send += _prepareSensorDiagnosticMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
+        case 2: // Cpu Load, GPS Raw
+            // == Cpu Load ==
+            bytes2Send += _prepareCpuLoadMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
-        case 2: // LOAD, GPS
-            mavlink_msg_cpu_load_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlCpuLoadData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            // Pack the GPS message
-            mavlink_msg_gps_raw_int_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlGpsData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
+            // == GPS Raw ==
+            bytes2Send += _prepareGpsMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
-        case 3: // raw IMU	
-            mavlink_msg_raw_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlRawImuData);
-
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+        case 3: // Raw IMU
+            // == Raw IMU ==
+            bytes2Send += _prepareRawImuMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
+            
             break;
-
         case 4: // Reboot (if required)		
-            // it there has been a reboot
+            // == Reboot ==
             if (mlBoot.version == 1) {
-                // Copy the message to the send buffer
-                mavlink_msg_boot_pack(SLUGS_SYSTEMID,
-                    SLUGS_SENSOR_SPI_COMPID,
-                    &msg,
-                    1);
+                bytes2Send += _prepareBootMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
                 mlBoot.version = 0;
             }
 
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
             break;
 
-        case 5: // Bias		
-            mavlink_msg_sensor_bias_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlSensorBiasData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+        case 5: // Sensor bias
+            // == Sensor bias ==
+            bytes2Send += _prepareSensorBiasMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
         case 6: // GPS Status
-#if USE_NMEA
-            //mlGpsStatus.msgsType++;
-            mavlink_msg_status_gps_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlGpsStatus);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-#else
-            mavlink_msg_novatel_diag_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlNovatelStatus);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-#endif
+            // == GPS Status ==
+            bytes2Send += _prepareGpsStatusMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
 
         case 7: // Pilot Console Data
-            mavlink_msg_rc_channels_raw_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlPilotConsoleData);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            // == RC Channels Raw ==
+            bytes2Send += _prepareRcChannelsMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
 
         case 8: // Sensor Data in meaningful units
-            mavlink_msg_scaled_imu_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlFilteredData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            // == Scaled IMU ==
+            bytes2Send += _prepareScaledImuMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
 
-        case 9: // Raw Pressure
-            // Send status text message
+        case 9: // GPS Origin Info, Raw Pressure
+            // == Status text ==
             if (sendGpsOriginMessage) {
                 sprintf(mlStatustext.text,"Sensor origin: %.2f %.2f %.1f",
                     mlGSLocationFloat.lat, mlGSLocationFloat.lon, mlGSLocationFloat.alt);
                 mlStatustext.severity = MAV_SEVERITY_INFO;
-                mavlink_msg_statustext_encode(SLUGS_SYSTEMID,
-                    SLUGS_SENSOR_SPI_COMPID, &msg, &mlStatustext);
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                bytes2Send += _prepareStatusTextMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
                 sendGpsOriginMessage = false;
             }
             
-            // Raw pressure
-            memset(&msg, 0, sizeof (mavlink_message_t));
-            mavlink_msg_raw_pressure_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlRawPressureData);
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            // == Raw Pressure ==
+            bytes2Send += _prepareRawPressureMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
 
-        case 10:
-            // Send response to control MCU messages
+        case 10: // Command ack, GPS date time
+            // == Command Ack ==
             if (sendCommandAcknowledgement) {
-
-                mavlink_msg_command_ack_encode(SLUGS_SYSTEMID,
-                    SLUGS_SENSOR_SPI_COMPID,
-                    &msg,
-                    &mlCommandAck);
-                // Copy the message to the send buffer
-                bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+                bytes2Send += _prepareCommandAckMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
                 sendCommandAcknowledgement = false;
             }
 
-            // clear the msg
-            memset(&msg, 0, sizeof (mavlink_message_t));
-
-            mavlink_msg_gps_date_time_encode(SLUGS_SYSTEMID,
-                SLUGS_SENSOR_SPI_COMPID,
-                &msg,
-                &mlGpsDateTime);
-
-            // Copy the message to the send buffer
-            bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+            // == GPS Date & Time ==
+            bytes2Send += _prepareGpsTimeMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
             break;
         default:
@@ -349,39 +254,14 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             break;
     }
 
-    memset(&msg, 0, sizeof (mavlink_message_t));
-    // Air Data, Gets included every time
-    mavlink_msg_scaled_pressure_encode(SLUGS_SYSTEMID,
-        SLUGS_SENSOR_SPI_COMPID,
-        &msg,
-        &mlAirData);
-    // Copy the message to the send buffer
-    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
+    // == Scaled Pressure ==
+    bytes2Send += _prepareScaledPressureMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
+    
+    // == Attitude ==
+    bytes2Send += _prepareAttitudeMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
-    // clear the message
-    memset(&msg, 0, sizeof (mavlink_message_t));
-
-
-    // Attitude data. Gets included every sample time
-    mavlink_msg_attitude_encode(SLUGS_SYSTEMID,
-        SLUGS_SENSOR_SPI_COMPID,
-        &msg,
-        &mlAttitudeData);
-
-    // Copy the message to the send buffer	
-    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-    memset(&msg, 0, sizeof (mavlink_message_t));
-
-    // XYZ Position. Gets included every sample time
-    mavlink_msg_local_position_ned_encode(SLUGS_SYSTEMID,
-        SLUGS_SENSOR_SPI_COMPID,
-        &msg,
-        &mlLocalPositionData);
-    // Copy the message to the send buffer
-    bytes2Send += mavlink_msg_to_send_buffer((dataOut + 1 + bytes2Send), &msg);
-
-    // Send pending status
+    // == Local Position NED ==
+    bytes2Send += _prepareLocalPositionMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
 
 
     // Put the length of the message in the first byte of the outgoing array
@@ -405,8 +285,6 @@ void send2DebugPort(unsigned char* protData, unsigned char hilOn) {
 
     // get the Length of the logBuffer
     bufLen = getLength(logBuffer);
-
-
 
     // if the interrupt catched up with the circularBuffer
     //  then turn on the DMA
