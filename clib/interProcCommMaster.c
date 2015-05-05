@@ -136,6 +136,7 @@ void spiSend(unsigned char * data2Send) {
 void sensorMCUInit(void) {
     schedulerInit();
     spiMasterInit();
+// TODO allow using both of these devices at the same time
 #ifndef NO_MAGNETO
     magnetoInit();
 #endif
@@ -143,4 +144,10 @@ void sensorMCUInit(void) {
     mavlinkInit();
     uartBufferInit();
     mlBoot.version = 1;
+    LED_SENS_BUSY_TRIS = 0;
+    LED_SENS_STATUS_TRIS = 0;
+    LED_SENS_BUSY_SET(OFF);
+    LED_SENS_STATUS_SET(ON);
+
+    pressureInit();
 }

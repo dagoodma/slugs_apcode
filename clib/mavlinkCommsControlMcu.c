@@ -537,10 +537,10 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 break;
 
             case 8:// raw Pressure
-                #ifndef REDUCE_RADIO_TELEMETRY
+                //#ifndef REDUCE_RADIO_TELEMETRY
                 // == Raw Pressure ==
                 bytes2Send += _prepareRawPressureMavlink(SLUGS_CONTROL_COMPID, SLUGS_RADIO_CHANNEL, dataOut + 1 + bytes2Send);
-                #endif
+                //#endif
 
                 break;
 

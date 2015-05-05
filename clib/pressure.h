@@ -1,7 +1,7 @@
 /*
 The MIT License
 
-Copyright (c) 2009 UCSC Autonomous Systems Lab
+Copyright (c) 2015 UCSC Autonomous Systems Lab
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@ THE SOFTWARE.
 
 */
 
-#ifndef _MAGNETO_H_
-#define _MAGNETO_H_
+#ifndef _PRESSURE_H_
+#define _PRESSURE_H_
 #ifdef __cplusplus
        extern "C"{
 #endif
@@ -37,49 +37,37 @@ THE SOFTWARE.
 #include "apUtils.h"
 #include "mavlinkSensorMcu.h"
 
-// Magnetomertometer Data
-#define MAG_READ		0x3D
-#define	MAG_WRITE		0x3C
-#define REGISTER_A		0x00
-#define REGISTER_B		0x01
-#define MODE_REGISTER	0x02
+#ifdef NO_MAGNETO
 
-// Configuration Settings
-#define	MODE_50_HZ		0x18		
-#define MODE_CONTINUOS	0x00
+// Pressure sensor addesses
+#define PRESSURE_READ		0x51
+#define	PRESSURE_WRITE		0x28
 
 //  I2C State Machine Defines
 
-// Configuration State Machine
-#define CONFIG_IDLE		0
-#define CONFIG_START	1
-#define CONFIG_IDTX		2
-#define CONFIG_REG_TX	3
-#define CONFIG_VAL_TX	4
-#define CONFIG_DONE		5
-#define CONFIG_STOP		6
-
 // Reading State Machine
-#define	READ_IDLE		10
-#define READ_START		11
-#define READ_IDTX		12
-#define READ_RESTART	13
-#define READ_REGADD		14
-#define READ_IDADD2		15
-#define	READ_DATA		16
-#define READ_DONE		17
-#define	READ_STOP		17
+#define	READ_IDLE		1
+#define READ_START		2
+#define READ_WAIT               3
+#define READ_BRDATA_HI          4
+#define READ_BRDATA_LO          5
+#define READ_TEMPDATA_HI        6
+#define READ_TEMPDATA_LO        7
+#define READ_DONE		8
+#define	READ_STOP		9
 
-void magnetoInit (void);
-void startMagRead (void);   
+void pressureInit (void);
+void startPressureRead (void);
 void i2c1Start (void);    	
 void i2c1Stop (void);
 void i2c1Write (unsigned char byte2write);
 void dummyDelay (void);
-void getMag (int16_t* magVals);
+void getPressure (int16_t* pressureVals);
 
 #ifdef __cplusplus
        }
 #endif
 
-#endif /* _MAGNETO_H_ */
+#endif
+
+#endif /* _PRESSURE_H_ */

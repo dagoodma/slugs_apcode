@@ -25,6 +25,8 @@ THE SOFTWARE.
 
 #include "magneto.h"
 
+#ifndef NO_MAGNETO
+
 /*
 The endianess of the dsPIC was determined with an experiment as follows
 
@@ -44,6 +46,7 @@ The endianess of the dsPIC was determined with an experiment as follows
 
 volatile unsigned char i2c1State;		// State Machine State
 unsigned char reg2Config;		// Register to config
+
 
 // Declared global to avoid having them be static 
 // inside the interrupt
@@ -362,3 +365,5 @@ void dummyDelay (void) {
 	}
 }
 
+
+#endif

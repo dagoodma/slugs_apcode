@@ -39,6 +39,8 @@ THE SOFTWARE.
 
 #ifndef NO_MAGNETO
 #include "magneto.h"
+#else
+#include "pressure.h"
 #endif
            
 #if USE_CUBE_16405

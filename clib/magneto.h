@@ -37,6 +37,9 @@ THE SOFTWARE.
 #include "apUtils.h"
 #include "mavlinkSensorMcu.h"
 
+
+#ifndef NO_MAGNETO
+
 // Magnetomertometer Data
 #define MAG_READ		0x3D
 #define	MAG_WRITE		0x3C
@@ -80,6 +83,8 @@ void getMag (int16_t* magVals);
 
 #ifdef __cplusplus
        }
+#endif
+
 #endif
 
 #endif /* _MAGNETO_H_ */

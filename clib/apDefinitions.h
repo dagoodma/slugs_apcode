@@ -255,6 +255,7 @@ typedef char BOOL;
     #define OFF     ((unsigned char) 0)
 
 
+    // CONTROL DSC LEDs
     #define LED_CTRL_BUSY_TRIS  (TRISAbits.TRISA14)
     #define LED_CTRL_STATUS_TRIS  (TRISAbits.TRISA15)
     #define LED_CTRL_BUSY       (LATAbits.LATA14)
@@ -271,6 +272,25 @@ typedef char BOOL;
                                     LED_CTRL_STATUS_TRIS = 0; \
                                     LED_CTRL_STATUS_SET(OFF); \
                                 } while(0)
+
+    // SESNOR DSC LEDs
+    #define LED_SENS_BUSY_TRIS  (TRISBbits.TRISB1)
+    #define LED_SENS_STATUS_TRIS  (TRISBbits.TRISB0)
+    #define LED_SENS_BUSY       (LATBbits.LATB1)
+    #define LED_SENS_STATUS     (LATBbits.LATB0)
+
+    #define LED_SENS_BUSY_SET(state)    (LED_SENS_BUSY = (unsigned char)state)
+    #define LED_SENS_STATUS_SET(state)  (LED_SENS_STATUS = (unsigned char)state)
+    #define LED_SENS_BUSY_TOGGLE()    (LED_SENS_BUSY = LED_SENS_BUSY ^ 1)
+    #define LED_SENS_STATUS_TOGGLE()  (LED_SENS_STATUS = LED_SENS_STATUS ^ 1)
+
+    #define LED_SENS_INIT() do { \
+                                    LED_SENS_BUSY_TRIS = 0; \
+                                    LED_SENS_BUSY_SET(OFF); \
+                                    LED_SENS_STATUS_TRIS = 0; \
+                                    LED_SENS_STATUS_SET(OFF); \
+                                } while(0)
+
 
     // -- Default Home Location --
     // Also known as ground station location, and mission origin

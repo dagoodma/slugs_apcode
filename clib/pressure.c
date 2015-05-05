@@ -23,19 +23,18 @@ THE SOFTWARE.
 
 */
 
+#include "apDefinitions.h"
+#include "ipcScheduler.h"
 #include "pressure.h"
 
-
 volatile unsigned char i2c1State;		// State Machine State
-unsigned char reg2Config;		// Register to config
 
 // Declared global to avoid having them be static 
 // inside the interrupt
-tShortToChar currentMag;		// placeholder for current mag reading
-unsigned char byteRead, wordRead; // current byte and word read
-unsigned char byteCount;		// Count the number of bytes received
+tShortToChar currentPressure;		// placeholder for current pressure reading
+tShortToChar currentTemperature;	// placeholder for current temp reading
 
-void magDebugUartConfig(void){
+void pressureDebugUartConfig(void){
 	// Configure and open the port;
 	// U2MODE Register
 	// ==============
@@ -68,8 +67,8 @@ void magDebugUartConfig(void){
 	IEC4bits.U2EIE 		= 0;	
 }
 
-void magnetoInit (void){
-
+void pressureInit (void){
+        //pressureDebugUartConfig();
 	// Configure the I2C bus
 	I2C1CONbits.A10M = 0;		// 7 bit address
 	I2C1BRG =	363;			// I2CBRG = 363. 100Khz for a 40 Mhz clock
@@ -85,118 +84,50 @@ void magnetoInit (void){
 	I2C1CONbits.I2CEN = 1;
 	
 	// Initialize the state machine
-	i2c1State = CONFIG_IDLE;
-	// Select the register to configure
-	reg2Config = REGISTER_A;
+	i2c1State = READ_IDLE;
 		
 	// Wait 5 mS
 	dummyDelay();
-	
-	// Change the mode to 50 Hz
-	// ========================
-	// Start The Bus
-	i2c1Start();
-	// Wait for the bus stop
-	// this signal that the whole config went trhough
-	while(i2c1State != CONFIG_IDLE){
-		printToUart2("Out of Int: %d\n\r",i2c1State);
-	}
-	
-	// Wait 5 mS
-	dummyDelay();
-	
-	
-	// Change the gain
-	// ===============
-	// Change the register to config
-	reg2Config = REGISTER_B;
-	// Start The Bus
-	i2c1Start();
-	// Wait for the bus stop
-	// this signal that the whole config went trhough
-	while(i2c1State != CONFIG_IDLE){
-		printToUart2("Out of 2nd I: %d\n\r",i2c1State);
-	}
 
-	printToUart2("Changed To %s\n\r","0.7 Gain");
-	
-	// Wait 5 mS
-	dummyDelay();
-	
-	// Change the mode to continous
-	// ============================
-	// Change the register to config
-	reg2Config = MODE_REGISTER;
-	// Start The Bus
-	i2c1Start();
-	// Wait for the bus stop
-	// this signal that the whole config went trhough
-	while(i2c1State != READ_IDLE){
-		printToUart2("Out of 3rd I: %d\n\r",i2c1State);
-	}
-	
-	// Wait 5 mS
-	dummyDelay();
-	
-	// Initialize the variables
-	byteRead = 1;
-	wordRead = 0;
-	byteCount = 0;
+        // Start reading pressure
+        printToUart2("Starting Pressure I2C\n\r");
+        startPressureRead();
 }
 
-void startMagRead (void) {
-	i2c1State = READ_IDLE;
-	byteRead = 1;
-	wordRead = 0;
-	byteCount = 0;
-	i2c1Start();
-	
+void startPressureRead (void) {
+    i2c1State = READ_IDLE;
+    i2c1Start();
 }
 
-void readMag (uint8_t idx, int16_t val){
-	static int16_t magReading[3];
-	
-	magReading[idx]	= val;
-	
-	if (idx == 2){
-		mlRawImuData.xmag = magReading[0];
-		mlRawImuData.ymag = magReading[1];
-		mlRawImuData.zmag = magReading[2];
-	}
+void saveData (void){
+    mlRawPressureData.press_diff1 = currentPressure.shData;
+    mlRawPressureData.temperature = currentTemperature.shData;
 }
 
-void getMag (int16_t* magVals){
-	static uint8_t readMagVar = 1;
+void getPressure (int16_t* pressureVals){
+    LED_SENS_STATUS_TOGGLE();
+    
+    pressureVals[0] =  mlRawPressureData.press_diff1;
+    pressureVals[1] =  mlRawPressureData.temperature;
 	
-	magVals[0] =  mlRawImuData.xmag;
-	magVals[1] =  mlRawImuData.ymag;
-	magVals[2] =  mlRawImuData.zmag;
-	
-	// After reporting the data start the reading for the next cycle
-	// called every other time since the mags refresh @ 50 Hz
-	#ifndef NO_MAGNETO
-		if (readMagVar) {
-			startMagRead();
-		}
-	#endif
-	// flip the read flag
-	readMagVar = (readMagVar == 1)? 0: 1;
-	
+    startPressureRead();
 }
 
 // I2C Primitives
 // ==============
 
 void i2c1Start(void){
+        LED_SENS_BUSY_TOGGLE();
+
 	// Change the mode to start
-	i2c1State = (i2c1State == CONFIG_IDLE)? CONFIG_START : READ_START;
+	i2c1State = READ_START;
 	// Start the bus
 	I2C1CONbits.SEN =1;  
 }
 
 void i2c1Stop(void){
-	// Change the mode to start
-	i2c1State = (i2c1State == CONFIG_DONE)? CONFIG_STOP : READ_STOP;
+	// Change the mode
+	i2c1State = READ_STOP;
 	// Stop the bus
 	I2C1CONbits.PEN =1;  
 }
@@ -208,141 +139,136 @@ void i2c1Write(unsigned char byte2write){
 // Interrupt Service Routine (State Machine Implementation)
 // =========================
 
-void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){		
-	switch (i2c1State) {
-		case CONFIG_START:
-			if (!I2C1CONbits.SEN){
-				// change the state
-				i2c1State = CONFIG_IDTX;
-				// Send the address to write
-				i2c1Write(MAG_WRITE);
-			}
-		break;
-		case CONFIG_IDTX:
-			if (!I2C1STATbits.ACKSTAT){
-				// change the state
-				i2c1State = CONFIG_REG_TX;
-				// send the register address
-				i2c1Write(reg2Config);
-			}
-		break;
-		case CONFIG_REG_TX:
-			if (!I2C1STATbits.ACKSTAT){
-				i2c1State = CONFIG_VAL_TX;				
-				if (reg2Config==REGISTER_A){
-					// send the actual configuration for 50Hz
-					i2c1Write(MODE_50_HZ);
-				} else {
-					// send the configuration for continuous sampling
-					i2c1Write(MODE_CONTINUOS);
-				}
-			}
-		break;
-		case CONFIG_VAL_TX:
-			if (!I2C1STATbits.ACKSTAT){
-				i2c1State = CONFIG_DONE;
-				// Send a bus Stop
-				i2c1Stop();
-			}
-		break;
-		case CONFIG_STOP:
-			if (!I2C1CONbits.PEN){
-				if (reg2Config!=MODE_REGISTER){
-					// Set the Config to idle, wait for next config
-					i2c1State = CONFIG_IDLE;
-				} else {
-					// Ready to read magnetometer data
-					i2c1State = READ_IDLE;
-				}	
-			}
-		break;
-		case READ_START:
-			if (!I2C1CONbits.SEN){
-				// change the state
-				i2c1State = READ_IDTX;
-				// Send the address to write
-				i2c1Write(MAG_READ);
-			}		
-		break;
-		case READ_IDTX:
-			//if (!I2C1CONbits.RSEN){
-			if (!I2C1STATbits.ACKSTAT){
-				// change the state
-				i2c1State = READ_DATA;
-				// Start Clocking Data
-				I2C1CONbits.RCEN = 1;
-			}		
-		break;	
-		case READ_DATA:
-			if (I2C1STATbits.RBF){
-				//printToUart2("br:%d wr:%d dc:%d\n\r",byteRead, wordRead,byteCount);
-				byteCount++;
-				// read the received Data
-				if (byteCount < 7) {
-					currentMag.chData[byteRead] = (unsigned char)I2C1RCV;
-					//printToUart2("byte:%d\n\r", I2C1RCV);
-				} else {
-					wordRead= (unsigned char)I2C1RCV;
-					byteRead = 1;
-					//printToUart2("ignored:%d\n\r", I2C1RCV);
-				}
-				
-				// if we just read a word (i.e. byteRead == 1)
-				if(byteRead == 0)
-				{
-					//printToUart2("%u\n\r",currentMag.usData);
-					readMag(wordRead,currentMag.shData);
-					wordRead++;
-				}
-				
-				// flip the byte
-				byteRead = byteRead == 0? 1 : 0;
-				
-				//if (wordRead >= 3){
-				if (byteCount >= 7 ){
-					// Done Generate a NACK 
-					I2C1CONbits.ACKDT = 1;
-		            I2C1CONbits.ACKEN = 1;
-				} else {
-					// Generate the AKN
-					I2C1CONbits.ACKDT = 0;
-            		I2C1CONbits.ACKEN = 1;
-				}
-			} else if (!I2C1STATbits.ACKSTAT){
-				//if (wordRead < 3){
-				if (byteCount < 7){
-					// Enable reading
-					I2C1CONbits.RCEN = 1;					
-				} else {
-					// change the state
-					i2c1State = READ_DONE;
-					i2c1Stop();					
-				}	
-			}
-		break;	
-		case READ_STOP:
-			if (!I2C1CONbits.PEN){
-				// Ready to read next magnetometer data
-				i2c1State = READ_IDLE;				
-			}
-		break;	
-	}
-	//
-	IFS1bits.MI2C1IF = 0;			// Clear the master interrupt
-	I2C1STATbits.IWCOL = 0;			// Clear the collision flag just in case		
+void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
+    switch (i2c1State) {
+        case READ_START:
+            if (!I2C1CONbits.SEN) {
+                //I2C1CONbits.SEN = 1;
+                i2c1Write(PRESSURE_READ);
+                i2c1State = READ_WAIT;
+            }
+            break;
+        case READ_WAIT:
+            if (!I2C1STATbits.ACKSTAT) {
+                LED_SENS_STATUS_SET(ON);
+                I2C1CONbits.RCEN = 1;
+                i2c1State = READ_BRDATA_HI;
+                //byteCount = 0;
+            }
+            break;
+        case READ_BRDATA_HI:
+            if (I2C1STATbits.RBF) {
+                //printToUart2("...");
+                // Read Bridge Data [13:8], bits 6 and 7 are status
+                uint8_t readByte = (uint8_t)I2C1RCV;
+                // TODO handle statusValue
+                uint8_t statusValue = (readByte & 0xC0) >> 6;
+                readByte &= 0x3F;
+                currentPressure.chData[0] = readByte;
+
+
+                //printToUart2("Got i2c BRHI=0x%X, STAT=0x%X\n",readByte,statusValue);
+
+                // Generate an ack
+                I2C1CONbits.ACKDT = 0;
+                I2C1CONbits.ACKEN = 1;
+            }
+            else if (!I2C1CONbits.ACKEN) {
+                I2C1CONbits.RCEN = 1;
+                i2c1State = READ_BRDATA_LO;
+            }
+            break;
+        case READ_BRDATA_LO:
+            if (I2C1STATbits.RBF) {
+                //printToUart2("...");
+                // Read Bridge Data [7:0]
+                uint8_t readByte = (uint8_t)I2C1RCV;
+                currentPressure.chData[1] = readByte;
+
+                //printToUart2("Got i2c BRLO=0x%X\n",readByte);
+
+                // Generate an ack
+                I2C1CONbits.ACKDT = 0;
+                I2C1CONbits.ACKEN = 1;
+            }
+            else if (!I2C1CONbits.ACKEN) {
+                I2C1CONbits.RCEN = 1;
+                i2c1State = READ_TEMPDATA_HI;
+            }
+            break;
+        case READ_TEMPDATA_HI:
+            if (I2C1STATbits.RBF) {
+                //printToUart2("...");
+                // Read temperature data [10:3]
+                uint8_t readByte = (uint8_t)I2C1RCV;
+                currentTemperature.chData[0] = readByte;
+
+                // Generate an ack
+                I2C1CONbits.ACKDT = 0;
+                I2C1CONbits.ACKEN = 1;
+            }
+            else if (!I2C1CONbits.ACKEN) {
+                I2C1CONbits.RCEN = 1;
+                i2c1State = READ_TEMPDATA_LO;
+            }
+            break;
+        case READ_TEMPDATA_LO:
+            if (I2C1STATbits.RBF) {
+                // Read temperature data [2:0], mask last 5 off
+                uint8_t readByte = (uint8_t)I2C1RCV;
+                readByte &= 0xE0;
+                currentTemperature.chData[1] = readByte;
+                saveData();
+
+                // Generate an nack
+                I2C1CONbits.ACKDT = 1;
+                I2C1CONbits.ACKEN = 1;
+
+                i2c1State = READ_DONE;
+                i2c1Stop();
+
+                // DEBUG
+                printToUart2("Got press=0x%X, temp=0x%X\n",
+                    currentPressure.shData, currentTemperature.shData);
+            }
+            break;
+        case READ_STOP:
+            if (!I2C1CONbits.PEN){
+                i2c1State = READ_IDLE;
+            }
+            break;
+        default:
+            break;
+    }
+    IFS1bits.MI2C1IF = 0;		// Clear the master interrupt
+    I2C1STATbits.IWCOL = 0;		// Clear the collision flag just in case
 }
 
 void dummyDelay (void) {
-	unsigned int i, j;
-	// Put some huge delays to wait for Magnetometer power-up 
-	// without the need of a timer
-	// 5 milliseconds are expected for power-up
-	// @ 40Mhz requires aprox 200,000 nops
-	for( i = 0; i < 20; i += 1 ){
-		for( j = 0; j < 32700; j += 1 )
-		{
-			Nop();
-		}
-	}
+    unsigned int i, j;
+    // Put some huge delays to wait for pressure sensor power-up
+    // without the need of a timer
+    // 5 milliseconds are expected for power-up
+    // @ 40Mhz requires aprox 200,000 nops
+    for( i = 0; i < 20; i += 1 ){
+            for( j = 0; j < 32700; j += 1 )
+            {
+                    Nop();
+            }
+    }
 }
+
+// TODO consolodate all of these types of functions
+/*
+void printToUart2 (const char *fmt, ...){
+	va_list ap;
+	char buf [300];
+
+	va_start(ap, fmt);
+	vsprintf(buf, fmt, ap);
+	va_end (ap);
+	putsUART2((unsigned int*)buf);
+         while (BusyUART2());
+}
+ * */
 
