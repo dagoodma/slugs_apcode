@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.202
+ * Model version                        : 1.210
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Sat Jan 31 12:07:47 2015
+ * Real-Time Workshop file generated on : Wed May 06 20:22:56 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Sat Jan 31 12:07:48 2015
+ * C source code generated on           : Wed May 06 20:22:57 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -33,25 +33,25 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
                                         * Referenced by: '<S87>/Embedded MATLAB Function3'
                                         */
   0.97044334975369462,                 /* Computed Parameter: DiscreteZeroPole_A
-                                        * Referenced by: '<S168>/Discrete Zero-Pole'
+                                        * Referenced by: '<S170>/Discrete Zero-Pole'
                                         */
   0.029119852459414206,                /* Computed Parameter: DiscreteZeroPole_C
-                                        * Referenced by: '<S168>/Discrete Zero-Pole'
+                                        * Referenced by: '<S170>/Discrete Zero-Pole'
                                         */
   0.014778325123152709,                /* Computed Parameter: DiscreteZeroPole_D
-                                        * Referenced by: '<S168>/Discrete Zero-Pole'
+                                        * Referenced by: '<S170>/Discrete Zero-Pole'
                                         */
   0.01,                                /* Expression: T
-                                        * Referenced by: '<S157>/Constant'
+                                        * Referenced by: '<S159>/Constant'
                                         */
   0.02,                                /* Expression: f
-                                        * Referenced by: '<S157>/Constant1'
+                                        * Referenced by: '<S159>/Constant1'
                                         */
   0.01,                                /* Expression: T
-                                        * Referenced by: '<S160>/Constant'
+                                        * Referenced by: '<S162>/Constant'
                                         */
   4.0,                                 /* Expression: f
-                                        * Referenced by: '<S160>/Constant1'
+                                        * Referenced by: '<S162>/Constant1'
                                         */
   0.01,                                /* Expression: T
                                         * Referenced by: '<S98>/Constant'
@@ -195,19 +195,28 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
                                         * Referenced by: '<S109>/Discrete Zero-Pole'
                                         */
   0.01,                                /* Expression: T
-                                        * Referenced by: '<S159>/Constant'
+                                        * Referenced by: '<S161>/Constant'
                                         */
   4.0,                                 /* Expression: f
-                                        * Referenced by: '<S159>/Constant1'
+                                        * Referenced by: '<S161>/Constant1'
+                                        */
+  -9.2183E+6,                          /* Expression: pitotOffset
+                                        * Referenced by: '<S152>/Bias'
+                                        */
+  3000.0,                              /* Expression: maxDynPressure
+                                        * Referenced by: '<S121>/[0.001  maxDynPress]'
+                                        */
+  0.001,                               /* Expression: 0.001
+                                        * Referenced by: '<S121>/[0.001  maxDynPress]'
                                         */
   100.0,                               /* Expression: 100
                                         * Referenced by: '<S118>/Gain'
                                         */
   0.01,                                /* Expression: T
-                                        * Referenced by: '<S158>/Constant'
+                                        * Referenced by: '<S160>/Constant'
                                         */
   0.02,                                /* Expression: f
-                                        * Referenced by: '<S158>/Constant1'
+                                        * Referenced by: '<S160>/Constant1'
                                         */
   0.0F,                                /* Computed Parameter: Vn_fil_Y0
                                         * Referenced by: '<S94>/Vn_fil'
@@ -226,46 +235,31 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
    */
   { 0.0F, 0.0F, 0.0F },
   143.543F,                            /* Computed Parameter: Out1_Y0
-                                        * Referenced by: '<S162>/Out1'
+                                        * Referenced by: '<S164>/Out1'
                                         */
   120000.0F,                           /* Computed Parameter: u0k120k_UpperSat
-                                        * Referenced by: '<S165>/[80k - 120k]'
+                                        * Referenced by: '<S167>/[80k - 120k]'
                                         */
   80000.0F,                            /* Computed Parameter: u0k120k_LowerSat
-                                        * Referenced by: '<S165>/[80k - 120k]'
+                                        * Referenced by: '<S167>/[80k - 120k]'
                                         */
   0.0F,                                /* Computed Parameter: IntegerDelay_InitialCondition
-                                        * Referenced by: '<S166>/Integer Delay'
-                                        */
-  -0.0950433F,                         /* Computed Parameter: gains_Value
-                                        * Referenced by: '<S170>/gains'
-                                        */
-  293.053F,                            /* Computed Parameter: MeanTemperatureforCalibration_V
-                                        * Referenced by: '<S170>/Mean Temperature for Calibration'
-                                        */
-  -0.0552923F,                         /* Computed Parameter: gains_Value_k
-                                        * Referenced by: '<S171>/gains'
-                                        */
-  -202.93F,                            /* Computed Parameter: MeanTemperatureforCalibration_i
-                                        * Referenced by: '<S171>/Mean Temperature for Calibration'
-                                        */
-  -41.0F,                              /* Computed Parameter: Constant_Value_i5
-                                        * Referenced by: '<S171>/Constant'
+                                        * Referenced by: '<S168>/Integer Delay'
                                         */
   -6.0F,                               /* Computed Parameter: Constant_Value_h
-                                        * Referenced by: '<S173>/Constant'
+                                        * Referenced by: '<S172>/Constant'
                                         */
-  0.0207608F,                          /* Computed Parameter: gains_Value_m
-                                        * Referenced by: '<S173>/gains'
+  0.0207608F,                          /* Computed Parameter: gains_Value
+                                        * Referenced by: '<S172>/gains'
                                         */
-  347.23F,                             /* Computed Parameter: MeanTemperatureforCalibration_m
-                                        * Referenced by: '<S173>/Mean Temperature for Calibration'
+  347.23F,                             /* Computed Parameter: MeanTemperatureforCalibration_V
+                                        * Referenced by: '<S172>/Mean Temperature for Calibration'
                                         */
   -0.0102663F,                         /* Computed Parameter: gains_Value_c
-                                        * Referenced by: '<S174>/gains'
+                                        * Referenced by: '<S173>/gains'
                                         */
   -161.3F,                             /* Computed Parameter: MeanTemperatureforCalibration_c
-                                        * Referenced by: '<S174>/Mean Temperature for Calibration'
+                                        * Referenced by: '<S173>/Mean Temperature for Calibration'
                                         */
   0.01F,                               /* Computed Parameter: DiscreteTimeIntegrator1_gainval
                                         * Referenced by: '<S12>/Discrete-Time Integrator1'
@@ -427,32 +421,38 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   27.127F,                             /* Computed Parameter: Gains_Value
                                         * Referenced by: '<S151>/Gains'
                                         */
-  1.51128531F,                         /* Computed Parameter: Gains_Value_e
-                                        * Referenced by: '<S156>/Gains'
+  1.51128531F,                         /* Computed Parameter: Gains_Value_m
+                                        * Referenced by: '<S157>/Gains'
                                         */
-  -1605.28198F,                        /* Computed Parameter: Bias_Value
-                                        * Referenced by: '<S156>/Bias'
+  0.977F,                              /* Computed Parameter: Gains_Value_c
+                                        * Referenced by: '<S158>/Gains'
+                                        */
+  -50.0F,                              /* Computed Parameter: Bias_Value_i
+                                        * Referenced by: '<S158>/Bias'
+                                        */
+  -1605.28198F,                        /* Computed Parameter: Bias_Value_b
+                                        * Referenced by: '<S157>/Bias'
                                         */
   -50.0F,                              /* Computed Parameter: Constant_Value_dn
-                                        * Referenced by: '<S172>/Constant'
+                                        * Referenced by: '<S171>/Constant'
                                         */
   9444.44434F,                         /* Computed Parameter: Bias_Value_l
                                         * Referenced by: '<S151>/Bias'
                                         */
   0.093502529F,                        /* Computed Parameter: Constant3_Value_n
-                                        * Referenced by: '<S161>/Constant3'
+                                        * Referenced by: '<S163>/Constant3'
                                         */
   -0.188893303F,                       /* Computed Parameter: Constant4_Value_d
-                                        * Referenced by: '<S161>/Constant4'
+                                        * Referenced by: '<S163>/Constant4'
                                         */
   2.18031291E-5F,                      /* Computed Parameter: Constant5_Value_j
-                                        * Referenced by: '<S161>/Constant5'
+                                        * Referenced by: '<S163>/Constant5'
                                         */
   145473.5F,                           /* Computed Parameter: Constant2_Value_cf
-                                        * Referenced by: '<S161>/Constant2'
+                                        * Referenced by: '<S163>/Constant2'
                                         */
   0.3048F,                             /* Computed Parameter: UnitConversion_Gain_c
-                                        * Referenced by: '<S167>/Unit Conversion'
+                                        * Referenced by: '<S169>/Unit Conversion'
                                         */
   -1.0F,                               /* Computed Parameter: Gain_Gain_a
                                         * Referenced by: '<S86>/Gain'
@@ -551,26 +551,23 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   0.1F,                                /* Computed Parameter: Gain_Gain_o
                                         * Referenced by: '<S12>/Gain'
                                         */
-  6921.4F,                             /* Computed Parameter: Gains_Value_k
+  6921.4F,                             /* Computed Parameter: Gains_Value_g
                                         * Referenced by: '<S152>/Gains'
                                         */
-  -130.0F,                             /* Computed Parameter: Constant_Value_hm
-                                        * Referenced by: '<S169>/Constant'
-                                        */
-  -9.2183E+6F,                         /* Computed Parameter: Bias_Value_b
-                                        * Referenced by: '<S152>/Bias'
-                                        */
-  3000.0F,                             /* Computed Parameter: u001maxDynPress_UpperSat
-                                        * Referenced by: '<S121>/[0.001  maxDynPress]'
-                                        */
-  0.001F,                              /* Computed Parameter: u001maxDynPress_LowerSat
-                                        * Referenced by: '<S121>/[0.001  maxDynPress]'
-                                        */
-  3.17606163F,                         /* Computed Parameter: Gains_Value_k1
+  6894.75732F,                         /* Computed Parameter: Gains_Value_b
                                         * Referenced by: '<S153>/Gains'
                                         */
+  0.0001526F,                          /* Computed Parameter: Gains_Value_a
+                                        * Referenced by: '<S154>/Gains'
+                                        */
+  -3.5F,                               /* Computed Parameter: Bias_Value_c
+                                        * Referenced by: '<S154>/Bias'
+                                        */
+  3.17606163F,                         /* Computed Parameter: Gains_Value_k
+                                        * Referenced by: '<S155>/Gains'
+                                        */
   911.698242F,                         /* Computed Parameter: Bias_Value_la
-                                        * Referenced by: '<S153>/Bias'
+                                        * Referenced by: '<S155>/Bias'
                                         */
   0U,                                  /* Computed Parameter: Constant_Value_e
                                         * Referenced by: '<S114>/Constant'
@@ -585,7 +582,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
                                         * Referenced by: '<S114>/FixPt Switch'
                                         */
   1U,                                  /* Computed Parameter: IntegerDelay_DelayLength
-                                        * Referenced by: '<S166>/Integer Delay'
+                                        * Referenced by: '<S168>/Integer Delay'
                                         */
   1U,                                  /* Computed Parameter: IntegerDelay_DelayLength_k
                                         * Referenced by: '<S12>/Integer Delay'
@@ -627,10 +624,10 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
                                         * Referenced by: '<Root>/Constant'
                                         */
   1,                                   /* Computed Parameter: Constant2_Value_e
-                                        * Referenced by: '<S179>/Constant2'
+                                        * Referenced by: '<S178>/Constant2'
                                         */
   0,                                   /* Computed Parameter: Constant1_Value_kt
-                                        * Referenced by: '<S179>/Constant1'
+                                        * Referenced by: '<S178>/Constant1'
                                         */
 
   /* Start of '<S94>/Embedded MATLAB Function2' */

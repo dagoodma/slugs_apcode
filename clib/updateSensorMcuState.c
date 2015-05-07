@@ -26,12 +26,13 @@ THE SOFTWARE.
 
 #include "updateSensorMcuState.h"
 
+// PressDiff1 and Temperature now come from digital sensor
 void updateRawADCData(int16_t* adcData) {
     //mlRawPressureData.time_usec = mlAttitudeData.time_boot_ms; // set by updateTimestamp()
     mlRawPressureData.press_abs = (int16_t) adcData[0]; // Baro
-    mlRawPressureData.press_diff1 = (int16_t) adcData[1]; // Pito
+    //mlRawPressureData.press_diff1 = (int16_t) adcData[1]; // Pito
     mlRawPressureData.press_diff2 = (int16_t) adcData[2]; // Power
-    mlRawPressureData.temperature = (int16_t) adcData[3]; // Temp
+    //mlRawPressureData.temperature = (int16_t) adcData[3]; // Temp
 }
 
 void updateAirData(float* airData) {

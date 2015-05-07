@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.202
+ * Model version                        : 1.210
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Sat Jan 31 12:07:47 2015
+ * Real-Time Workshop file generated on : Wed May 06 20:22:56 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Sat Jan 31 12:07:48 2015
+ * C source code generated on           : Wed May 06 20:22:57 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -178,7 +178,7 @@ void sensorMCUSlugsMKII_myMuxFun1_l(real32_T rtu_u1, real32_T rtu_u2, real32_T
  *    '<S126>/Embedded MATLAB Function'
  *    '<S126>/Embedded MATLAB Function1'
  *    '<S126>/Embedded MATLAB Function2'
- *    '<S157>/Embedded MATLAB Function'
+ *    '<S159>/Embedded MATLAB Function'
  *    ...
  */
 void s_EmbeddedMATLABFunction_p_Init(rtDW_EmbeddedMATLABFunction_s_i *localDW)
@@ -197,7 +197,7 @@ void s_EmbeddedMATLABFunction_p_Init(rtDW_EmbeddedMATLABFunction_s_i *localDW)
  *    '<S126>/Embedded MATLAB Function'
  *    '<S126>/Embedded MATLAB Function1'
  *    '<S126>/Embedded MATLAB Function2'
- *    '<S157>/Embedded MATLAB Function'
+ *    '<S159>/Embedded MATLAB Function'
  *    ...
  */
 void sensor_EmbeddedMATLABFunction_c(real_T rtu_u, real_T rtu_T, real_T rtu_f,
@@ -399,13 +399,11 @@ void sensorMCUSlugsMKII_step(void)
   real32_T rtb_ixj;
   real32_T rtb_DataTypeConversion1_l;
   boolean_T rtb_LogicalOperator;
-  real32_T rtb_Sum_lw;
+  real32_T rtb_Sum_l;
   int16_T rtb_Switch_k[13];
   uint8_T rtb_Compare_j;
   uint32_T rtb_Output;
-  int16_T rtb_DataTypeConversion1_o;
   int16_T rtb_DataTypeConversion2_m;
-  int16_T rtb_DataTypeConversion3_n;
   boolean_T rtb_LogicalOperator_f;
   real32_T rtb_UEN2NEU[3];
   real32_T rtb_q_dot[4];
@@ -676,13 +674,8 @@ void sensorMCUSlugsMKII_step(void)
     /* DataTypeConversion: '<S119>/Data Type Conversion' */
     colIdx = (int16_T)sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_gn.y;
 
-    /* MATLAB Function: '<S119>/Embedded MATLAB Function1' */
-    sensor_EmbeddedMATLABFunction_g(sensorMCUSlugsMKII_B.Pitot,
-      &sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction1_b);
-
-    /* DataTypeConversion: '<S119>/Data Type Conversion1' */
-    rtb_DataTypeConversion1_o = (int16_T)
-      sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction1_b.y;
+    /* S-Function "dsPIC_C_function_Call" Block: <S119>/Read the Pressure Data [pressure.c] */
+    getPressure(&sensorMCUSlugsMKII_B.ReadthePressureDatapressurec[0]);
 
     /* MATLAB Function: '<S119>/Embedded MATLAB Function2' */
     sensor_EmbeddedMATLABFunction_g(sensorMCUSlugsMKII_B.Power,
@@ -692,26 +685,28 @@ void sensorMCUSlugsMKII_step(void)
     rtb_DataTypeConversion2_m = (int16_T)
       sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction2_dh.y;
 
-    /* MATLAB Function: '<S119>/Embedded MATLAB Function3' */
-    sensor_EmbeddedMATLABFunction_g(sensorMCUSlugsMKII_B.Thermistor,
-      &sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction3_c);
-
-    /* DataTypeConversion: '<S119>/Data Type Conversion3' */
-    rtb_DataTypeConversion3_n = (int16_T)
-      sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction3_c.y;
-
     /* MATLAB Function: '<S119>/myMux Fun' */
     /* MATLAB Function 'Sensor Data/Sensor Suite/If no HIL then Read all the Sensors/myMux Fun': '<S148>:1' */
     /*  This block supports an embeddable subset of the MATLAB language. */
     /*  See the help menu for details.  */
     /* '<S148>:1:5' */
     sensorMCUSlugsMKII_B.y_nt[0] = colIdx;
-    sensorMCUSlugsMKII_B.y_nt[1] = rtb_DataTypeConversion1_o;
+    sensorMCUSlugsMKII_B.y_nt[1] =
+      sensorMCUSlugsMKII_B.ReadthePressureDatapressurec[0];
     sensorMCUSlugsMKII_B.y_nt[2] = rtb_DataTypeConversion2_m;
-    sensorMCUSlugsMKII_B.y_nt[3] = rtb_DataTypeConversion3_n;
+    sensorMCUSlugsMKII_B.y_nt[3] =
+      sensorMCUSlugsMKII_B.ReadthePressureDatapressurec[1];
 
     /* S-Function "dsPIC_C_function_Call" Block: <S119>/Update State AP ADC Data [updateSensorMcuState.c] */
     updateRawADCData(sensorMCUSlugsMKII_B.y_nt);
+
+    /* MATLAB Function: '<S119>/Embedded MATLAB Function1' */
+    sensor_EmbeddedMATLABFunction_g(sensorMCUSlugsMKII_B.Pitot,
+      &sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction1_b);
+
+    /* MATLAB Function: '<S119>/Embedded MATLAB Function3' */
+    sensor_EmbeddedMATLABFunction_g(sensorMCUSlugsMKII_B.Thermistor,
+      &sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction3_c);
 
     /* S-Function "dsPIC_C_function_Call" Block: <S119>/Read the Cube Data [adisCube16405.c] */
     getCubeData(&sensorMCUSlugsMKII_B.ReadtheCubeDataadisCube16405c[0]);
@@ -740,9 +735,11 @@ void sensorMCUSlugsMKII_step(void)
     sensorMCUSlugsMKII_B.y_h[8] =
       sensorMCUSlugsMKII_B.ReadtheCubeDataadisCube16405c[8];
     sensorMCUSlugsMKII_B.y_h[9] = colIdx;
-    sensorMCUSlugsMKII_B.y_h[10] = rtb_DataTypeConversion1_o;
+    sensorMCUSlugsMKII_B.y_h[10] =
+      sensorMCUSlugsMKII_B.ReadthePressureDatapressurec[0];
     sensorMCUSlugsMKII_B.y_h[11] = rtb_DataTypeConversion2_m;
-    sensorMCUSlugsMKII_B.y_h[12] = rtb_DataTypeConversion3_n;
+    sensorMCUSlugsMKII_B.y_h[12] =
+      sensorMCUSlugsMKII_B.ReadthePressureDatapressurec[1];
 
     /* S-Function "dsPIC_C_function_Call" Block: <S119>/Is the GPS Novatel or Ublox? [gpsPort.c] */
     sensorMCUSlugsMKII_B.IstheGPSNovatelorUbloxgpsPortc = isGPSNovatel();
@@ -825,9 +822,9 @@ void sensorMCUSlugsMKII_step(void)
 
   /* Fcn: '<S82>/f' */
   if (rtb_Merge_idx < 0.0F) {
-    rtb_Sum_lw = -(real32_T)sqrt(-rtb_Merge_idx);
+    rtb_Sum_l = -(real32_T)sqrt(-rtb_Merge_idx);
   } else {
-    rtb_Sum_lw = (real32_T)sqrt(rtb_Merge_idx);
+    rtb_Sum_l = (real32_T)sqrt(rtb_Merge_idx);
   }
 
   /* End of Fcn: '<S82>/f' */
@@ -835,7 +832,7 @@ void sensorMCUSlugsMKII_step(void)
   /* Product: '<S82>/Rh' incorporates:
    *  Constant: '<S82>/Re=equatorial radius'
    */
-  rtb_ixk = sensorMCUSlugsMKII_P.Reequatorialradius_Value / rtb_Sum_lw;
+  rtb_ixk = sensorMCUSlugsMKII_P.Reequatorialradius_Value / rtb_Sum_l;
 
   /* Sum: '<S82>/Sum2' */
   rtb_jxi = sensorMCUSlugsMKII_B.Switch2[2] + rtb_ixk;
@@ -896,9 +893,9 @@ void sensorMCUSlugsMKII_step(void)
 
   /* Fcn: '<S73>/f' */
   if (rtb_Merge_idx < 0.0F) {
-    rtb_Sum_lw = -(real32_T)sqrt(-rtb_Merge_idx);
+    rtb_Sum_l = -(real32_T)sqrt(-rtb_Merge_idx);
   } else {
-    rtb_Sum_lw = (real32_T)sqrt(rtb_Merge_idx);
+    rtb_Sum_l = (real32_T)sqrt(rtb_Merge_idx);
   }
 
   /* End of Fcn: '<S73>/f' */
@@ -906,7 +903,7 @@ void sensorMCUSlugsMKII_step(void)
   /* Product: '<S73>/Rh' incorporates:
    *  Constant: '<S73>/Re=equatorial radius'
    */
-  rtb_Rh = sensorMCUSlugsMKII_P.Reequatorialradius_Value_b / rtb_Sum_lw;
+  rtb_Rh = sensorMCUSlugsMKII_P.Reequatorialradius_Value_b / rtb_Sum_l;
 
   /* Sum: '<S73>/Sum2' */
   rtb_RhhcosphisinlambYe = sensorMCUSlugsMKII_B.GettheGSLocationupdateSensorMCU
@@ -922,7 +919,7 @@ void sensorMCUSlugsMKII_step(void)
   /* Product: '<S73>/(Rh+h)cos(phi)*cos(lamb)=Xe' incorporates:
    *  Trigonometry: '<S73>/cos(lamb)'
    */
-  rtb_Sum_lw = rtb_RhhcosphisinlambYe * rtb_ixj * (real32_T)cos(rtb_Merge_idx);
+  rtb_Sum_l = rtb_RhhcosphisinlambYe * rtb_ixj * (real32_T)cos(rtb_Merge_idx);
 
   /* Product: '<S73>/(Rh+h)cos(phi)*sin(lamb)=Ye' incorporates:
    *  Trigonometry: '<S73>/sin(lamb)'
@@ -960,8 +957,8 @@ void sensorMCUSlugsMKII_step(void)
   tmp[8L] = (real32_T)cos(rtb_Deg2R_idx_0);
 
   /* Sum: '<S17>/Sum1' */
-  rtb_Deg2R_idx_0 = rtb_RhhcosphicoslambXe - rtb_Sum_lw;
-  rtb_Sum_lw = rtb_jxi - rtb_RhhcosphisinlambYe;
+  rtb_Deg2R_idx_0 = rtb_RhhcosphicoslambXe - rtb_Sum_l;
+  rtb_Sum_l = rtb_jxi - rtb_RhhcosphisinlambYe;
   rtb_Deg2R_idx = rtb_kxj - rtb_ixk;
 
   /* Product: '<S81>/Product1' incorporates:
@@ -969,7 +966,7 @@ void sensorMCUSlugsMKII_step(void)
    */
   for (colIdx = 0; colIdx < 3; colIdx++) {
     tmp_0[colIdx] = tmp[colIdx + 6] * rtb_Deg2R_idx + (tmp[colIdx + 3] *
-      rtb_Sum_lw + tmp[colIdx] * rtb_Deg2R_idx_0);
+      rtb_Sum_l + tmp[colIdx] * rtb_Deg2R_idx_0);
   }
 
   /* End of Product: '<S81>/Product1' */
@@ -1035,7 +1032,7 @@ void sensorMCUSlugsMKII_step(void)
    */
   rtb_Deg2R_idx = rtb_GyroErr_idx * rtb_UEN2NEU[2] - rtb_GyroErr_idx_0 *
     rtb_UEN2NEU[1];
-  rtb_Sum_lw = rtb_GyroErr_idx_0 * rtb_UEN2NEU[0] - rtb_GyroErr_idx_1 *
+  rtb_Sum_l = rtb_GyroErr_idx_0 * rtb_UEN2NEU[0] - rtb_GyroErr_idx_1 *
     rtb_UEN2NEU[2];
   rtb_GyroErr_idx_0 = rtb_GyroErr_idx_1 * rtb_UEN2NEU[1] - rtb_GyroErr_idx *
     rtb_UEN2NEU[0];
@@ -1046,8 +1043,7 @@ void sensorMCUSlugsMKII_step(void)
   for (colIdx = 0; colIdx < 3; colIdx++) {
     tmp_0[colIdx] = sensorMCUSlugsMKII_B.VectorConcatenate[colIdx + 6] *
       rtb_GyroErr_idx_0 + (sensorMCUSlugsMKII_B.VectorConcatenate[colIdx + 3] *
-      rtb_Sum_lw + sensorMCUSlugsMKII_B.VectorConcatenate[colIdx] *
-      rtb_Deg2R_idx);
+      rtb_Sum_l + sensorMCUSlugsMKII_B.VectorConcatenate[colIdx] * rtb_Deg2R_idx);
   }
 
   /* End of Product: '<S12>/Product2' */
@@ -1074,21 +1070,21 @@ void sensorMCUSlugsMKII_step(void)
    *  Sum: '<S78>/Diff'
    *  UnitDelay: '<S78>/UD'
    */
-  rtb_Deg2R_idx_0 = (real32_T)fabs(sensorMCUSlugsMKII_B.In1_p[0] -
+  rtb_Deg2R_idx = (real32_T)fabs(sensorMCUSlugsMKII_B.In1_p[0] -
     sensorMCUSlugsMKII_DWork.UD_DSTATE);
 
   /* Abs: '<S76>/Abs1' incorporates:
    *  Sum: '<S79>/Diff'
    *  UnitDelay: '<S79>/UD'
    */
-  rtb_Deg2R_idx = (real32_T)fabs(sensorMCUSlugsMKII_B.In1_p[1] -
+  rtb_Sum_l = (real32_T)fabs(sensorMCUSlugsMKII_B.In1_p[1] -
     sensorMCUSlugsMKII_DWork.UD_DSTATE_e);
 
   /* Abs: '<S77>/Abs1' incorporates:
    *  Sum: '<S80>/Diff'
    *  UnitDelay: '<S80>/UD'
    */
-  rtb_Sum_lw = (real32_T)fabs(sensorMCUSlugsMKII_B.In1_p[2] -
+  rtb_Deg2R_idx_0 = (real32_T)fabs(sensorMCUSlugsMKII_B.In1_p[2] -
     sensorMCUSlugsMKII_DWork.UD_DSTATE_k);
 
   /* Sum: '<S16>/Sum' incorporates:
@@ -1096,30 +1092,27 @@ void sensorMCUSlugsMKII_step(void)
    *  Saturate: '<S76>/Saturation1'
    *  Saturate: '<S77>/Saturation1'
    */
-  rtb_Deg2R_idx_0 = ((rtb_Deg2R_idx_0 >=
-                      sensorMCUSlugsMKII_P.Saturation1_UpperSat ?
-                      sensorMCUSlugsMKII_P.Saturation1_UpperSat :
-                      rtb_Deg2R_idx_0 <=
-                      sensorMCUSlugsMKII_P.Saturation1_LowerSat ?
-                      sensorMCUSlugsMKII_P.Saturation1_LowerSat :
-                      rtb_Deg2R_idx_0) + (rtb_Deg2R_idx >=
-    sensorMCUSlugsMKII_P.Saturation1_UpperSat_d ?
-    sensorMCUSlugsMKII_P.Saturation1_UpperSat_d : rtb_Deg2R_idx <=
-    sensorMCUSlugsMKII_P.Saturation1_LowerSat_m ?
-    sensorMCUSlugsMKII_P.Saturation1_LowerSat_m : rtb_Deg2R_idx)) + (rtb_Sum_lw >=
-    sensorMCUSlugsMKII_P.Saturation1_UpperSat_m ?
-    sensorMCUSlugsMKII_P.Saturation1_UpperSat_m : rtb_Sum_lw <=
-    sensorMCUSlugsMKII_P.Saturation1_LowerSat_j ?
-    sensorMCUSlugsMKII_P.Saturation1_LowerSat_j : rtb_Sum_lw);
+  rtb_Deg2R_idx = ((rtb_Deg2R_idx >= sensorMCUSlugsMKII_P.Saturation1_UpperSat ?
+                    sensorMCUSlugsMKII_P.Saturation1_UpperSat : rtb_Deg2R_idx <=
+                    sensorMCUSlugsMKII_P.Saturation1_LowerSat ?
+                    sensorMCUSlugsMKII_P.Saturation1_LowerSat : rtb_Deg2R_idx) +
+                   (rtb_Sum_l >= sensorMCUSlugsMKII_P.Saturation1_UpperSat_d ?
+                    sensorMCUSlugsMKII_P.Saturation1_UpperSat_d : rtb_Sum_l <=
+                    sensorMCUSlugsMKII_P.Saturation1_LowerSat_m ?
+                    sensorMCUSlugsMKII_P.Saturation1_LowerSat_m : rtb_Sum_l)) +
+    (rtb_Deg2R_idx_0 >= sensorMCUSlugsMKII_P.Saturation1_UpperSat_m ?
+     sensorMCUSlugsMKII_P.Saturation1_UpperSat_m : rtb_Deg2R_idx_0 <=
+     sensorMCUSlugsMKII_P.Saturation1_LowerSat_j ?
+     sensorMCUSlugsMKII_P.Saturation1_LowerSat_j : rtb_Deg2R_idx_0);
 
   /* DataTypeConversion: '<S16>/Data Type Conversion2' incorporates:
    *  Saturate: '<S16>/Saturation1'
    */
-  rtb_Deg2R_idx_0 = (real32_T)floor(rtb_Deg2R_idx_0 >=
+  rtb_Deg2R_idx_0 = (real32_T)floor(rtb_Deg2R_idx >=
     sensorMCUSlugsMKII_P.Saturation1_UpperSat_e ?
-    sensorMCUSlugsMKII_P.Saturation1_UpperSat_e : rtb_Deg2R_idx_0 <=
+    sensorMCUSlugsMKII_P.Saturation1_UpperSat_e : rtb_Deg2R_idx <=
     sensorMCUSlugsMKII_P.Saturation1_LowerSat_a ?
-    sensorMCUSlugsMKII_P.Saturation1_LowerSat_a : rtb_Deg2R_idx_0);
+    sensorMCUSlugsMKII_P.Saturation1_LowerSat_a : rtb_Deg2R_idx);
   if (rtIsNaNF(rtb_Deg2R_idx_0) || rtIsInfF(rtb_Deg2R_idx_0)) {
     rtb_Deg2R_idx_0 = 0.0F;
   } else {
@@ -1176,7 +1169,7 @@ void sensorMCUSlugsMKII_step(void)
   rtb_u11_idx = sensorMCUSlugsMKII_P.u11_Gain[0] * sensorMCUSlugsMKII_B.In1_p[0];
   rtb_u11_idx_0 = sensorMCUSlugsMKII_P.u11_Gain[1] * sensorMCUSlugsMKII_B.In1_p
     [1];
-  rtb_Sum_lw = sensorMCUSlugsMKII_P.u11_Gain[2] * sensorMCUSlugsMKII_B.In1_p[2];
+  rtb_Sum_l = sensorMCUSlugsMKII_P.u11_Gain[2] * sensorMCUSlugsMKII_B.In1_p[2];
 
   /* MATLAB Function: '<S87>/Embedded MATLAB Function3' */
   /* MATLAB Function 'Position and Attitude Filter/Position Filter/BlendPosVel/2 FIlter Blend/Embedded MATLAB Function3': '<S97>:1' */
@@ -1198,7 +1191,7 @@ void sensorMCUSlugsMKII_step(void)
 
   if (rtb_DataTypeConversion2_n != 0) {
     /* '<S97>:1:16' */
-    rtb_Merge_idx = (rtb_Sum_lw - sensorMCUSlugsMKII_DWork.lastGps_h) /
+    rtb_Merge_idx = (rtb_Sum_l - sensorMCUSlugsMKII_DWork.lastGps_h) /
       sensorMCUSlugsMKII_DWork.TimeSinceLast;
 
     /* '<S97>:1:17' */
@@ -1214,7 +1207,7 @@ void sensorMCUSlugsMKII_step(void)
     }
 
     /* '<S97>:1:25' */
-    sensorMCUSlugsMKII_DWork.lastGps_h = rtb_Sum_lw;
+    sensorMCUSlugsMKII_DWork.lastGps_h = rtb_Sum_l;
   } else {
     /*      h = lastH; */
     /* '<S97>:1:28' */
@@ -1264,33 +1257,33 @@ void sensorMCUSlugsMKII_step(void)
   /*  lastH = h; */
   rtb_Merge_idx *= sensorMCUSlugsMKII_P.Gain_Gain_ks;
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S164>/Get the GS Location [updateSensorMCUState.c] */
+  /* S-Function "dsPIC_C_function_Call" Block: <S166>/Get the GS Location [updateSensorMCUState.c] */
   getGSLocation(&sensorMCUSlugsMKII_B.GettheGSLocationupdateSensorM_m[0]);
 
   /* MATLAB Function: '<S150>/Enables//Disables the Computation of  initial Baro Bias' */
-  /* MATLAB Function 'Sensor Data/Sensor Suite/Low Pass Filtering,Temperature Compensation and Calibration/Baro Altimeter/Enables/Disables the Computation of  initial Baro Bias': '<S163>:1' */
+  /* MATLAB Function 'Sensor Data/Sensor Suite/Low Pass Filtering,Temperature Compensation and Calibration/Baro Altimeter/Enables/Disables the Computation of  initial Baro Bias': '<S165>:1' */
   if (sensorMCUSlugsMKII_DWork.aveCount < 2500.0) {
-    /* '<S163>:1:11' */
-    /* '<S163>:1:12' */
+    /* '<S165>:1:11' */
+    /* '<S165>:1:12' */
     sensorMCUSlugsMKII_DWork.aveCount = sensorMCUSlugsMKII_DWork.aveCount + 1.0;
   }
 
   if (sensorMCUSlugsMKII_DWork.aveCount == 2500.0) {
-    /* '<S163>:1:15' */
-    /* '<S163>:1:16' */
+    /* '<S165>:1:15' */
+    /* '<S165>:1:16' */
     sensorMCUSlugsMKII_DWork.tIni = 0.0;
 
-    /* '<S163>:1:17' */
+    /* '<S165>:1:17' */
     sensorMCUSlugsMKII_DWork.aveCount = sensorMCUSlugsMKII_DWork.aveCount + 1.0;
   }
 
-  /* '<S163>:1:20' */
+  /* '<S165>:1:20' */
   rtb_tOut = sensorMCUSlugsMKII_DWork.tIni;
 
   /* End of MATLAB Function: '<S150>/Enables//Disables the Computation of  initial Baro Bias' */
 
   /* Outputs for Enabled SubSystem: '<S150>/Zero Out Height' incorporates:
-   *  EnablePort: '<S166>/Enable'
+   *  EnablePort: '<S168>/Enable'
    */
   /* if aveCount > 500 */
   /*     tIni = 0; */
@@ -1315,8 +1308,8 @@ void sensorMCUSlugsMKII_step(void)
   /*      bias = initBias; */
   /*  end; */
   if (rtb_tOut > 0.0) {
-    /* Sum: '<S166>/Sum' incorporates:
-     *  Delay: '<S166>/Integer Delay'
+    /* Sum: '<S168>/Sum' incorporates:
+     *  Delay: '<S168>/Integer Delay'
      */
     sensorMCUSlugsMKII_B.Sum =
       sensorMCUSlugsMKII_B.GettheGSLocationupdateSensorM_m[0] -
@@ -1355,59 +1348,64 @@ void sensorMCUSlugsMKII_step(void)
   /* DataTypeConversion: '<S121>/Data Type Conversion5' */
   rtb_DataTypeConversion5 = (real_T)rtb_Switch_k[12];
 
-  /* MATLAB Function: '<S157>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S159>/Embedded MATLAB Function' */
   sensor_EmbeddedMATLABFunction_c(rtb_DataTypeConversion5,
     sensorMCUSlugsMKII_P.Constant_Value, sensorMCUSlugsMKII_P.Constant1_Value,
     &sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_b,
     &sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_b);
 
-  /* Sum: '<S156>/Sum' incorporates:
-   *  Constant: '<S156>/Bias'
-   *  Constant: '<S156>/Gains'
-   *  Product: '<S156>/Divide'
+  /* Sum: '<S157>/Sum' incorporates:
+   *  Constant: '<S157>/Bias'
+   *  Constant: '<S157>/Gains'
+   *  Constant: '<S158>/Bias'
+   *  Constant: '<S158>/Gains'
+   *  Product: '<S157>/Divide'
+   *  Product: '<S158>/Divide'
+   *  Sum: '<S158>/Sum'
    */
-  rtb_RhhcosphicoslambXe = (real32_T)((real_T)sensorMCUSlugsMKII_P.Gains_Value_e
-    * sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_b.y) +
-    sensorMCUSlugsMKII_P.Bias_Value;
+  rtb_RhhcosphicoslambXe = ((real32_T)((real_T)
+    sensorMCUSlugsMKII_P.Gains_Value_c *
+    sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_b.y) +
+    sensorMCUSlugsMKII_P.Bias_Value_i) * sensorMCUSlugsMKII_P.Gains_Value_m +
+    sensorMCUSlugsMKII_P.Bias_Value_b;
 
-  /* RelationalOperator: '<S172>/Compare' incorporates:
-   *  Constant: '<S172>/Constant'
+  /* RelationalOperator: '<S171>/Compare' incorporates:
+   *  Constant: '<S171>/Constant'
    */
   rtb_Compare_j = (rtb_RhhcosphicoslambXe <
                    sensorMCUSlugsMKII_P.Constant_Value_dn);
 
-  /* Outputs for Enabled SubSystem: '<S155>/Hi Temp Compensation' incorporates:
+  /* Outputs for Enabled SubSystem: '<S156>/Hi Temp Compensation' incorporates:
+   *  EnablePort: '<S172>/Enable'
+   */
+  /* Logic: '<S156>/Logical Operator' */
+  if (!(rtb_Compare_j != 0)) {
+    /* Sum: '<S172>/Add' incorporates:
+     *  Constant: '<S172>/Constant'
+     *  Constant: '<S172>/Mean Temperature for Calibration'
+     *  Constant: '<S172>/gains'
+     *  Product: '<S172>/Divide1'
+     *  Sum: '<S172>/Sum1'
+     *  Sum: '<S172>/Sum2'
+     */
+    sensorMCUSlugsMKII_B.Merge = ((real32_T)rtb_Switch_k[9] -
+      (rtb_RhhcosphicoslambXe -
+       sensorMCUSlugsMKII_P.MeanTemperatureforCalibration_V) *
+      sensorMCUSlugsMKII_P.gains_Value) + sensorMCUSlugsMKII_P.Constant_Value_h;
+  }
+
+  /* End of Logic: '<S156>/Logical Operator' */
+  /* End of Outputs for SubSystem: '<S156>/Hi Temp Compensation' */
+
+  /* Outputs for Enabled SubSystem: '<S156>/Lo Temp Compensation' incorporates:
    *  EnablePort: '<S173>/Enable'
    */
-  /* Logic: '<S155>/Logical Operator' */
-  if (!(rtb_Compare_j != 0)) {
-    /* Sum: '<S173>/Add' incorporates:
-     *  Constant: '<S173>/Constant'
+  if (rtb_Compare_j > 0) {
+    /* Sum: '<S173>/Sum2' incorporates:
      *  Constant: '<S173>/Mean Temperature for Calibration'
      *  Constant: '<S173>/gains'
      *  Product: '<S173>/Divide1'
      *  Sum: '<S173>/Sum1'
-     *  Sum: '<S173>/Sum2'
-     */
-    sensorMCUSlugsMKII_B.Merge = ((real32_T)rtb_Switch_k[9] -
-      (rtb_RhhcosphicoslambXe -
-       sensorMCUSlugsMKII_P.MeanTemperatureforCalibration_m) *
-      sensorMCUSlugsMKII_P.gains_Value_m) +
-      sensorMCUSlugsMKII_P.Constant_Value_h;
-  }
-
-  /* End of Logic: '<S155>/Logical Operator' */
-  /* End of Outputs for SubSystem: '<S155>/Hi Temp Compensation' */
-
-  /* Outputs for Enabled SubSystem: '<S155>/Lo Temp Compensation' incorporates:
-   *  EnablePort: '<S174>/Enable'
-   */
-  if (rtb_Compare_j > 0) {
-    /* Sum: '<S174>/Sum2' incorporates:
-     *  Constant: '<S174>/Mean Temperature for Calibration'
-     *  Constant: '<S174>/gains'
-     *  Product: '<S174>/Divide1'
-     *  Sum: '<S174>/Sum1'
      */
     sensorMCUSlugsMKII_B.Merge = (real32_T)rtb_Switch_k[9] -
       (rtb_RhhcosphicoslambXe -
@@ -1415,12 +1413,12 @@ void sensorMCUSlugsMKII_step(void)
       sensorMCUSlugsMKII_P.gains_Value_c;
   }
 
-  /* End of Outputs for SubSystem: '<S155>/Lo Temp Compensation' */
+  /* End of Outputs for SubSystem: '<S156>/Lo Temp Compensation' */
 
   /* DataTypeConversion: '<S121>/Data Type Conversion19' */
   rtb_DataTypeConversion19 = sensorMCUSlugsMKII_B.Merge;
 
-  /* MATLAB Function: '<S160>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S162>/Embedded MATLAB Function' */
   sensor_EmbeddedMATLABFunction_c(rtb_DataTypeConversion19,
     sensorMCUSlugsMKII_P.Constant_Value_j,
     sensorMCUSlugsMKII_P.Constant1_Value_d,
@@ -1438,13 +1436,13 @@ void sensorMCUSlugsMKII_step(void)
     sensorMCUSlugsMKII_P.Bias_Value_l;
 
   /* Outputs for Enabled SubSystem: '<S150>/Initial Baro Bias' incorporates:
-   *  EnablePort: '<S165>/Enable'
+   *  EnablePort: '<S167>/Enable'
    */
   if (rtb_tOut > 0.0) {
-    /* DataTypeConversion: '<S165>/Data Type Conversion' */
+    /* DataTypeConversion: '<S167>/Data Type Conversion' */
     rtb_DataTypeConversion = rtb_ixk;
 
-    /* DiscreteZeroPole: '<S168>/Discrete Zero-Pole' */
+    /* DiscreteZeroPole: '<S170>/Discrete Zero-Pole' */
     {
       rtb_DiscreteZeroPole_h = sensorMCUSlugsMKII_P.DiscreteZeroPole_D*
         rtb_DataTypeConversion;
@@ -1452,8 +1450,8 @@ void sensorMCUSlugsMKII_step(void)
         sensorMCUSlugsMKII_DWork.DiscreteZeroPole_DSTATE_p;
     }
 
-    /* Saturate: '<S165>/[80k - 120k]' incorporates:
-     *  DataTypeConversion: '<S165>/Data Type Conversion1'
+    /* Saturate: '<S167>/[80k - 120k]' incorporates:
+     *  DataTypeConversion: '<S167>/Data Type Conversion1'
      */
     sensorMCUSlugsMKII_B.u0k120k = (real32_T)rtb_DiscreteZeroPole_h >=
       sensorMCUSlugsMKII_P.u0k120k_UpperSat ?
@@ -1461,7 +1459,7 @@ void sensorMCUSlugsMKII_step(void)
       sensorMCUSlugsMKII_P.u0k120k_LowerSat ?
       sensorMCUSlugsMKII_P.u0k120k_LowerSat : (real32_T)rtb_DiscreteZeroPole_h;
 
-    /* Update for DiscreteZeroPole: '<S168>/Discrete Zero-Pole' */
+    /* Update for DiscreteZeroPole: '<S170>/Discrete Zero-Pole' */
     {
       sensorMCUSlugsMKII_DWork.DiscreteZeroPole_DSTATE_p =
         rtb_DataTypeConversion + sensorMCUSlugsMKII_P.DiscreteZeroPole_A*
@@ -1471,36 +1469,36 @@ void sensorMCUSlugsMKII_step(void)
 
   /* End of Outputs for SubSystem: '<S150>/Initial Baro Bias' */
 
-  /* Product: '<S161>/Divide' incorporates:
-   *  Sum: '<S161>/Sum2'
+  /* Product: '<S163>/Divide' incorporates:
+   *  Sum: '<S163>/Sum2'
    */
-  rtb_Sum_lw = (rtb_ixk - sensorMCUSlugsMKII_B.u0k120k) /
+  rtb_Sum_l = (rtb_ixk - sensorMCUSlugsMKII_B.u0k120k) /
     sensorMCUSlugsMKII_B.u0k120k;
 
-  /* Sum: '<S161>/Sum1' incorporates:
-   *  Constant: '<S161>/Constant2'
-   *  Constant: '<S161>/Constant3'
-   *  Constant: '<S161>/Constant4'
-   *  Constant: '<S161>/Constant5'
-   *  Gain: '<S167>/Unit Conversion'
-   *  Product: '<S161>/Divide1'
-   *  Product: '<S161>/Divide2'
-   *  Product: '<S161>/Divide3'
-   *  Product: '<S161>/Divide4'
-   *  Sum: '<S161>/Sum3'
+  /* Sum: '<S163>/Sum1' incorporates:
+   *  Constant: '<S163>/Constant2'
+   *  Constant: '<S163>/Constant3'
+   *  Constant: '<S163>/Constant4'
+   *  Constant: '<S163>/Constant5'
+   *  Gain: '<S169>/Unit Conversion'
+   *  Product: '<S163>/Divide1'
+   *  Product: '<S163>/Divide2'
+   *  Product: '<S163>/Divide3'
+   *  Product: '<S163>/Divide4'
+   *  Sum: '<S163>/Sum3'
    */
-  rtb_Rh = ((rtb_Sum_lw * rtb_Sum_lw * sensorMCUSlugsMKII_P.Constant3_Value_n +
-             rtb_Sum_lw * sensorMCUSlugsMKII_P.Constant4_Value_d) +
+  rtb_Rh = ((rtb_Sum_l * rtb_Sum_l * sensorMCUSlugsMKII_P.Constant3_Value_n +
+             rtb_Sum_l * sensorMCUSlugsMKII_P.Constant4_Value_d) +
             sensorMCUSlugsMKII_P.Constant5_Value_j) *
     sensorMCUSlugsMKII_P.Constant2_Value_cf *
     sensorMCUSlugsMKII_P.UnitConversion_Gain_c +
     sensorMCUSlugsMKII_B.GettheGSLocationupdateSensorM_m[0];
 
   /* Outputs for Enabled SubSystem: '<S150>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S162>/Enable'
+   *  EnablePort: '<S164>/Enable'
    */
   /* Logic: '<S150>/Logical Operator' incorporates:
-   *  Inport: '<S162>/In1'
+   *  Inport: '<S164>/In1'
    *  Sum: '<S150>/Sum1'
    */
   if (!(rtb_tOut != 0.0)) {
@@ -1662,15 +1660,15 @@ void sensorMCUSlugsMKII_step(void)
   rtb_GyroErr_idx_0 = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun.y[1] -
     (Product1_h[1] - sensorMCUSlugsMKII_DWork.IntegerDelay1_DSTATE_b[1]) *
     sensorMCUSlugsMKII_P.Gain2_Gain_l;
-  rtb_Sum_lw = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun.y[2] - (Product1_h[2]
-    - sensorMCUSlugsMKII_DWork.IntegerDelay1_DSTATE_b[2]) *
+  rtb_Sum_l = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun.y[2] - (Product1_h[2] -
+    sensorMCUSlugsMKII_DWork.IntegerDelay1_DSTATE_b[2]) *
     sensorMCUSlugsMKII_P.Gain2_Gain_l;
 
   /* RateLimiter: '<S86>/Rate Limiter' */
   rtb_Deg2R_idx_0 = rtb_kxj - sensorMCUSlugsMKII_DWork.PrevY[0];
   rtb_DataTypeConversion1_l = rtb_GyroErr_idx_0 -
     sensorMCUSlugsMKII_DWork.PrevY[1];
-  rtb_ixj = rtb_Sum_lw - sensorMCUSlugsMKII_DWork.PrevY[2];
+  rtb_ixj = rtb_Sum_l - sensorMCUSlugsMKII_DWork.PrevY[2];
   rtb_Deg2R_idx = rtb_kxj;
   if (rtb_Deg2R_idx_0 > sensorMCUSlugsMKII_P.RateLimiter_RisingLim) {
     rtb_Deg2R_idx = sensorMCUSlugsMKII_DWork.PrevY[0] +
@@ -1700,7 +1698,7 @@ void sensorMCUSlugsMKII_step(void)
   rtb_GyroErr_idx_0 = rtb_Deg2R_idx;
 
   /* RateLimiter: '<S86>/Rate Limiter' */
-  rtb_Deg2R_idx = rtb_Sum_lw;
+  rtb_Deg2R_idx = rtb_Sum_l;
   if (rtb_ixj > sensorMCUSlugsMKII_P.RateLimiter_RisingLim) {
     rtb_Deg2R_idx = sensorMCUSlugsMKII_DWork.PrevY[2] +
       sensorMCUSlugsMKII_P.RateLimiter_RisingLim;
@@ -1751,7 +1749,7 @@ void sensorMCUSlugsMKII_step(void)
   /* DataTypeConversion: '<S88>/Data Type Conversion1' */
   rtb_kxj = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun1.y[0];
   rtb_GyroErr_idx_0 = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun1.y[1];
-  rtb_Sum_lw = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun1.y[2];
+  rtb_Sum_l = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun1.y[2];
 
   /* Sum: '<S12>/Add' incorporates:
    *  DataTypeConversion: '<S88>/Data Type Conversion1'
@@ -1958,7 +1956,7 @@ void sensorMCUSlugsMKII_step(void)
   } else {
     rtb_Switch6[0] = rtb_kxj;
     rtb_Switch6[1] = rtb_GyroErr_idx_0;
-    rtb_Switch6[2] = rtb_Sum_lw;
+    rtb_Switch6[2] = rtb_Sum_l;
   }
 
   /* End of Switch: '<S3>/Switch6' */
@@ -2125,7 +2123,7 @@ void sensorMCUSlugsMKII_step(void)
   /* DataTypeConversion: '<S117>/Data Type Conversion6' */
   rtb_u11_idx = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun_f.y[0];
   rtb_u11_idx_0 = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun_f.y[1];
-  rtb_Sum_lw = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun_f.y[2];
+  rtb_Sum_l = (real32_T)sensorMCUSlugsMKII_B.sf_myMuxFun_f.y[2];
 
   /* Product: '<S117>/Divide' incorporates:
    *  Constant: '<S117>/Gyro Gains'
@@ -2189,7 +2187,7 @@ void sensorMCUSlugsMKII_step(void)
   sensorMCUSlugsMKII_B.y[2] = rtb_DataTypeConversion3_e_idx_1;
   sensorMCUSlugsMKII_B.y[3] = rtb_u11_idx;
   sensorMCUSlugsMKII_B.y[4] = rtb_u11_idx_0;
-  sensorMCUSlugsMKII_B.y[5] = rtb_Sum_lw;
+  sensorMCUSlugsMKII_B.y[5] = rtb_Sum_l;
   sensorMCUSlugsMKII_B.y[6] = rtb_UEN2NEU[0];
   sensorMCUSlugsMKII_B.y[7] = rtb_UEN2NEU[1];
   sensorMCUSlugsMKII_B.y[8] = rtb_UEN2NEU[2];
@@ -2354,10 +2352,10 @@ void sensorMCUSlugsMKII_step(void)
   scheduleData(sensorMCUSlugsMKII_B.DataTypeConversion_e,
                &sensorMCUSlugsMKII_B.SendDebugDatatoSerialPortandPre[0]);
 
-  /* S-Function "dsPIC_Digital_OutputWrite" Block: <S179>/Drive SSL Low */
+  /* S-Function "dsPIC_Digital_OutputWrite" Block: <S178>/Drive SSL Low */
   LATBbits.LATB2 = sensorMCUSlugsMKII_P.Constant1_Value_kt;
 
-  /* S-Function "dsPIC_Nop" Block: <S179>/Nop */
+  /* S-Function "dsPIC_Nop" Block: <S178>/Nop */
   asm ("nop");
   asm ("nop");
   asm ("nop");
@@ -2369,10 +2367,10 @@ void sensorMCUSlugsMKII_step(void)
   asm ("nop");
   asm ("nop");
 
-  /* S-Function "dsPIC_C_function_Call" Block: <S179>/Send Data Via SPI [interProcCommMaster.c] */
+  /* S-Function "dsPIC_C_function_Call" Block: <S178>/Send Data Via SPI [interProcCommMaster.c] */
   spiSend(sensorMCUSlugsMKII_B.SendDebugDatatoSerialPortandPre);
 
-  /* S-Function "dsPIC_Nop" Block: <S179>/Nop1 */
+  /* S-Function "dsPIC_Nop" Block: <S178>/Nop1 */
   asm ("nop");
   asm ("nop");
   asm ("nop");
@@ -2384,7 +2382,7 @@ void sensorMCUSlugsMKII_step(void)
   asm ("nop");
   asm ("nop");
 
-  /* S-Function "dsPIC_Digital_OutputWrite" Block: <S179>/Drive SSL High */
+  /* S-Function "dsPIC_Digital_OutputWrite" Block: <S178>/Drive SSL High */
   LATBbits.LATB2 = sensorMCUSlugsMKII_P.Constant2_Value_e;
 
   /* Sum: '<S12>/Sum1' incorporates:
@@ -2466,57 +2464,10 @@ void sensorMCUSlugsMKII_step(void)
 
   /* End of Switch: '<S114>/FixPt Switch' */
 
-  /* RelationalOperator: '<S169>/Compare' incorporates:
-   *  Constant: '<S169>/Constant'
-   */
-  rtb_Product_b = (rtb_RhhcosphicoslambXe <
-                   sensorMCUSlugsMKII_P.Constant_Value_hm);
-
-  /* Outputs for Enabled SubSystem: '<S154>/Hi Temp Compensation2' incorporates:
-   *  EnablePort: '<S170>/Enable'
-   */
-  /* Logic: '<S154>/Logical Operator' */
-  if (!(rtb_Product_b != 0)) {
-    /* Sum: '<S170>/Sum2' incorporates:
-     *  Constant: '<S170>/Mean Temperature for Calibration'
-     *  Constant: '<S170>/gains'
-     *  Product: '<S170>/Divide1'
-     *  Sum: '<S170>/Sum1'
-     */
-    sensorMCUSlugsMKII_B.Merge_m = (real32_T)rtb_Switch_k[10] -
-      (rtb_RhhcosphicoslambXe -
-       sensorMCUSlugsMKII_P.MeanTemperatureforCalibration_V) *
-      sensorMCUSlugsMKII_P.gains_Value;
-  }
-
-  /* End of Logic: '<S154>/Logical Operator' */
-  /* End of Outputs for SubSystem: '<S154>/Hi Temp Compensation2' */
-
-  /* Outputs for Enabled SubSystem: '<S154>/Lo Temp Compensation' incorporates:
-   *  EnablePort: '<S171>/Enable'
-   */
-  if (rtb_Product_b > 0) {
-    /* Sum: '<S171>/Add' incorporates:
-     *  Constant: '<S171>/Constant'
-     *  Constant: '<S171>/Mean Temperature for Calibration'
-     *  Constant: '<S171>/gains'
-     *  Product: '<S171>/Divide1'
-     *  Sum: '<S171>/Sum1'
-     *  Sum: '<S171>/Sum2'
-     */
-    sensorMCUSlugsMKII_B.Merge_m = ((real32_T)rtb_Switch_k[10] -
-      (rtb_RhhcosphicoslambXe -
-       sensorMCUSlugsMKII_P.MeanTemperatureforCalibration_i) *
-      sensorMCUSlugsMKII_P.gains_Value_k) +
-      sensorMCUSlugsMKII_P.Constant_Value_i5;
-  }
-
-  /* End of Outputs for SubSystem: '<S154>/Lo Temp Compensation' */
-
   /* DataTypeConversion: '<S121>/Data Type Conversion3' */
-  rtb_DataTypeConversion3 = sensorMCUSlugsMKII_B.Merge_m;
+  rtb_DataTypeConversion3 = (real_T)rtb_Switch_k[10];
 
-  /* MATLAB Function: '<S159>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S161>/Embedded MATLAB Function' */
   sensor_EmbeddedMATLABFunction_c(rtb_DataTypeConversion3,
     sensorMCUSlugsMKII_P.Constant_Value_dj,
     sensorMCUSlugsMKII_P.Constant1_Value_j,
@@ -2524,21 +2475,29 @@ void sensorMCUSlugsMKII_step(void)
     &sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_f);
 
   /* Sum: '<S152>/Sum' incorporates:
+   *  Abs: '<S121>/Abs'
    *  Constant: '<S152>/Bias'
    *  Constant: '<S152>/Gains'
+   *  Constant: '<S153>/Gains'
+   *  Constant: '<S154>/Bias'
+   *  Constant: '<S154>/Gains'
    *  DataTypeConversion: '<S121>/Data Type Conversion4'
    *  Product: '<S152>/Divide'
+   *  Product: '<S153>/Divide'
+   *  Product: '<S154>/Divide'
+   *  Sum: '<S154>/Sum'
    */
-  rtb_Deg2R_idx_0 = sensorMCUSlugsMKII_P.Gains_Value_k * (real32_T)
-    sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_f.y +
-    sensorMCUSlugsMKII_P.Bias_Value_b;
+  rtb_RoundingFunction = (real_T)((real32_T)fabs
+    ((sensorMCUSlugsMKII_P.Gains_Value_a * (real32_T)
+      sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_f.y +
+      sensorMCUSlugsMKII_P.Bias_Value_c) * sensorMCUSlugsMKII_P.Gains_Value_b) *
+    sensorMCUSlugsMKII_P.Gains_Value_g) + sensorMCUSlugsMKII_P.Bias_Value;
 
   /* Saturate: '<S121>/[0.001  maxDynPress]' */
-  rtb_RhhcosphisinlambYe = rtb_Deg2R_idx_0 >=
-    sensorMCUSlugsMKII_P.u001maxDynPress_UpperSat ?
-    sensorMCUSlugsMKII_P.u001maxDynPress_UpperSat : rtb_Deg2R_idx_0 <=
+  omega = rtb_RoundingFunction >= sensorMCUSlugsMKII_P.u001maxDynPress_UpperSat ?
+    sensorMCUSlugsMKII_P.u001maxDynPress_UpperSat : rtb_RoundingFunction <=
     sensorMCUSlugsMKII_P.u001maxDynPress_LowerSat ?
-    sensorMCUSlugsMKII_P.u001maxDynPress_LowerSat : rtb_Deg2R_idx_0;
+    sensorMCUSlugsMKII_P.u001maxDynPress_LowerSat : rtb_RoundingFunction;
 
   /* Outputs for Enabled SubSystem: '<S116>/If no HIL then update Air Data' incorporates:
    *  EnablePort: '<S120>/Enable'
@@ -2551,7 +2510,7 @@ void sensorMCUSlugsMKII_step(void)
     /* Inport: '<S120>/AirData' incorporates:
      *  MATLAB Function: '<S116>/myMux Fun'
      */
-    sensorMCUSlugsMKII_B.AirData[0] = rtb_RhhcosphisinlambYe;
+    sensorMCUSlugsMKII_B.AirData[0] = (real32_T)omega;
     sensorMCUSlugsMKII_B.AirData[1] = rtb_ixk;
     sensorMCUSlugsMKII_B.AirData[2] = rtb_RhhcosphicoslambXe;
 
@@ -2561,12 +2520,14 @@ void sensorMCUSlugsMKII_step(void)
 
   /* End of Outputs for SubSystem: '<S116>/If no HIL then update Air Data' */
 
-  /* MATLAB Function: '<S116>/myMux Fun1' */
+  /* MATLAB Function: '<S116>/myMux Fun1' incorporates:
+   *  DataTypeConversion: '<S116>/Data Type Conversion5'
+   */
   /* MATLAB Function 'Sensor Data/Sensor Suite/myMux Fun1': '<S123>:1' */
   /*  This block supports an embeddable subset of the MATLAB language. */
   /*  See the help menu for details.  */
   /* '<S123>:1:5' */
-  sensorMCUSlugsMKII_B.y_n[0] = rtb_RhhcosphisinlambYe;
+  sensorMCUSlugsMKII_B.y_n[0] = (real32_T)omega;
   sensorMCUSlugsMKII_B.y_n[1] = sensorMCUSlugsMKII_B.AirData[0];
   sensorMCUSlugsMKII_B.y_n[2] = 0.0F;
   sensorMCUSlugsMKII_B.y_n[3] = 0.0F;
@@ -2607,7 +2568,7 @@ void sensorMCUSlugsMKII_step(void)
   /* DataTypeConversion: '<S121>/Data Type Conversion6' */
   rtb_DataTypeConversion6 = (real_T)rtb_Switch_k[11];
 
-  /* MATLAB Function: '<S158>/Embedded MATLAB Function' */
+  /* MATLAB Function: '<S160>/Embedded MATLAB Function' */
   sensor_EmbeddedMATLABFunction_c(rtb_DataTypeConversion6,
     sensorMCUSlugsMKII_P.Constant_Value_a,
     sensorMCUSlugsMKII_P.Constant1_Value_k5,
@@ -2615,13 +2576,13 @@ void sensorMCUSlugsMKII_step(void)
     &sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_gc);
 
   /* DataTypeConversion: '<S121>/Data Type Conversion8' incorporates:
-   *  Constant: '<S153>/Bias'
-   *  Constant: '<S153>/Gains'
-   *  Product: '<S153>/Divide'
-   *  Sum: '<S153>/Sum'
+   *  Constant: '<S155>/Bias'
+   *  Constant: '<S155>/Gains'
+   *  Product: '<S155>/Divide'
+   *  Sum: '<S155>/Sum'
    */
   rtb_Deg2R_idx_0 = (real32_T)floor((real32_T)((real_T)
-    sensorMCUSlugsMKII_P.Gains_Value_k1 *
+    sensorMCUSlugsMKII_P.Gains_Value_k *
     sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_gc.y) +
     sensorMCUSlugsMKII_P.Bias_Value_la);
   if (rtIsNaNF(rtb_Deg2R_idx_0) || rtIsInfF(rtb_Deg2R_idx_0)) {
@@ -2718,10 +2679,10 @@ void sensorMCUSlugsMKII_step(void)
   sensorMCUSlugsMKII_DWork.UD_DSTATE_k = sensorMCUSlugsMKII_B.In1_p[2];
 
   /* Update for Enabled SubSystem: '<S150>/Zero Out Height' incorporates:
-   *  Update for EnablePort: '<S166>/Enable'
+   *  Update for EnablePort: '<S168>/Enable'
    */
   if (rtb_tOut > 0.0) {
-    /* Update for Delay: '<S166>/Integer Delay' */
+    /* Update for Delay: '<S168>/Integer Delay' */
     sensorMCUSlugsMKII_DWork.IntegerDelay_DSTATE_m = rtb_Rh;
   }
 
@@ -2964,14 +2925,14 @@ void sensorMCUSlugsMKII_initialize(boolean_T firstTime)
 
   /* End of Start for SubSystem: '<S86>/Subsystem' */
   /* Start for Enabled SubSystem: '<S150>/Zero Out Height' */
-  /* InitializeConditions for Delay: '<S166>/Integer Delay' */
+  /* InitializeConditions for Delay: '<S168>/Integer Delay' */
   sensorMCUSlugsMKII_DWork.IntegerDelay_DSTATE_m =
     sensorMCUSlugsMKII_P.IntegerDelay_InitialCondition;
 
   /* End of Start for SubSystem: '<S150>/Zero Out Height' */
 
   /* Start for Enabled SubSystem: '<S150>/Enabled Subsystem' */
-  /* VirtualOutportStart for Outport: '<S162>/Out1' */
+  /* VirtualOutportStart for Outport: '<S164>/Out1' */
   sensorMCUSlugsMKII_B.In1 = sensorMCUSlugsMKII_P.Out1_Y0;
 
   /* End of Start for SubSystem: '<S150>/Enabled Subsystem' */
@@ -3043,11 +3004,11 @@ void sensorMCUSlugsMKII_initialize(boolean_T firstTime)
     sensorMCUSlugsMKII_DWork.aveCount = 1.0;
     sensorMCUSlugsMKII_DWork.tIni = 1.0;
 
-    /* InitializeConditions for MATLAB Function: '<S157>/Embedded MATLAB Function' */
+    /* InitializeConditions for MATLAB Function: '<S159>/Embedded MATLAB Function' */
     s_EmbeddedMATLABFunction_p_Init
       (&sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_b);
 
-    /* InitializeConditions for MATLAB Function: '<S160>/Embedded MATLAB Function' */
+    /* InitializeConditions for MATLAB Function: '<S162>/Embedded MATLAB Function' */
     s_EmbeddedMATLABFunction_p_Init
       (&sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_e);
 
@@ -3134,11 +3095,11 @@ void sensorMCUSlugsMKII_initialize(boolean_T firstTime)
     /* InitializeConditions for UnitDelay: '<S112>/Output' */
     sensorMCUSlugsMKII_DWork.Output_DSTATE = sensorMCUSlugsMKII_P.Output_X0;
 
-    /* InitializeConditions for MATLAB Function: '<S159>/Embedded MATLAB Function' */
+    /* InitializeConditions for MATLAB Function: '<S161>/Embedded MATLAB Function' */
     s_EmbeddedMATLABFunction_p_Init
       (&sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_f);
 
-    /* InitializeConditions for MATLAB Function: '<S158>/Embedded MATLAB Function' */
+    /* InitializeConditions for MATLAB Function: '<S160>/Embedded MATLAB Function' */
     s_EmbeddedMATLABFunction_p_Init
       (&sensorMCUSlugsMKII_DWork.sf_EmbeddedMATLABFunction_gc);
   }

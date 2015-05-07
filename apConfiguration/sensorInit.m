@@ -63,8 +63,10 @@ magOffset = 0;
 %pitotOffset = -1083.881038056753;
 %%pitotScale  =  1.0513785;
 %%pitotOffset = -1.0058787e+003;
-pitotScale  =  6.9214e+003;
-pitotOffset = -9.2183e+006;
+%pitotScale  =  6.9214e+003;
+%pitotOffset = -9.2183e+006;
+pitotScale = 1; % new pitot sensor is factor calibrated
+pitotOffset = 0;
 
 % Temp
 % 14.8  -> 1160
@@ -74,11 +76,13 @@ pitotOffset = -9.2183e+006;
 % 33.5  -> 1280
 % 35.1  -> 1301
 
-temp = [148 179 243 320 335 351];
-raw  = [1160 1180 1230 1265 1280 1301];
-P =  polyfit(raw,temp,1);
-tempScale  = P(1);
-tempOffset = P(2);
+%temp = [148 179 243 320 335 351];
+%raw  = [1160 1180 1230 1265 1280 1301];
+%P =  polyfit(raw,temp,1);
+%tempScale  = P(1);
+%tempOffset = P(2);
+tempScale = 1; % temperature sensor from new pitot sensor (factory calibrated)
+tempOffset = 0;
 
 % Power
 %  7.0 -> 1921

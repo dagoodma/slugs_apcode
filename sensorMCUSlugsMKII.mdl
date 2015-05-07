@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.202"
+    ComputedModelVersion    "1.210"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -37,11 +37,11 @@ Model {
   Creator		  "User"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "User"
+  LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Jun 17 14:00:19 2013"
-  RTWModifiedTimeStamp	  293378104
-  ModelVersionFormat	  "1.%<AutoIncrement:202>"
+  LastModifiedDate	  "Wed May 06 20:11:06 2015"
+  RTWModifiedTimeStamp	  352746479
+  ModelVersionFormat	  "1.%<AutoIncrement:210>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -79,7 +79,6 @@ Model {
     $ObjectID		    2
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "sensorMCUSlugsMKII"
-    signals_		    []
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
@@ -700,7 +699,7 @@ Model {
 	      CustomProperty {
 		DataType		"string"
 		Name			"GMAKE_PLACE"
-		Value			"C:\\PROGRA~1\\MATLAB\\R2011b\\bin\\win64\\gmake"
+		Value			"C:\\PROGRA~1\\MATLAB\\R2011b\\bin\\win32\\gmake"
 	      }
 	      CustomProperty {
 		DataType		"string"
@@ -715,19 +714,19 @@ Model {
 	      CustomProperty {
 		DataType		"string"
 		Name			"LDPICTYPE"
-		Value			" -Xlinker --script=C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\support\\dsPIC33F\\gld\\p33fJ256MC710.gld"
+		Value			" -Xlinker --script=C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\support\\dsPIC33F\\gld\\p33fJ256MC710.gld"
 	      }
 	      CustomProperty {
 		DataType		"string"
 		Name			"LDLIBPIC"
-		Value			" C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\lib\\libpic30-coff.a C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\lib\\dsPIC33F\\li"
-		"bp33fJ256MC710-coff.a C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\lib\\libc-coff.a C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\lib\\libm"
-		"-coff.a"
+		Value			" C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\lib\\libpic30-coff.a C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\lib\\dsPIC3"
+		"3F\\libp33fJ256MC710-coff.a C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\lib\\libc-coff.a C:\\PROGRA~1\\MICROC~1\\xc16\\v1.1"
+		"1\\lib\\libm-coff.a"
 	      }
 	      CustomProperty {
 		DataType		"string"
 		Name			"PIC_INCLUDES"
-		Value			" -I C:\\PROGRA~2\\MICROC~1\\MPLABC~1\\include"
+		Value			" -I C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\include"
 	      }
 	      CustomProperty {
 		DataType		"string"
@@ -736,18 +735,8 @@ Model {
 	      }
 	      CustomProperty {
 		DataType		"string"
-		Name			"GCC1"
-		Value			"xc16-gcc -omf=coff"
-	      }
-	      CustomProperty {
-		DataType		"string"
-		Name			"AR1"
-		Value			"xc16-ar -r -omf=coff"
-	      }
-	      CustomProperty {
-		DataType		"string"
-		Name			"BIN2HEX"
-		Value			"xc16-bin2hex -omf=coff"
+		Name			"GCCPATH"
+		Value			"'C:\\\\PROGRA~1\\\\MICROC~1\\\\xc16\\\\v1.11\\\\bin\\\\'"
 	      }
 	    }
 	    PropName		    "Components"
@@ -901,13 +890,6 @@ Model {
       SampleTime	      "1"
       StateMustResolveToSignalObject off
       RTWStateStorageClass    "Auto"
-    }
-    Block {
-      BlockType		      Display
-      Format		      "short"
-      Decimation	      "10"
-      Floating		      off
-      SampleTime	      "-1"
     }
     Block {
       BlockType		      EnablePort
@@ -1176,7 +1158,7 @@ Model {
   }
   System {
     Name		    "sensorMCUSlugsMKII"
-    Location		    [76, 104, 1106, 736]
+    Location		    [47, 96, 1063, 600]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -1190,7 +1172,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "25036"
+    SIDHighWatermark	    "25068"
     Block {
       BlockType		      Reference
       Name		      "Configure Model \nfor dsPIC"
@@ -1199,7 +1181,7 @@ Model {
       Position		      [320, 54, 432, 110]
       ForegroundColor	      "blue"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "3.84"
+      LibraryVersion	      "3.79"
       SourceBlock	      "dsPICdrivers/Simulink Configuration/Configure Model \nfor dsPIC"
       SourceType	      ""
     }
@@ -1341,7 +1323,7 @@ Model {
 	  Position		  [20, 28, 180, 202]
 	  BackgroundColor	  "lightBlue"
 	  Priority		  "5"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/Peripheral I//O/Input Capture"
 	  SourceType		  "Input driver for Input Capture Peripheral"
 	  IntPriority		  "6"
@@ -1638,7 +1620,7 @@ Model {
       Position		      [730, 60, 830, 100]
       BackgroundColor	      "lightBlue"
       Priority		      "5"
-      LibraryVersion	      "3.84"
+      LibraryVersion	      "3.79"
       SourceBlock	      "dsPICdrivers/Digital I//O/Digital Output Write"
       SourceType	      ""
       PORT		      "B"
@@ -1911,7 +1893,7 @@ Model {
       Ports		      []
       Position		      [480, 62, 585, 98]
       BackgroundColor	      "orange"
-      LibraryVersion	      "3.84"
+      LibraryVersion	      "3.79"
       SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
       SourceType	      "C Function Call"
       FctUpdate		      "None"
@@ -1950,7 +1932,7 @@ Model {
       BackgroundColor	      "lightBlue"
       DropShadow	      on
       Priority		      "1"
-      LibraryVersion	      "3.84"
+      LibraryVersion	      "3.79"
       SourceBlock	      "dsPICdrivers/Master"
       SourceType	      "Master"
       TimeStepType	      "Timer1"
@@ -2001,7 +1983,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"Position and Attitude Filter"
-	Location		[6, 82, 1412, 809]
+	Location		[6, 82, 1249, 754]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -3280,7 +3262,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [220, 103, 325, 147]
 		    ShowName		    off
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -3895,7 +3877,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [220, 103, 325, 147]
 		    ShowName		    off
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -5321,7 +5303,7 @@ Model {
 		  Ports			  [1, 1]
 		  Position		  [200, 80, 325, 120]
 		  ShowName		  off
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -5358,7 +5340,7 @@ Model {
 		  Ports			  [1, 1]
 		  Position		  [205, 160, 330, 200]
 		  ShowName		  off
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -5692,7 +5674,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [375, 207, 480, 243]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -8560,7 +8542,7 @@ Model {
 	  Position		  [120, 452, 225, 488]
 	  BlockMirror		  on
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -8733,7 +8715,7 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"BlendPosVel"
-		Location		[2, 82, 1194, 871]
+		Location		[2, 82, 1194, 771]
 		Open			off
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
@@ -12683,7 +12665,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [20, 105, 135, 145]
 	  BackgroundColor	  "lightBlue"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/Digital I//O/Digital Input"
 	  SourceType		  ""
 	  PORT			  "A"
@@ -12710,7 +12692,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [290, 217, 395, 253]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12747,7 +12729,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [290, 317, 395, 353]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12784,7 +12766,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [295, 422, 400, 458]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12821,7 +12803,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [290, 122, 395, 158]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12858,7 +12840,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [295, 517, 400, 553]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -13243,8 +13225,8 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"Sensor Data"
-	Location		[205, 111, 927, 542]
-	Open			off
+	Location		[400, 149, 1122, 580]
+	Open			on
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -13275,7 +13257,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [20, 275, 135, 315]
 	  BackgroundColor	  "lightBlue"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/Digital I//O/Digital Input"
 	  SourceType		  ""
 	  PORT			  "D"
@@ -13326,7 +13308,7 @@ Model {
 	      Ports		      [0, 1]
 	      Position		      [125, 122, 230, 158]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -13363,7 +13345,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [290, 122, 395, 158]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -13400,7 +13382,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [460, 122, 565, 158]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -13472,7 +13454,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Sensor Suite"
-	    Location		    [2, 82, 1405, 847]
+	    Location		    [10, 155, 1253, 588]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -16444,7 +16426,7 @@ Model {
 		  Ports			  [0, 2]
 		  Position		  [25, 25, 150, 65]
 		  BackgroundColor	  "lightBlue"
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/Calculus Time Step"
 		  SourceType		  "Calculation Time"
 		  SampleTime		  "0.01"
@@ -16726,7 +16708,7 @@ Model {
 	      BlockType		      Goto
 	      Name		      "Goto2"
 	      SID		      "24704"
-	      Position		      [700, 326, 750, 344]
+	      Position		      [700, 326, 770, 344]
 	      BackgroundColor	      "magenta"
 	      ShowName		      off
 	      GotoTag		      "Float1Diag"
@@ -16736,7 +16718,7 @@ Model {
 	      BlockType		      Goto
 	      Name		      "Goto3"
 	      SID		      "24705"
-	      Position		      [885, 361, 935, 379]
+	      Position		      [885, 362, 970, 378]
 	      BackgroundColor	      "magenta"
 	      ShowName		      off
 	      GotoTag		      "Float2Diag"
@@ -16777,7 +16759,7 @@ Model {
 	      Name		      "If no HIL then\nRead all the\nSensors"
 	      SID		      "24709"
 	      Ports		      [0, 2, 1]
-	      Position		      [90, 218, 150, 287]
+	      Position		      [90, 213, 150, 282]
 	      MinAlgLoopOccurrences   off
 	      PropExecContextOutsideSubsystem off
 	      RTWSystemCode	      "Auto"
@@ -16787,7 +16769,7 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"If no HIL then\nRead all the\nSensors"
-		Location		[378, 110, 1129, 756]
+		Location		[310, 207, 1061, 755]
 		Open			off
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
@@ -16816,7 +16798,7 @@ Model {
 		  Position		  [20, 224, 150, 306]
 		  BackgroundColor	  "lightBlue"
 		  Priority		  "5"
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/Peripheral I//O/ADC Input"
 		  SourceType		  "dsPIC : ADC10"
 		  ADC_TYPE		  "12 bits"
@@ -16931,6 +16913,17 @@ Model {
 		  BackgroundColor	  "black"
 		  ShowName		  off
 		  Outputs		  "[6 3 1]"
+		  DisplayOption		  "bar"
+		}
+		Block {
+		  BlockType		  Demux
+		  Name			  "Demux3"
+		  SID			  "25039"
+		  Ports			  [1, 2]
+		  Position		  [280, 341, 285, 379]
+		  BackgroundColor	  "black"
+		  ShowName		  off
+		  Outputs		  "[1 1]"
 		  DisplayOption		  "bar"
 		}
 		Block {
@@ -17456,7 +17449,7 @@ Model {
 		  Ports			  [0, 1]
 		  Position		  [130, 582, 270, 628]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17504,7 +17497,7 @@ Model {
 		  Ports			  [0, 1]
 		  Position		  [225, 97, 330, 133]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17520,6 +17513,43 @@ Model {
 		  OutputType		  "[ 3 ]"
 		  FctDeclaration	  "extern void getCubeData(int16_T* y1);"
 		  FctCall		  "getCubeData(*%y1);"
+		  OrderingInOutPopup	  "None"
+		  FctStart		  "None"
+		  FctStart_Name		  "Init_onlyOnce"
+		  FctStart_Declaration	  "inline extern void Init_onlyOnce();"
+		  FctStart_Call		  "Init_onlyOnce();"
+		  FctInit		  "None"
+		  FctInit_Name		  "Init_Reset"
+		  FctInit_Declaration	  "inline extern void Init_Reset();"
+		  FctInit_Call		  "Init_Reset();"
+		  PinDigitalInput	  "[]"
+		  PinDigitalOutput	  "[]"
+		  AnalogueInput		  "[]"
+		}
+		Block {
+		  BlockType		  Reference
+		  Name			  "Read the Pressure Data\n[pressure.c]"
+		  SID			  "25038"
+		  Tag			  "dsPIC_dsPIC_CFunctionCall"
+		  Ports			  [0, 1]
+		  Position		  [130, 342, 235, 378]
+		  BackgroundColor	  "orange"
+		  LibraryVersion	  "3.79"
+		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
+		  SourceType		  "C Function Call"
+		  FctUpdate		  "Output Function"
+		  fctName		  "'getPressure'"
+		  INPUT_SIZE		  "1"
+		  INPUT1		  "--"
+		  INPUT2		  "--"
+		  INPUT3		  "--"
+		  OUTPUT_SIZE		  "2"
+		  OUTPUT1		  "int16"
+		  SampleTime		  ".01"
+		  InputType		  "[ ]"
+		  OutputType		  "[ 3 ]"
+		  FctDeclaration	  "extern void getPressure(int16_T* y1);"
+		  FctCall		  "getPressure(*%y1);"
 		  OrderingInOutPopup	  "None"
 		  FctStart		  "None"
 		  FctStart_Name		  "Init_onlyOnce"
@@ -17561,7 +17591,7 @@ Model {
 		  Ports			  [1]
 		  Position		  [555, 372, 695, 418]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17633,7 +17663,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [290, 117, 430, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -17670,7 +17700,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [490, 117, 630, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -17707,7 +17737,7 @@ Model {
 		    Ports		    [0, 1]
 		    Position		    [75, 117, 215, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -17807,7 +17837,7 @@ Model {
 		    Ports		    [0, 1]
 		    Position		    [490, 117, 630, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -18434,20 +18464,6 @@ Model {
 		  }
 		}
 		Line {
-		  SrcBlock		  "Data Type Conversion1"
-		  SrcPort		  1
-		  Points		  [50, 0]
-		  Branch {
-		    DstBlock		    "myMux Fun4"
-		    DstPort		    11
-		  }
-		  Branch {
-		    Points		    [0, 125]
-		    DstBlock		    "myMux Fun"
-		    DstPort		    2
-		  }
-		}
-		Line {
 		  SrcBlock		  "Data Type Conversion2"
 		  SrcPort		  1
 		  Points		  [45, 0]
@@ -18459,20 +18475,6 @@ Model {
 		    Points		    [0, 130]
 		    DstBlock		    "myMux Fun"
 		    DstPort		    3
-		  }
-		}
-		Line {
-		  SrcBlock		  "Data Type Conversion3"
-		  SrcPort		  1
-		  Points		  [40, 0]
-		  Branch {
-		    DstBlock		    "myMux Fun4"
-		    DstPort		    13
-		  }
-		  Branch {
-		    Points		    [0, 135]
-		    DstBlock		    "myMux Fun"
-		    DstPort		    4
 		  }
 		}
 		Line {
@@ -18578,6 +18580,42 @@ Model {
 		  DstBlock		  "Switch2"
 		  DstPort		  3
 		}
+		Line {
+		  SrcBlock		  "Read the Pressure Data\n[pressure.c]"
+		  SrcPort		  1
+		  DstBlock		  "Demux3"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Demux3"
+		  SrcPort		  1
+		  Points		  [135, 0]
+		  Branch {
+		    Points		    [0, -95]
+		    DstBlock		    "myMux Fun4"
+		    DstPort		    11
+		  }
+		  Branch {
+		    Points		    [0, 30]
+		    DstBlock		    "myMux Fun"
+		    DstPort		    2
+		  }
+		}
+		Line {
+		  SrcBlock		  "Demux3"
+		  SrcPort		  2
+		  Points		  [125, 0]
+		  Branch {
+		    Points		    [0, 60]
+		    DstBlock		    "myMux Fun"
+		    DstPort		    4
+		  }
+		  Branch {
+		    Points		    [0, -75]
+		    DstBlock		    "myMux Fun4"
+		    DstPort		    13
+		  }
+		}
 	      }
 	    }
 	    Block {
@@ -18595,7 +18633,7 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"If no HIL then\nupdate Air Data"
-		Location		[224, 114, 1254, 961]
+		Location		[-249, 378, 781, 902]
 		Open			off
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
@@ -18647,7 +18685,7 @@ Model {
 		  Ports			  [1]
 		  Position		  [185, 112, 325, 158]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.84"
+		  LibraryVersion	  "3.79"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -18739,8 +18777,8 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"Low Pass Filtering,Temperature\nCompensation and Calibration"
-		Location		[106, 82, 1305, 805]
-		Open			off
+		Location		[24, 239, 1267, 683]
+		Open			on
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
 		ScreenColor		"white"
@@ -18786,6 +18824,14 @@ Model {
 		  BackgroundColor	  "darkGreen"
 		  Port			  "4"
 		  IconDisplay		  "Port number"
+		}
+		Block {
+		  BlockType		  Abs
+		  Name			  "Abs"
+		  SID			  "25047"
+		  Position		  [805, 340, 835, 370]
+		  ZOrder		  -1
+		  SaturateOnIntegerOverflow off
 		}
 		Block {
 		  BlockType		  SubSystem
@@ -19418,7 +19464,7 @@ Model {
 		    Ports		    [0, 1]
 		    Position		    [25, 27, 130, 63]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.84"
+		    LibraryVersion	    "3.79"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -20149,20 +20195,10 @@ Model {
 		  GotoTag		  "Temp"
 		}
 		Block {
-		  BlockType		  From
-		  Name			  "From2"
-		  SID			  "24824"
-		  Position		  [145, 302, 200, 318]
-		  BlockMirror		  on
-		  BackgroundColor	  "cyan"
-		  ShowName		  off
-		  GotoTag		  "Temp"
-		}
-		Block {
 		  BlockType		  Goto
 		  Name			  "Goto"
 		  SID			  "24825"
-		  Position		  [560, 612, 615, 628]
+		  Position		  [635, 612, 690, 628]
 		  BackgroundColor	  "magenta"
 		  ShowName		  off
 		  GotoTag		  "Temp"
@@ -20170,10 +20206,10 @@ Model {
 		}
 		Block {
 		  BlockType		  SubSystem
-		  Name			  "Pitot\nUnit Conversion"
-		  SID			  "24826"
+		  Name			  "Pitot\nApply Calibration"
+		  SID			  "25048"
 		  Ports			  [1, 1]
-		  Position		  [610, 341, 680, 369]
+		  Position		  [870, 341, 940, 369]
 		  MinAlgLoopOccurrences	  off
 		  PropExecContextOutsideSubsystem off
 		  RTWSystemCode		  "Auto"
@@ -20181,7 +20217,7 @@ Model {
 		  Opaque		  off
 		  RequestExecContextInheritance	off
 		  MaskHideContents	  off
-		  MaskDescription	  "Convert Analog readings to units"
+		  MaskDescription	  "Scale and offset pitot sensor readings from calibration"
 		  MaskPromptString	  "Initial Bias|Initial Gains"
 		  MaskStyleString	  "edit,edit"
 		  MaskVariables		  "bias=@1;gains=@2;"
@@ -20197,8 +20233,225 @@ Model {
 		  MaskIconUnits		  "autoscale"
 		  MaskValueString	  "pitotOffset|pitotScale"
 		  System {
-		    Name		    "Pitot\nUnit Conversion"
-		    Location		    [205, 99, 1235, 946]
+		    Name		    "Pitot\nApply Calibration"
+		    Location		    [205, 99, 1235, 664]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "usletter"
+		    PaperUnits		    "inches"
+		    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "Raw"
+		    SID			    "25049"
+		    Position		    [25, 148, 55, 162]
+		    BackgroundColor	    "darkGreen"
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Constant
+		    Name		    "Bias"
+		    SID			    "25054"
+		    Position		    [115, 200, 190, 230]
+		    ZOrder		    -4
+		    Value		    "pitotOffset"
+		    }
+		    Block {
+		    BlockType		    Product
+		    Name		    "Divide"
+		    SID			    "25050"
+		    Ports		    [2, 1]
+		    Position		    [155, 132, 185, 163]
+		    ShowName		    off
+		    InputSameDT		    off
+		    OutDataTypeStr	    "single"
+		    RndMeth		    "Floor"
+		    SaturateOnIntegerOverflow off
+		    }
+		    Block {
+		    BlockType		    Constant
+		    Name		    "Gains"
+		    SID			    "25051"
+		    Position		    [20, 95, 115, 115]
+		    Value		    "pitotScale"
+		    OutDataTypeStr	    "single"
+		    }
+		    Block {
+		    BlockType		    Sum
+		    Name		    "Sum"
+		    SID			    "25053"
+		    Ports		    [2, 1]
+		    Position		    [235, 140, 255, 160]
+		    ZOrder		    -18
+		    ShowName		    off
+		    IconShape		    "round"
+		    Inputs		    "|++"
+		    InputSameDT		    off
+		    OutDataTypeStr	    "Inherit: Inherit via internal rule"
+		    SaturateOnIntegerOverflow off
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Comp"
+		    SID			    "25052"
+		    Position		    [315, 143, 345, 157]
+		    BackgroundColor	    "yellow"
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Raw"
+		    SrcPort		    1
+		    DstBlock		    "Divide"
+		    DstPort		    2
+		    }
+		    Line {
+		    SrcBlock		    "Gains"
+		    SrcPort		    1
+		    Points		    [10, 0; 0, 35]
+		    DstBlock		    "Divide"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Bias"
+		    SrcPort		    1
+		    Points		    [50, 0]
+		    DstBlock		    "Sum"
+		    DstPort		    2
+		    }
+		    Line {
+		    SrcBlock		    "Sum"
+		    SrcPort		    1
+		    DstBlock		    "Comp"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Divide"
+		    SrcPort		    1
+		    DstBlock		    "Sum"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "Pitot\nUnit Conversion (psi to pa)"
+		  SID			  "25040"
+		  Ports			  [1, 1]
+		  Position		  [695, 341, 765, 369]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskDescription	  "Convert units in Psi to Pa"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "Pitot\nUnit Conversion (psi to pa)"
+		    Location		    [205, 99, 1235, 664]
+		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "usletter"
+		    PaperUnits		    "inches"
+		    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "Raw"
+		    SID			    "25041"
+		    Position		    [25, 148, 55, 162]
+		    BackgroundColor	    "darkGreen"
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Product
+		    Name		    "Divide"
+		    SID			    "25043"
+		    Ports		    [2, 1]
+		    Position		    [155, 132, 185, 163]
+		    ShowName		    off
+		    InputSameDT		    off
+		    OutDataTypeStr	    "single"
+		    RndMeth		    "Floor"
+		    SaturateOnIntegerOverflow off
+		    }
+		    Block {
+		    BlockType		    Constant
+		    Name		    "Gains"
+		    SID			    "25044"
+		    Position		    [20, 95, 115, 115]
+		    Value		    "6894.75729"
+		    OutDataTypeStr	    "single"
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Comp"
+		    SID			    "25046"
+		    Position		    [315, 143, 345, 157]
+		    BackgroundColor	    "yellow"
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Raw"
+		    SrcPort		    1
+		    DstBlock		    "Divide"
+		    DstPort		    2
+		    }
+		    Line {
+		    SrcBlock		    "Gains"
+		    SrcPort		    1
+		    Points		    [10, 0; 0, 35]
+		    DstBlock		    "Divide"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Divide"
+		    SrcPort		    1
+		    DstBlock		    "Comp"
+		    DstPort		    1
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "Pitot\nUnit Conversion (psi)"
+		  SID			  "24826"
+		  Ports			  [1, 1]
+		  Position		  [580, 341, 650, 369]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskDescription	  "Convert digital reading to units in Psi"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "Pitot\nUnit Conversion (psi)"
+		    Location		    [205, 99, 1235, 664]
 		    Open		    off
 		    ModelBrowserVisibility  off
 		    ModelBrowserWidth	    200
@@ -20224,7 +20477,7 @@ Model {
 		    Name		    "Bias"
 		    SID			    "24828"
 		    Position		    [85, 250, 195, 270]
-		    Value		    "bias"
+		    Value		    "-3.5"
 		    OutDataTypeStr	    "single"
 		    }
 		    Block {
@@ -20244,7 +20497,7 @@ Model {
 		    Name		    "Gains"
 		    SID			    "24830"
 		    Position		    [20, 95, 115, 115]
-		    Value		    "gains"
+		    Value		    "1.526e-04"
 		    OutDataTypeStr	    "single"
 		    }
 		    Block {
@@ -20433,586 +20686,6 @@ Model {
 		    SrcPort		    1
 		    DstBlock		    "Comp"
 		    DstPort		    1
-		    }
-		  }
-		}
-		Block {
-		  BlockType		  SubSystem
-		  Name			  "Temp Compensate Accel X1"
-		  SID			  "24840"
-		  Ports			  [2, 1]
-		  Position		  [135, 326, 270, 379]
-		  MinAlgLoopOccurrences	  off
-		  PropExecContextOutsideSubsystem off
-		  RTWSystemCode		  "Auto"
-		  FunctionWithSeparateData off
-		  Opaque		  off
-		  RequestExecContextInheritance	off
-		  MaskHideContents	  off
-		  System {
-		    Name		    "Temp Compensate Accel X1"
-		    Location		    [6, 82, 1172, 1000]
-		    Open		    off
-		    ModelBrowserVisibility  off
-		    ModelBrowserWidth	    200
-		    ScreenColor		    "white"
-		    PaperOrientation	    "landscape"
-		    PaperPositionMode	    "auto"
-		    PaperType		    "usletter"
-		    PaperUnits		    "inches"
-		    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
-		    TiledPageScale	    1
-		    ShowPageBoundaries	    off
-		    ZoomFactor		    "100"
-		    Block {
-		    BlockType		    Inport
-		    Name		    "Temp"
-		    SID			    "24841"
-		    Position		    [25, 38, 55, 52]
-		    BackgroundColor	    "darkGreen"
-		    IconDisplay		    "Port number"
-		    }
-		    Block {
-		    BlockType		    Inport
-		    Name		    "Dynamic"
-		    SID			    "24842"
-		    Position		    [200, 98, 230, 112]
-		    Port		    "2"
-		    IconDisplay		    "Port number"
-		    }
-		    Block {
-		    BlockType		    Reference
-		    Name		    "Compare\nTo Constant"
-		    SID			    "24843"
-		    Ports		    [1, 1]
-		    Position		    [145, 27, 250, 63]
-		    LibraryVersion	    "1.256"
-		    SourceBlock		    "simulink/Logic and Bit\nOperations/Compare\nTo Constant"
-		    SourceType		    "Compare To Constant"
-		    relop		    "<"
-		    const		    "pitCutTemp"
-		    OutDataTypeStr	    "uint8"
-		    ZeroCross		    off
-		    }
-		    Block {
-		    BlockType		    Display
-		    Name		    "Display"
-		    SID			    "24844"
-		    Ports		    [1]
-		    Position		    [695, 70, 785, 100]
-		    Decimation		    "1"
-		    Lockdown		    off
-		    }
-		    Block {
-		    BlockType		    Display
-		    Name		    "Display2"
-		    SID			    "24845"
-		    Ports		    [1]
-		    Position		    [475, 40, 565, 70]
-		    Decimation		    "1"
-		    Lockdown		    off
-		    }
-		    Block {
-		    BlockType		    SubSystem
-		    Name		    "Hi Temp\nCompensation2"
-		    SID			    "24846"
-		    Ports		    [2, 1, 1]
-		    Position		    [315, 88, 405, 157]
-		    MinAlgLoopOccurrences   off
-		    PropExecContextOutsideSubsystem off
-		    RTWSystemCode	    "Auto"
-		    FunctionWithSeparateData off
-		    Opaque		    off
-		    RequestExecContextInheritance off
-		    MaskHideContents	    off
-		    MaskDescription	    "This block implements a temperature compensation. It implmements the following equation:\n\n"
-		    "M_tc = M_raw - K_t(T - T_avg)"
-		    MaskPromptString	    "Tempearature Coeficient (K_t)|Calibration Temperature Mean (T_avg)"
-		    MaskStyleString	    "edit,edit"
-		    MaskVariables	    "alpha=@1;tempMean=@2;"
-		    MaskTunableValueString  "on,on"
-		    MaskCallbackString	    "|"
-		    MaskEnableString	    "on,on"
-		    MaskVisibilityString    "on,on"
-		    MaskToolTipString	    "on,on"
-		    MaskIconFrame	    on
-		    MaskIconOpaque	    on
-		    MaskIconRotate	    "none"
-		    MaskPortRotate	    "default"
-		    MaskIconUnits	    "autoscale"
-		    MaskValueString	    "pitTGain2|pitTMean2"
-		    System {
-		    Name		    "Hi Temp\nCompensation2"
-		    Location		    [2, 82, 1194, 1000]
-		    Open		    off
-		    ModelBrowserVisibility  off
-		    ModelBrowserWidth	    200
-		    ScreenColor		    "white"
-		    PaperOrientation	    "landscape"
-		    PaperPositionMode	    "auto"
-		    PaperType		    "usletter"
-		    PaperUnits		    "inches"
-		    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
-		    TiledPageScale	    1
-		    ShowPageBoundaries	    off
-		    ZoomFactor		    "100"
-		    Block {
-		    BlockType		    Inport
-		    Name		    "Raw"
-		    SID			    "24847"
-		    Position		    [500, 148, 530, 162]
-		    BackgroundColor	    "darkGreen"
-		    IconDisplay		    "Port number"
-		    }
-		    Block {
-		    BlockType		    Inport
-		    Name		    "Temp Raw"
-		    SID			    "24848"
-		    Position		    [420, 228, 450, 242]
-		    BackgroundColor	    "darkGreen"
-		    Port		    "2"
-		    IconDisplay		    "Port number"
-		    }
-		    Block {
-		    BlockType		    EnablePort
-		    Name		    "Enable"
-		    SID			    "24849"
-		    Ports		    []
-		    Position		    [755, 110, 775, 130]
-		    }
-		    Block {
-		    BlockType		    Product
-		    Name		    "Divide1"
-		    SID			    "24850"
-		    Ports		    [2, 1]
-		    Position		    [545, 212, 575, 243]
-		    ShowName		    off
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    RndMeth		    "Floor"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Constant
-		    Name		    "Mean Temperature\nfor Calibration"
-		    SID			    "24851"
-		    Position		    [385, 280, 495, 300]
-		    Value		    "tempMean"
-		    OutDataTypeStr	    "single"
-		    }
-		    Block {
-		    BlockType		    Sum
-		    Name		    "Sum1"
-		    SID			    "24852"
-		    Ports		    [2, 1]
-		    Position		    [500, 225, 520, 245]
-		    ShowName		    off
-		    IconShape		    "round"
-		    Inputs		    "|+-"
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Sum
-		    Name		    "Sum2"
-		    SID			    "24853"
-		    Ports		    [2, 1]
-		    Position		    [590, 145, 610, 165]
-		    ShowName		    off
-		    IconShape		    "round"
-		    Inputs		    "|+-"
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Constant
-		    Name		    "gains"
-		    SID			    "24854"
-		    Position		    [405, 185, 515, 205]
-		    Value		    "alpha"
-		    OutDataTypeStr	    "single"
-		    }
-		    Block {
-		    BlockType		    Outport
-		    Name		    "Comp"
-		    SID			    "24855"
-		    Position		    [665, 148, 695, 162]
-		    BackgroundColor	    "yellow"
-		    IconDisplay		    "Port number"
-		    }
-		    Line {
-		    SrcBlock		    "Mean Temperature\nfor Calibration"
-		    SrcPort		    1
-		    Points		    [10, 0]
-		    DstBlock		    "Sum1"
-		    DstPort		    2
-		    }
-		    Line {
-		    SrcBlock		    "Raw"
-		    SrcPort		    1
-		    DstBlock		    "Sum2"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Temp Raw"
-		    SrcPort		    1
-		    DstBlock		    "Sum1"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Sum1"
-		    SrcPort		    1
-		    DstBlock		    "Divide1"
-		    DstPort		    2
-		    }
-		    Line {
-		    SrcBlock		    "gains"
-		    SrcPort		    1
-		    Points		    [5, 0; 0, 25]
-		    DstBlock		    "Divide1"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Divide1"
-		    SrcPort		    1
-		    Points		    [20, 0]
-		    DstBlock		    "Sum2"
-		    DstPort		    2
-		    }
-		    Line {
-		    SrcBlock		    "Sum2"
-		    SrcPort		    1
-		    DstBlock		    "Comp"
-		    DstPort		    1
-		    }
-		    }
-		    }
-		    Block {
-		    BlockType		    SubSystem
-		    Name		    "Lo Temp\nCompensation"
-		    SID			    "24856"
-		    Ports		    [2, 1, 1]
-		    Position		    [315, 213, 405, 282]
-		    MinAlgLoopOccurrences   off
-		    PropExecContextOutsideSubsystem off
-		    RTWSystemCode	    "Auto"
-		    FunctionWithSeparateData off
-		    Opaque		    off
-		    RequestExecContextInheritance off
-		    MaskHideContents	    off
-		    MaskDescription	    "This block implements a temperature compensation. It implmements the following equation:\n\n"
-		    "M_tc = M_raw - K_t(T - T_avg)"
-		    MaskPromptString	    "Tempearature Coeficient (K_t)|Calibration Temperature Mean (T_avg)"
-		    MaskStyleString	    "edit,edit"
-		    MaskVariables	    "alpha=@1;tempMean=@2;"
-		    MaskTunableValueString  "on,on"
-		    MaskCallbackString	    "|"
-		    MaskEnableString	    "on,on"
-		    MaskVisibilityString    "on,on"
-		    MaskToolTipString	    "on,on"
-		    MaskIconFrame	    on
-		    MaskIconOpaque	    on
-		    MaskIconRotate	    "none"
-		    MaskPortRotate	    "default"
-		    MaskIconUnits	    "autoscale"
-		    MaskValueString	    "pitTGain1|pitTMean1"
-		    System {
-		    Name		    "Lo Temp\nCompensation"
-		    Location		    [6, 82, 1172, 1000]
-		    Open		    off
-		    ModelBrowserVisibility  off
-		    ModelBrowserWidth	    200
-		    ScreenColor		    "white"
-		    PaperOrientation	    "landscape"
-		    PaperPositionMode	    "auto"
-		    PaperType		    "usletter"
-		    PaperUnits		    "inches"
-		    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
-		    TiledPageScale	    1
-		    ShowPageBoundaries	    off
-		    ZoomFactor		    "100"
-		    Block {
-		    BlockType		    Inport
-		    Name		    "Raw"
-		    SID			    "24857"
-		    Position		    [500, 148, 530, 162]
-		    BackgroundColor	    "darkGreen"
-		    IconDisplay		    "Port number"
-		    }
-		    Block {
-		    BlockType		    Inport
-		    Name		    "Temp Raw"
-		    SID			    "24858"
-		    Position		    [420, 228, 450, 242]
-		    BackgroundColor	    "darkGreen"
-		    Port		    "2"
-		    IconDisplay		    "Port number"
-		    }
-		    Block {
-		    BlockType		    EnablePort
-		    Name		    "Enable"
-		    SID			    "24859"
-		    Ports		    []
-		    Position		    [725, 60, 745, 80]
-		    }
-		    Block {
-		    BlockType		    Sum
-		    Name		    "Add"
-		    SID			    "24860"
-		    Ports		    [2, 1]
-		    Position		    [740, 147, 770, 178]
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Constant
-		    Name		    "Constant"
-		    SID			    "24861"
-		    Position		    [750, 190, 820, 220]
-		    BlockMirror		    on
-		    ShowName		    off
-		    Value		    "pitAdjust"
-		    OutDataTypeStr	    "single"
-		    }
-		    Block {
-		    BlockType		    Product
-		    Name		    "Divide1"
-		    SID			    "24862"
-		    Ports		    [2, 1]
-		    Position		    [545, 212, 575, 243]
-		    ShowName		    off
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    RndMeth		    "Floor"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Constant
-		    Name		    "Mean Temperature\nfor Calibration"
-		    SID			    "24863"
-		    Position		    [385, 280, 495, 300]
-		    Value		    "tempMean"
-		    OutDataTypeStr	    "single"
-		    }
-		    Block {
-		    BlockType		    Sum
-		    Name		    "Sum1"
-		    SID			    "24864"
-		    Ports		    [2, 1]
-		    Position		    [500, 225, 520, 245]
-		    ShowName		    off
-		    IconShape		    "round"
-		    Inputs		    "|+-"
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Sum
-		    Name		    "Sum2"
-		    SID			    "24865"
-		    Ports		    [2, 1]
-		    Position		    [590, 145, 610, 165]
-		    ShowName		    off
-		    IconShape		    "round"
-		    Inputs		    "|+-"
-		    InputSameDT		    off
-		    OutDataTypeStr	    "single"
-		    SaturateOnIntegerOverflow off
-		    }
-		    Block {
-		    BlockType		    Constant
-		    Name		    "gains"
-		    SID			    "24866"
-		    Position		    [405, 185, 515, 205]
-		    Value		    "alpha"
-		    OutDataTypeStr	    "single"
-		    }
-		    Block {
-		    BlockType		    Outport
-		    Name		    "Comp"
-		    SID			    "24867"
-		    Position		    [855, 158, 885, 172]
-		    BackgroundColor	    "yellow"
-		    IconDisplay		    "Port number"
-		    }
-		    Line {
-		    SrcBlock		    "Add"
-		    SrcPort		    1
-		    DstBlock		    "Comp"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Constant"
-		    SrcPort		    1
-		    Points		    [-30, 0; 0, -35]
-		    DstBlock		    "Add"
-		    DstPort		    2
-		    }
-		    Line {
-		    SrcBlock		    "Sum2"
-		    SrcPort		    1
-		    DstBlock		    "Add"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Divide1"
-		    SrcPort		    1
-		    Points		    [20, 0]
-		    DstBlock		    "Sum2"
-		    DstPort		    2
-		    }
-		    Line {
-		    SrcBlock		    "gains"
-		    SrcPort		    1
-		    Points		    [5, 0; 0, 25]
-		    DstBlock		    "Divide1"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Sum1"
-		    SrcPort		    1
-		    DstBlock		    "Divide1"
-		    DstPort		    2
-		    }
-		    Line {
-		    SrcBlock		    "Temp Raw"
-		    SrcPort		    1
-		    DstBlock		    "Sum1"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Raw"
-		    SrcPort		    1
-		    DstBlock		    "Sum2"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Mean Temperature\nfor Calibration"
-		    SrcPort		    1
-		    Points		    [10, 0]
-		    DstBlock		    "Sum1"
-		    DstPort		    2
-		    }
-		    }
-		    }
-		    Block {
-		    BlockType		    Logic
-		    Name		    "Logical\nOperator"
-		    SID			    "24868"
-		    Ports		    [1, 1]
-		    Position		    [295, 29, 325, 61]
-		    ShowName		    off
-		    Operator		    "NOT"
-		    AllPortsSameDT	    off
-		    OutDataTypeStr	    "boolean"
-		    }
-		    Block {
-		    BlockType		    Merge
-		    Name		    "Merge"
-		    SID			    "24869"
-		    Ports		    [2, 1]
-		    Position		    [560, 155, 600, 195]
-		    }
-		    Block {
-		    BlockType		    Outport
-		    Name		    "Baro_c"
-		    SID			    "24870"
-		    Position		    [660, 168, 690, 182]
-		    IconDisplay		    "Port number"
-		    }
-		    Line {
-		    SrcBlock		    "Hi Temp\nCompensation2"
-		    SrcPort		    1
-		    Points		    [25, 0; 0, 40]
-		    DstBlock		    "Merge"
-		    DstPort		    1
-		    }
-		    Line {
-		    SrcBlock		    "Logical\nOperator"
-		    SrcPort		    1
-		    Points		    [30, 0; 0, 10]
-		    Branch {
-		    DstBlock		    "Hi Temp\nCompensation2"
-		    DstPort		    enable
-		    }
-		    Branch {
-		    DstBlock		    "Display2"
-		    DstPort		    1
-		    }
-		    }
-		    Line {
-		    SrcBlock		    "Merge"
-		    SrcPort		    1
-		    Points		    [15, 0]
-		    Branch {
-		    DstBlock		    "Baro_c"
-		    DstPort		    1
-		    }
-		    Branch {
-		    Points		    [0, -90]
-		    DstBlock		    "Display"
-		    DstPort		    1
-		    }
-		    }
-		    Line {
-		    SrcBlock		    "Dynamic"
-		    SrcPort		    1
-		    Points		    [15, 0]
-		    Branch {
-		    Points		    [0, 125]
-		    DstBlock		    "Lo Temp\nCompensation"
-		    DstPort		    1
-		    }
-		    Branch {
-		    DstBlock		    "Hi Temp\nCompensation2"
-		    DstPort		    1
-		    }
-		    }
-		    Line {
-		    SrcBlock		    "Temp"
-		    SrcPort		    1
-		    Points		    [60, 0]
-		    Branch {
-		    DstBlock		    "Compare\nTo Constant"
-		    DstPort		    1
-		    }
-		    Branch {
-		    Points		    [0, 95]
-		    Branch {
-		    Points		    [0, 125]
-		    DstBlock		    "Lo Temp\nCompensation"
-		    DstPort		    2
-		    }
-		    Branch {
-		    DstBlock		    "Hi Temp\nCompensation2"
-		    DstPort		    2
-		    }
-		    }
-		    }
-		    Line {
-		    SrcBlock		    "Compare\nTo Constant"
-		    SrcPort		    1
-		    Points		    [15, 0]
-		    Branch {
-		    Points		    [0, 145; 90, 0]
-		    DstBlock		    "Lo Temp\nCompensation"
-		    DstPort		    enable
-		    }
-		    Branch {
-		    DstBlock		    "Logical\nOperator"
-		    DstPort		    1
-		    }
-		    }
-		    Line {
-		    SrcBlock		    "Lo Temp\nCompensation"
-		    SrcPort		    1
-		    Points		    [30, 0; 0, -65]
-		    DstBlock		    "Merge"
-		    DstPort		    2
 		    }
 		  }
 		}
@@ -21567,10 +21240,10 @@ Model {
 		}
 		Block {
 		  BlockType		  SubSystem
-		  Name			  "Thermistor\nUnit Conversion"
-		  SID			  "24900"
+		  Name			  "Temperature\nApply Calibration"
+		  SID			  "25062"
 		  Ports			  [1, 1]
-		  Position		  [390, 676, 460, 704]
+		  Position		  [490, 676, 560, 704]
 		  MinAlgLoopOccurrences	  off
 		  PropExecContextOutsideSubsystem off
 		  RTWSystemCode		  "Auto"
@@ -21594,9 +21267,134 @@ Model {
 		  MaskIconUnits		  "autoscale"
 		  MaskValueString	  "tempOffset|tempScale"
 		  System {
-		    Name		    "Thermistor\nUnit Conversion"
+		    Name		    "Temperature\nApply Calibration"
 		    Location		    [205, 99, 1235, 946]
 		    Open		    off
+		    ModelBrowserVisibility  off
+		    ModelBrowserWidth	    200
+		    ScreenColor		    "white"
+		    PaperOrientation	    "landscape"
+		    PaperPositionMode	    "auto"
+		    PaperType		    "usletter"
+		    PaperUnits		    "inches"
+		    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+		    TiledPageScale	    1
+		    ShowPageBoundaries	    off
+		    ZoomFactor		    "100"
+		    Block {
+		    BlockType		    Inport
+		    Name		    "Raw"
+		    SID			    "25063"
+		    Position		    [25, 148, 55, 162]
+		    BackgroundColor	    "darkGreen"
+		    IconDisplay		    "Port number"
+		    }
+		    Block {
+		    BlockType		    Constant
+		    Name		    "Bias"
+		    SID			    "25064"
+		    Position		    [85, 250, 195, 270]
+		    Value		    "bias"
+		    OutDataTypeStr	    "single"
+		    }
+		    Block {
+		    BlockType		    Product
+		    Name		    "Divide"
+		    SID			    "25065"
+		    Ports		    [2, 1]
+		    Position		    [155, 132, 185, 163]
+		    ShowName		    off
+		    InputSameDT		    off
+		    OutDataTypeStr	    "single"
+		    RndMeth		    "Floor"
+		    SaturateOnIntegerOverflow off
+		    }
+		    Block {
+		    BlockType		    Constant
+		    Name		    "Gains"
+		    SID			    "25066"
+		    Position		    [20, 95, 115, 115]
+		    Value		    "gains"
+		    OutDataTypeStr	    "single"
+		    }
+		    Block {
+		    BlockType		    Sum
+		    Name		    "Sum"
+		    SID			    "25067"
+		    Ports		    [2, 1]
+		    Position		    [260, 140, 280, 160]
+		    ShowName		    off
+		    IconShape		    "round"
+		    Inputs		    "|++"
+		    InputSameDT		    off
+		    OutDataTypeStr	    "single"
+		    SaturateOnIntegerOverflow off
+		    }
+		    Block {
+		    BlockType		    Outport
+		    Name		    "Comp"
+		    SID			    "25068"
+		    Position		    [315, 143, 345, 157]
+		    BackgroundColor	    "yellow"
+		    IconDisplay		    "Port number"
+		    }
+		    Line {
+		    SrcBlock		    "Sum"
+		    SrcPort		    1
+		    DstBlock		    "Comp"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Divide"
+		    SrcPort		    1
+		    DstBlock		    "Sum"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Gains"
+		    SrcPort		    1
+		    Points		    [10, 0; 0, 35]
+		    DstBlock		    "Divide"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Raw"
+		    SrcPort		    1
+		    DstBlock		    "Divide"
+		    DstPort		    2
+		    }
+		    Line {
+		    SrcBlock		    "Bias"
+		    SrcPort		    1
+		    Points		    [70, 0]
+		    DstBlock		    "Sum"
+		    DstPort		    2
+		    }
+		  }
+		}
+		Block {
+		  BlockType		  SubSystem
+		  Name			  "Temperature\nUnit Conversion"
+		  SID			  "24900"
+		  Ports			  [1, 1]
+		  Position		  [400, 676, 470, 704]
+		  MinAlgLoopOccurrences	  off
+		  PropExecContextOutsideSubsystem off
+		  RTWSystemCode		  "Auto"
+		  FunctionWithSeparateData off
+		  Opaque		  off
+		  RequestExecContextInheritance	off
+		  MaskHideContents	  off
+		  MaskDescription	  "Convert digital readings from pitot's temperature sensor to units in 0.1c"
+		  MaskIconFrame		  on
+		  MaskIconOpaque	  on
+		  MaskIconRotate	  "none"
+		  MaskPortRotate	  "default"
+		  MaskIconUnits		  "autoscale"
+		  System {
+		    Name		    "Temperature\nUnit Conversion"
+		    Location		    [205, 99, 1235, 788]
+		    Open		    on
 		    ModelBrowserVisibility  off
 		    ModelBrowserWidth	    200
 		    ScreenColor		    "white"
@@ -21621,7 +21419,7 @@ Model {
 		    Name		    "Bias"
 		    SID			    "24902"
 		    Position		    [85, 250, 195, 270]
-		    Value		    "bias"
+		    Value		    "-50"
 		    OutDataTypeStr	    "single"
 		    }
 		    Block {
@@ -21641,7 +21439,7 @@ Model {
 		    Name		    "Gains"
 		    SID			    "24904"
 		    Position		    [20, 95, 115, 115]
-		    Value		    "gains"
+		    Value		    "0.977"
 		    OutDataTypeStr	    "single"
 		    }
 		    Block {
@@ -22688,7 +22486,7 @@ Model {
 		  Name			  "[0.001  maxDynPress]"
 		  SID			  "24931"
 		  Ports			  [1, 1]
-		  Position		  [750, 340, 780, 370]
+		  Position		  [1000, 340, 1030, 370]
 		  InputPortMap		  "u0"
 		  UpperLimit		  "maxDynPressure"
 		  LowerLimit		  "0.001"
@@ -22705,7 +22503,7 @@ Model {
 		  BlockType		  Outport
 		  Name			  "Pitot (Pa)"
 		  SID			  "24933"
-		  Position		  [855, 348, 885, 362]
+		  Position		  [1105, 348, 1135, 362]
 		  BackgroundColor	  "yellow"
 		  Port			  "2"
 		  IconDisplay		  "Port number"
@@ -22723,7 +22521,7 @@ Model {
 		  BlockType		  Outport
 		  Name			  "Temp (0.1 C)"
 		  SID			  "24935"
-		  Position		  [600, 683, 630, 697]
+		  Position		  [675, 683, 705, 697]
 		  BackgroundColor	  "yellow"
 		  Port			  "4"
 		  IconDisplay		  "Port number"
@@ -22740,7 +22538,7 @@ Model {
 		Line {
 		  SrcBlock		  "Tustin Lowpass, Auto Initial Condition1"
 		  SrcPort		  1
-		  DstBlock		  "Thermistor\nUnit Conversion"
+		  DstBlock		  "Temperature\nUnit Conversion"
 		  DstPort		  1
 		}
 		Line {
@@ -22796,7 +22594,7 @@ Model {
 		Line {
 		  SrcBlock		  "Data Type Conversion4"
 		  SrcPort		  1
-		  DstBlock		  "Pitot\nUnit Conversion"
+		  DstBlock		  "Pitot\nUnit Conversion (psi)"
 		  DstPort		  1
 		}
 		Line {
@@ -22810,20 +22608,6 @@ Model {
 		  SrcPort		  1
 		  DstBlock		  "Barometer\nUnit Conversion"
 		  DstPort		  1
-		}
-		Line {
-		  SrcBlock		  "Thermistor\nUnit Conversion"
-		  SrcPort		  1
-		  Points		  [65, 0]
-		  Branch {
-		    DstBlock		    "Temp (0.1 C)"
-		    DstPort		    1
-		  }
-		  Branch {
-		    Points		    [0, -70]
-		    DstBlock		    "Goto"
-		    DstPort		    1
-		  }
 		}
 		Line {
 		  SrcBlock		  "Data Type Conversion6"
@@ -22856,12 +22640,6 @@ Model {
 		  DstPort		  1
 		}
 		Line {
-		  SrcBlock		  "Pitot\nUnit Conversion"
-		  SrcPort		  1
-		  DstBlock		  "[0.001  maxDynPress]"
-		  DstPort		  1
-		}
-		Line {
 		  SrcBlock		  "Power\nUnit Conversion"
 		  SrcPort		  1
 		  DstBlock		  "Data Type Conversion8"
@@ -22887,23 +22665,55 @@ Model {
 		  DstPort		  2
 		}
 		Line {
-		  SrcBlock		  "From2"
-		  SrcPort		  1
-		  Points		  [-30, 0; 0, 30]
-		  DstBlock		  "Temp Compensate Accel X1"
-		  DstPort		  1
-		}
-		Line {
 		  SrcBlock		  "Pitot raw"
 		  SrcPort		  1
-		  DstBlock		  "Temp Compensate Accel X1"
-		  DstPort		  2
-		}
-		Line {
-		  SrcBlock		  "Temp Compensate Accel X1"
-		  SrcPort		  1
+		  Points		  [190, 0; 0, -10]
 		  DstBlock		  "Data Type Conversion3"
 		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Pitot\nUnit Conversion (psi)"
+		  SrcPort		  1
+		  DstBlock		  "Pitot\nUnit Conversion (psi to pa)"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Pitot\nUnit Conversion (psi to pa)"
+		  SrcPort		  1
+		  DstBlock		  "Abs"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Abs"
+		  SrcPort		  1
+		  DstBlock		  "Pitot\nApply Calibration"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Pitot\nApply Calibration"
+		  SrcPort		  1
+		  DstBlock		  "[0.001  maxDynPress]"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Temperature\nUnit Conversion"
+		  SrcPort		  1
+		  DstBlock		  "Temperature\nApply Calibration"
+		  DstPort		  1
+		}
+		Line {
+		  SrcBlock		  "Temperature\nApply Calibration"
+		  SrcPort		  1
+		  Points		  [35, 0]
+		  Branch {
+		    DstBlock		    "Temp (0.1 C)"
+		    DstPort		    1
+		  }
+		  Branch {
+		    Points		    [0, -70]
+		    DstBlock		    "Goto"
+		    DstPort		    1
+		  }
 		}
 	      }
 	    }
@@ -22915,7 +22725,7 @@ Model {
 	      Ports		      [1]
 	      Position		      [675, 747, 815, 793]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -22963,7 +22773,7 @@ Model {
 	      Position		      [475, 608, 615, 657]
 	      BlockMirror	      on
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -23355,6 +23165,7 @@ Model {
 	      SrcPort		      1
 	      Points		      [5, 0]
 	      Branch {
+		Labels			[1, 0]
 		DstBlock		"Switch"
 		DstPort			2
 	      }
@@ -23366,7 +23177,6 @@ Model {
 	    Line {
 	      SrcBlock		      "If no HIL then\nRead all the\nSensors"
 	      SrcPort		      1
-	      Points		      [0, -5]
 	      DstBlock		      "Switch"
 	      DstPort		      3
 	    }
@@ -23498,7 +23308,7 @@ Model {
 	    Line {
 	      SrcBlock		      "If no HIL then\nRead all the\nSensors"
 	      SrcPort		      2
-	      Points		      [25, 0; 0, 65]
+	      Points		      [25, 0; 0, 70]
 	      DstBlock		      "GPS"
 	      DstPort		      1
 	    }
@@ -23882,7 +23692,7 @@ Model {
 	      BlockMirror	      on
 	      BackgroundColor	      "lightBlue"
 	      Priority		      "5"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/Digital I//O/Digital Output Write"
 	      SourceType	      ""
 	      PORT		      "B"
@@ -23900,7 +23710,7 @@ Model {
 	      BlockMirror	      on
 	      BackgroundColor	      "lightBlue"
 	      Priority		      "5"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/Digital I//O/Digital Output Write"
 	      SourceType	      ""
 	      PORT		      "B"
@@ -23919,7 +23729,7 @@ Model {
 	      BackgroundColor	      "lightBlue"
 	      NamePlacement	      "alternate"
 	      ShowName		      off
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/Nop"
 	      SourceType	      "Nop"
 	      NbrNop		      "10"
@@ -23935,7 +23745,7 @@ Model {
 	      BackgroundColor	      "lightBlue"
 	      NamePlacement	      "alternate"
 	      ShowName		      off
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/Nop"
 	      SourceType	      "Nop"
 	      NbrNop		      "10"
@@ -23948,7 +23758,7 @@ Model {
 	      Ports		      [2, 1]
 	      Position		      [90, 207, 195, 243]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.84"
+	      LibraryVersion	      "3.79"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -24034,7 +23844,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [715, 132, 820, 168]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24071,7 +23881,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [150, 334, 290, 381]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24108,7 +23918,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [425, 134, 565, 181]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24145,7 +23955,7 @@ Model {
 	  Ports			  [1, 1]
 	  Position		  [145, 527, 285, 573]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24182,7 +23992,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [155, 144, 295, 191]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24219,7 +24029,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [150, 244, 290, 291]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24256,7 +24066,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [150, 434, 290, 481]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.84"
+	  LibraryVersion	  "3.79"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24387,7 +24197,7 @@ Model {
       BackgroundColor	      "lightBlue"
       DropShadow	      on
       Priority		      "2"
-      LibraryVersion	      "3.84"
+      LibraryVersion	      "3.79"
       SourceBlock	      "dsPICdrivers/Serial PORT/UART Configuration"
       SourceType	      "Configure UART"
       UART		      "1"
@@ -25210,7 +25020,7 @@ Model {
 }
 # Finite State Machines
 #
-#    Stateflow Version 7.6 (R2011b) dated Aug  6 2011, 13:17:15
+#    Stateflow Version 7.6 (R2011b) dated Aug  6 2011, 17:15:36
 #
 #
 
@@ -28140,7 +27950,7 @@ Stateflow {
       script		      "function y = sensMux(u1, u2,u3,u4,u5,u6,u7,u8, u9, u10, u11, u12, u13)\n% This block supports an "
       "embeddable subset of the MATLAB language.\n% See the help menu for details. \n\ny = [u1(1); u2(1); u3(1); u4(1);"
       " u5(1); u6(1); u7(1); u8(1); u9(1); u10(1); u11(1); u12(1); u13(1)];"
-      editorLayout	      "100 M4x1[317 572 956 640]"
+      editorLayout	      "100 M4x1[81 195 956 640]"
       fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
       "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
       emlDefaultFimath	      FimathUserSpecified
