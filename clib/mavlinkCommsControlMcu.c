@@ -470,11 +470,11 @@ void prepareTelemetryMavlink(unsigned char* dataOut) {
                 #ifndef REDUCE_RADIO_TELEMETRY
                 // == Diagnostic ==
                 bytes2Send += _prepareDiagnosticMavlink(SLUGS_CONTROL_COMPID, SLUGS_RADIO_CHANNEL, dataOut + 1 + bytes2Send);
-
+                #endif
                 // == Scaled Pressure ==
                 bytes2Send += _prepareScaledPressureMavlink(SLUGS_CONTROL_COMPID, SLUGS_RADIO_CHANNEL, dataOut + 1 + bytes2Send);
 
-                #endif
+                //#endif
 
                 break;
 

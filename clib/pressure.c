@@ -105,7 +105,7 @@ void saveData (void){
 }
 
 void getPressure (int16_t* pressureVals){
-    LED_SENS_STATUS_TOGGLE();
+    LED_SENS_BUSY_TOGGLE();
     
     pressureVals[0] =  mlRawPressureData.press_diff1;
     pressureVals[1] =  mlRawPressureData.temperature;
@@ -117,7 +117,7 @@ void getPressure (int16_t* pressureVals){
 // ==============
 
 void i2c1Start(void){
-        LED_SENS_BUSY_TOGGLE();
+        //LED_SENS_BUSY_TOGGLE();
 
 	// Change the mode to start
 	i2c1State = READ_START;
@@ -140,6 +140,7 @@ void i2c1Write(unsigned char byte2write){
 // =========================
 
 void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
+    LED_SENS_STATUS_TOGGLE();
     switch (i2c1State) {
         case READ_START:
             if (!I2C1CONbits.SEN) {
@@ -150,7 +151,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
             break;
         case READ_WAIT:
             if (!I2C1STATbits.ACKSTAT) {
-                LED_SENS_STATUS_SET(ON);
+                //LED_SENS_STATUS_SET(ON);
                 I2C1CONbits.RCEN = 1;
                 i2c1State = READ_BRDATA_HI;
                 //byteCount = 0;
@@ -228,8 +229,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 i2c1Stop();
 
                 // DEBUG
-                printToUart2("Got press=0x%X, temp=0x%X\n",
-                    currentPressure.shData, currentTemperature.shData);
+                //printToUart2("Got press=0x%X, temp=0x%X\n",
+                //    currentPressure.shData, currentTemperature.shData);
             }
             break;
         case READ_STOP:
