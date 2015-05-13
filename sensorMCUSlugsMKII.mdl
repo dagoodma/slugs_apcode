@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.210"
+    ComputedModelVersion    "1.211"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,9 +39,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 06 20:11:06 2015"
-  RTWModifiedTimeStamp	  352746479
-  ModelVersionFormat	  "1.%<AutoIncrement:210>"
+  LastModifiedDate	  "Sat May 09 05:59:13 2015"
+  RTWModifiedTimeStamp	  353051705
+  ModelVersionFormat	  "1.%<AutoIncrement:211>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -79,6 +79,7 @@ Model {
     $ObjectID		    2
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "sensorMCUSlugsMKII"
+    signals_		    []
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
@@ -699,7 +700,7 @@ Model {
 	      CustomProperty {
 		DataType		"string"
 		Name			"GMAKE_PLACE"
-		Value			"C:\\PROGRA~1\\MATLAB\\R2011b\\bin\\win32\\gmake"
+		Value			"C:\\PROGRA~1\\MATLAB\\R2011b\\bin\\win64\\gmake"
 	      }
 	      CustomProperty {
 		DataType		"string"
@@ -714,19 +715,19 @@ Model {
 	      CustomProperty {
 		DataType		"string"
 		Name			"LDPICTYPE"
-		Value			" -Xlinker --script=C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\support\\dsPIC33F\\gld\\p33fJ256MC710.gld"
+		Value			" -Xlinker --script=C:\\PROGRA~2\\MICROC~1\\xc16\\v1.11\\support\\dsPIC33F\\gld\\p33fJ256MC710.gld"
 	      }
 	      CustomProperty {
 		DataType		"string"
 		Name			"LDLIBPIC"
-		Value			" C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\lib\\libpic30-coff.a C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\lib\\dsPIC3"
-		"3F\\libp33fJ256MC710-coff.a C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\lib\\libc-coff.a C:\\PROGRA~1\\MICROC~1\\xc16\\v1.1"
+		Value			" C:\\PROGRA~2\\MICROC~1\\xc16\\v1.11\\lib\\libpic30-coff.a C:\\PROGRA~2\\MICROC~1\\xc16\\v1.11\\lib\\dsPIC3"
+		"3F\\libp33fJ256MC710-coff.a C:\\PROGRA~2\\MICROC~1\\xc16\\v1.11\\lib\\libc-coff.a C:\\PROGRA~2\\MICROC~1\\xc16\\v1.1"
 		"1\\lib\\libm-coff.a"
 	      }
 	      CustomProperty {
 		DataType		"string"
 		Name			"PIC_INCLUDES"
-		Value			" -I C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\include"
+		Value			" -I C:\\PROGRA~2\\MICROC~1\\xc16\\v1.11\\include"
 	      }
 	      CustomProperty {
 		DataType		"string"
@@ -736,7 +737,22 @@ Model {
 	      CustomProperty {
 		DataType		"string"
 		Name			"GCCPATH"
-		Value			"'C:\\\\PROGRA~1\\\\MICROC~1\\\\xc16\\\\v1.11\\\\bin\\\\'"
+		Value			""
+	      }
+	      CustomProperty {
+		DataType		"string"
+		Name			"GCC1"
+		Value			"xc16-gcc -omf=coff"
+	      }
+	      CustomProperty {
+		DataType		"string"
+		Name			"AR1"
+		Value			"xc16-ar -r -omf=coff"
+	      }
+	      CustomProperty {
+		DataType		"string"
+		Name			"BIN2HEX"
+		Value			"xc16-bin2hex -omf=coff"
 	      }
 	    }
 	    PropName		    "Components"
@@ -1158,7 +1174,7 @@ Model {
   }
   System {
     Name		    "sensorMCUSlugsMKII"
-    Location		    [47, 96, 1063, 600]
+    Location		    [667, 290, 1704, 864]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -1181,7 +1197,7 @@ Model {
       Position		      [320, 54, 432, 110]
       ForegroundColor	      "blue"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "3.79"
+      LibraryVersion	      "3.84"
       SourceBlock	      "dsPICdrivers/Simulink Configuration/Configure Model \nfor dsPIC"
       SourceType	      ""
     }
@@ -1323,7 +1339,7 @@ Model {
 	  Position		  [20, 28, 180, 202]
 	  BackgroundColor	  "lightBlue"
 	  Priority		  "5"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/Peripheral I//O/Input Capture"
 	  SourceType		  "Input driver for Input Capture Peripheral"
 	  IntPriority		  "6"
@@ -1620,7 +1636,7 @@ Model {
       Position		      [730, 60, 830, 100]
       BackgroundColor	      "lightBlue"
       Priority		      "5"
-      LibraryVersion	      "3.79"
+      LibraryVersion	      "3.84"
       SourceBlock	      "dsPICdrivers/Digital I//O/Digital Output Write"
       SourceType	      ""
       PORT		      "B"
@@ -1893,7 +1909,7 @@ Model {
       Ports		      []
       Position		      [480, 62, 585, 98]
       BackgroundColor	      "orange"
-      LibraryVersion	      "3.79"
+      LibraryVersion	      "3.84"
       SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
       SourceType	      "C Function Call"
       FctUpdate		      "None"
@@ -1932,7 +1948,7 @@ Model {
       BackgroundColor	      "lightBlue"
       DropShadow	      on
       Priority		      "1"
-      LibraryVersion	      "3.79"
+      LibraryVersion	      "3.84"
       SourceBlock	      "dsPICdrivers/Master"
       SourceType	      "Master"
       TimeStepType	      "Timer1"
@@ -3262,7 +3278,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [220, 103, 325, 147]
 		    ShowName		    off
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -3877,7 +3893,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [220, 103, 325, 147]
 		    ShowName		    off
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -5303,7 +5319,7 @@ Model {
 		  Ports			  [1, 1]
 		  Position		  [200, 80, 325, 120]
 		  ShowName		  off
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -5340,7 +5356,7 @@ Model {
 		  Ports			  [1, 1]
 		  Position		  [205, 160, 330, 200]
 		  ShowName		  off
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -5674,7 +5690,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [375, 207, 480, 243]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -8542,7 +8558,7 @@ Model {
 	  Position		  [120, 452, 225, 488]
 	  BlockMirror		  on
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12665,7 +12681,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [20, 105, 135, 145]
 	  BackgroundColor	  "lightBlue"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/Digital I//O/Digital Input"
 	  SourceType		  ""
 	  PORT			  "A"
@@ -12692,7 +12708,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [290, 217, 395, 253]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12729,7 +12745,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [290, 317, 395, 353]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12766,7 +12782,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [295, 422, 400, 458]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12803,7 +12819,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [290, 122, 395, 158]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -12840,7 +12856,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [295, 517, 400, 553]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -13225,7 +13241,7 @@ Model {
       MaskHideContents	      off
       System {
 	Name			"Sensor Data"
-	Location		[400, 149, 1122, 580]
+	Location		[398, 117, 1124, 601]
 	Open			on
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -13257,7 +13273,7 @@ Model {
 	  Ports			  [0, 1]
 	  Position		  [20, 275, 135, 315]
 	  BackgroundColor	  "lightBlue"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/Digital I//O/Digital Input"
 	  SourceType		  ""
 	  PORT			  "D"
@@ -13308,7 +13324,7 @@ Model {
 	      Ports		      [0, 1]
 	      Position		      [125, 122, 230, 158]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -13345,7 +13361,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [290, 122, 395, 158]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -13382,7 +13398,7 @@ Model {
 	      Ports		      [1, 1]
 	      Position		      [460, 122, 565, 158]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -16426,7 +16442,7 @@ Model {
 		  Ports			  [0, 2]
 		  Position		  [25, 25, 150, 65]
 		  BackgroundColor	  "lightBlue"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/Calculus Time Step"
 		  SourceType		  "Calculation Time"
 		  SampleTime		  "0.01"
@@ -16798,7 +16814,7 @@ Model {
 		  Position		  [20, 224, 150, 306]
 		  BackgroundColor	  "lightBlue"
 		  Priority		  "5"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/Peripheral I//O/ADC Input"
 		  SourceType		  "dsPIC : ADC10"
 		  ADC_TYPE		  "12 bits"
@@ -17449,7 +17465,7 @@ Model {
 		  Ports			  [0, 1]
 		  Position		  [130, 582, 270, 628]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17497,7 +17513,7 @@ Model {
 		  Ports			  [0, 1]
 		  Position		  [225, 97, 330, 133]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17534,7 +17550,7 @@ Model {
 		  Ports			  [0, 1]
 		  Position		  [130, 342, 235, 378]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17591,7 +17607,7 @@ Model {
 		  Ports			  [1]
 		  Position		  [555, 372, 695, 418]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -17663,7 +17679,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [290, 117, 430, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -17700,7 +17716,7 @@ Model {
 		    Ports		    [1, 1]
 		    Position		    [490, 117, 630, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -17737,7 +17753,7 @@ Model {
 		    Ports		    [0, 1]
 		    Position		    [75, 117, 215, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -17837,7 +17853,7 @@ Model {
 		    Ports		    [0, 1]
 		    Position		    [490, 117, 630, 163]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -18685,7 +18701,7 @@ Model {
 		  Ports			  [1]
 		  Position		  [185, 112, 325, 158]
 		  BackgroundColor	  "orange"
-		  LibraryVersion	  "3.79"
+		  LibraryVersion	  "3.84"
 		  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 		  SourceType		  "C Function Call"
 		  FctUpdate		  "Output Function"
@@ -18777,7 +18793,7 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"Low Pass Filtering,Temperature\nCompensation and Calibration"
-		Location		[24, 239, 1267, 683]
+		Location		[22, 207, 1286, 704]
 		Open			on
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
@@ -19464,7 +19480,7 @@ Model {
 		    Ports		    [0, 1]
 		    Position		    [25, 27, 130, 63]
 		    BackgroundColor	    "orange"
-		    LibraryVersion	    "3.79"
+		    LibraryVersion	    "3.84"
 		    SourceBlock		    "dsPICdrivers/OTHERS/C Function Call"
 		    SourceType		    "C Function Call"
 		    FctUpdate		    "Output Function"
@@ -21393,7 +21409,7 @@ Model {
 		  MaskIconUnits		  "autoscale"
 		  System {
 		    Name		    "Temperature\nUnit Conversion"
-		    Location		    [205, 99, 1235, 788]
+		    Location		    [20, 480, 1054, 1222]
 		    Open		    on
 		    ModelBrowserVisibility  off
 		    ModelBrowserWidth	    200
@@ -22725,7 +22741,7 @@ Model {
 	      Ports		      [1]
 	      Position		      [675, 747, 815, 793]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -22773,7 +22789,7 @@ Model {
 	      Position		      [475, 608, 615, 657]
 	      BlockMirror	      on
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -23692,7 +23708,7 @@ Model {
 	      BlockMirror	      on
 	      BackgroundColor	      "lightBlue"
 	      Priority		      "5"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/Digital I//O/Digital Output Write"
 	      SourceType	      ""
 	      PORT		      "B"
@@ -23710,7 +23726,7 @@ Model {
 	      BlockMirror	      on
 	      BackgroundColor	      "lightBlue"
 	      Priority		      "5"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/Digital I//O/Digital Output Write"
 	      SourceType	      ""
 	      PORT		      "B"
@@ -23729,7 +23745,7 @@ Model {
 	      BackgroundColor	      "lightBlue"
 	      NamePlacement	      "alternate"
 	      ShowName		      off
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/Nop"
 	      SourceType	      "Nop"
 	      NbrNop		      "10"
@@ -23745,7 +23761,7 @@ Model {
 	      BackgroundColor	      "lightBlue"
 	      NamePlacement	      "alternate"
 	      ShowName		      off
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/Nop"
 	      SourceType	      "Nop"
 	      NbrNop		      "10"
@@ -23758,7 +23774,7 @@ Model {
 	      Ports		      [2, 1]
 	      Position		      [90, 207, 195, 243]
 	      BackgroundColor	      "orange"
-	      LibraryVersion	      "3.79"
+	      LibraryVersion	      "3.84"
 	      SourceBlock	      "dsPICdrivers/OTHERS/C Function Call"
 	      SourceType	      "C Function Call"
 	      FctUpdate		      "Output Function"
@@ -23844,7 +23860,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [715, 132, 820, 168]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -23881,7 +23897,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [150, 334, 290, 381]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -23918,7 +23934,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [425, 134, 565, 181]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -23955,7 +23971,7 @@ Model {
 	  Ports			  [1, 1]
 	  Position		  [145, 527, 285, 573]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -23992,7 +24008,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [155, 144, 295, 191]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24029,7 +24045,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [150, 244, 290, 291]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24066,7 +24082,7 @@ Model {
 	  Ports			  [2, 1]
 	  Position		  [150, 434, 290, 481]
 	  BackgroundColor	  "orange"
-	  LibraryVersion	  "3.79"
+	  LibraryVersion	  "3.84"
 	  SourceBlock		  "dsPICdrivers/OTHERS/C Function Call"
 	  SourceType		  "C Function Call"
 	  FctUpdate		  "Output Function"
@@ -24197,7 +24213,7 @@ Model {
       BackgroundColor	      "lightBlue"
       DropShadow	      on
       Priority		      "2"
-      LibraryVersion	      "3.79"
+      LibraryVersion	      "3.84"
       SourceBlock	      "dsPICdrivers/Serial PORT/UART Configuration"
       SourceType	      "Configure UART"
       UART		      "1"
@@ -25020,7 +25036,7 @@ Model {
 }
 # Finite State Machines
 #
-#    Stateflow Version 7.6 (R2011b) dated Aug  6 2011, 17:15:36
+#    Stateflow Version 7.6 (R2011b) dated Aug  6 2011, 13:17:15
 #
 #
 

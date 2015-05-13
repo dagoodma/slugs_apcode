@@ -19,7 +19,7 @@
 #   Version 3.7c                             09-Jan-2012       |
 #--------------------------------------------------------------
 
-MAKE 			 = "C:\PROGRA~1\MATLAB\R2011b\bin\win32\gmake"
+MAKE 			 = "C:\PROGRA~1\MATLAB\R2011b\bin\win64\gmake"
 HOST             = PC
 BUILD            = yes
 BUILD_SUCCESS    = *** Created
@@ -39,7 +39,7 @@ S_FUNCTIONS         =
 S_FUNCTIONS_LIB     = 
 NUMST               = 1
 NCSTATES            = 0
-COMPUTER            = PCWIN
+COMPUTER            = PCWIN64
 BUILDARGS           =  GENERATE_REPORT=0 MULTI_INSTANCE_CODE=0 PORTABLE_WORDSIZES=0 GENERATE_ASAP2=0 TMW_EXTMODE_TESTING=0
 MULTITASKING        = 0
 MODELREFS           = 
@@ -91,7 +91,7 @@ NOOP = 0
 #------------------------------ Tool Locations ---------------------------------
 #
 
-GCCPATH	= C:\\PROGRA~1\\MICROC~1\\xc16\\v1.11\\bin\\
+GCCPATH	= 
 
 CC   = $(GCCPATH)pic30-gcc 
 CPP  = $(GCCPATH)pic30-gcc
@@ -108,12 +108,12 @@ OPTIM_GCC = -mcpu=33fJ256MC710 -O3 -fschedule-insns -fschedule-insns2 -mlarge-da
 LDFLAGS =  -Xlinker -t -Xlinker --report-mem -Xlinker -Map=../untitled.map -Xlinker --heap=0 -Xlinker -cref
 
 #-T C:\PROGRA~1\MICROC~1\MPLABC~1\support\gld\p30f2012.gld
-LDPICTYPE =  -Xlinker --script=C:\PROGRA~1\MICROC~1\xc16\v1.11\support\dsPIC33F\gld\p33fJ256MC710.gld
+LDPICTYPE =  -Xlinker --script=C:\PROGRA~2\MICROC~1\xc16\v1.11\support\dsPIC33F\gld\p33fJ256MC710.gld
 
 #-LC:\PROGRA~1\MICROC~1\MPLABC~1\lib\ -lp30F2012 -lm -lc -lpic30
-LDLIBPIC =  C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\libpic30-coff.a C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\dsPIC33F\libp33fJ256MC710-coff.a C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\libc-coff.a C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\libm-coff.a
+LDLIBPIC =  C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\libpic30-coff.a C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\dsPIC33F\libp33fJ256MC710-coff.a C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\libc-coff.a C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\libm-coff.a
 
-PIC_INCLUDES =  -I C:\PROGRA~1\MICROC~1\xc16\v1.11\include
+PIC_INCLUDES =  -I C:\PROGRA~2\MICROC~1\xc16\v1.11\include
 
 PIC_REF = 33fJ256MC710
 

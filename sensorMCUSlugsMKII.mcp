@@ -7,7 +7,7 @@ BuildDirPolicy=BuildDirIsProjectDir
 dir_bin=.
 dir_tmp=sensorMCUSlugsMKII_dspic\sources
 dir_sin=sensorMCUSlugsMKII_dspic\sources
-dir_inc=sensorMCUSlugsMKII_dspic\sources;sensorMCUSlugsMKII_dspic/sources;.;C:/Users/dagoodma/Documents/asl/slugs_apcode/sensorMCUSlugsMKII_dspic/sources;C:/Users/dagoodma/Documents/asl/slugs_apcode;C:/Users/dagoodma/Documents/asl/slugs_apcode/../mavlink/include/slugs;C:/Users/dagoodma/Documents/asl/slugs_apcode/clib;C:/PROGRA~1/MATLAB/R2011b/toolbox/dsp/include;C:/PROGRA~1/MICROC~1/xc16/v1.11/include;C:/PROGRA~1/MATLAB/R2011b/simulink/include;C:/PROGRA~1/MATLAB/R2011b/extern/include;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src;C:/PROGRA~1/MATLAB/R2011b/rtw/c/ert;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/common;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/custom;C:/PROGRA~1/MATLAB/R2011b/simulink/src
+dir_inc=sensorMCUSlugsMKII_dspic\sources;sensorMCUSlugsMKII_dspic/sources;.;C:/Users/dagoodma/Documents/asl/slugs_apcode/sensorMCUSlugsMKII_dspic/sources;C:/Users/dagoodma/Documents/asl/slugs_apcode;C:/Users/dagoodma/Documents/asl/slugs_apcode/../mavlink/include/slugs;C:/Users/dagoodma/Documents/asl/slugs_apcode/clib;C:/PROGRA~1/MATLAB/R2011b/toolbox/dsp/include;C:/PROGRA~2/MICROC~1/xc16/v1.11/include;C:/PROGRA~1/MATLAB/R2011b/simulink/include;C:/PROGRA~1/MATLAB/R2011b/extern/include;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src;C:/PROGRA~1/MATLAB/R2011b/rtw/c/ert;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/common;C:/PROGRA~1/MATLAB/R2011b/rtw/c/src/ext_mode/custom;C:/PROGRA~1/MATLAB/R2011b/simulink/src
 dir_lib=sensorMCUSlugsMKII_dspic\sources
 dir_lkr=sensorMCUSlugsMKII_dspic\sources
 [CAT_FILTERS]
@@ -67,9 +67,9 @@ file_040=sensorMCUSlugsMKII_dspic\sources\sensorMCUSlugsMKII_main.c
 file_041=C:\Users\dagoodma\Documents\asl\slugs_apcode\clib\updateSensorMcuState.c
 file_042=C:\Users\dagoodma\Documents\asl\slugs_apcode\clib\updateSensorMcuState.h
 file_043=
-file_044=C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\libpic30-coff.a
-file_045=C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\dsPIC33F\libp33fJ256MC710-coff.a
-file_046=C:\PROGRA~1\MICROC~1\xc16\v1.11\lib\libc-coff.a
+file_044=C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\libpic30-coff.a
+file_045=C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\dsPIC33F\libp33fJ256MC710-coff.a
+file_046=C:\PROGRA~2\MICROC~1\xc16\v1.11\lib\libc-coff.a
 [SUITE_INFO]
 suite_guid={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 suite_state=

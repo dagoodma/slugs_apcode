@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.210
+ * Model version                        : 1.211
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Wed May 06 20:22:56 2015
+ * Real-Time Workshop file generated on : Tue May 12 21:45:37 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Wed May 06 20:22:57 2015
+ * C source code generated on           : Tue May 12 21:45:38 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -200,7 +200,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   4.0,                                 /* Expression: f
                                         * Referenced by: '<S161>/Constant1'
                                         */
-  -9.2183E+6,                          /* Expression: pitotOffset
+  0.0,                                 /* Expression: pitotOffset
                                         * Referenced by: '<S152>/Bias'
                                         */
   3000.0,                              /* Expression: maxDynPressure
@@ -421,7 +421,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   27.127F,                             /* Computed Parameter: Gains_Value
                                         * Referenced by: '<S151>/Gains'
                                         */
-  1.51128531F,                         /* Computed Parameter: Gains_Value_m
+  1.0F,                                /* Computed Parameter: Gains_Value_m
                                         * Referenced by: '<S157>/Gains'
                                         */
   0.977F,                              /* Computed Parameter: Gains_Value_c
@@ -430,7 +430,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   -50.0F,                              /* Computed Parameter: Bias_Value_i
                                         * Referenced by: '<S158>/Bias'
                                         */
-  -1605.28198F,                        /* Computed Parameter: Bias_Value_b
+  0.0F,                                /* Computed Parameter: Bias_Value_b
                                         * Referenced by: '<S157>/Bias'
                                         */
   -50.0F,                              /* Computed Parameter: Constant_Value_dn
@@ -551,7 +551,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   0.1F,                                /* Computed Parameter: Gain_Gain_o
                                         * Referenced by: '<S12>/Gain'
                                         */
-  6921.4F,                             /* Computed Parameter: Gains_Value_g
+  1.0F,                                /* Computed Parameter: Gains_Value_g
                                         * Referenced by: '<S152>/Gains'
                                         */
   6894.75732F,                         /* Computed Parameter: Gains_Value_b
