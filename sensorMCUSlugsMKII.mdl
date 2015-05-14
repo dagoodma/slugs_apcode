@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.215"
+    ComputedModelVersion    "1.216"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,9 +39,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 13 22:03:24 2015"
+  LastModifiedDate	  "Wed May 13 22:10:54 2015"
   RTWModifiedTimeStamp	  353454381
-  ModelVersionFormat	  "1.%<AutoIncrement:215>"
+  ModelVersionFormat	  "1.%<AutoIncrement:216>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -1159,7 +1159,7 @@ Model {
   }
   System {
     Name		    "sensorMCUSlugsMKII"
-    Location		    [524, 180, 1561, 798]
+    Location		    [116, 234, 1153, 852]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -13455,7 +13455,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Sensor Suite"
-	    Location		    [-193, 207, 1050, 640]
+	    Location		    [-154, 239, 1089, 672]
 	    Open		    on
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -21452,7 +21452,7 @@ Model {
 		    Name		    "Gains"
 		    SID			    "24904"
 		    Position		    [20, 95, 115, 115]
-		    Value		    "0.977"
+		    Value		    "0.0977"
 		    OutDataTypeStr	    "single"
 		    }
 		    Block {

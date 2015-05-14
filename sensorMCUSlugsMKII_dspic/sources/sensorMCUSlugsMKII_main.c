@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.215
+ * Model version                        : 1.216
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Wed May 13 22:04:34 2015
+ * Real-Time Workshop file generated on : Wed May 13 22:11:59 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Wed May 13 22:04:34 2015
+ * C source code generated on           : Wed May 13 22:12:00 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
