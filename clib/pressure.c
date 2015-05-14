@@ -118,7 +118,8 @@ void startPressureRead (void) {
 
 void saveData (void){
     mlRawPressureData.press_diff1 = currentPressure.shData;
-    mlRawPressureData.temperature = currentTemperature.shData;
+    // Temperature is only 11 bits, so shift the last 5 bits off.
+    mlRawPressureData.temperature = (currentTemperature.shData) >> 5;
 }
 
 void getPressure (int16_t* pressureVals){
@@ -230,11 +231,10 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
             break;
         case READ_TEMPDATA_LO:
             if (I2C1STATbits.RBF) {
-                // Read temperature data [2:0], mask last 5 off
+                // Read temperature data [2:0], last 5 bits are undetermined
                 uint8_t readByte = (uint8_t)I2C1RCV;
-                readByte &= 0xE0;
                 currentTemperature.chData[0] = readByte;
-                saveData();
+                saveData(); // shifts last 5 bits of temp off
 
                 // Generate an nack
                 I2C1CONbits.ACKDT = 1;
