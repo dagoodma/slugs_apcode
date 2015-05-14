@@ -91,26 +91,22 @@ void pressureInit (void){
 	dummyDelay();
 
         // Start reading pressure
-        printToUart2("Starting Pressure I2C\n\r");
+        printToUart2("Starting Pressure I2C... ");
         pressureInitialized = false;
         i2c1Start();
-        
-        // Should take about 3ms for the device to be initialized
-        dummyDelay();
-        //dummyDelay();
-        //dummyDelay();
-        if (pressureInitialized) {
-            printToUart2("Initialized pressure\n\r");
-            LED_SENS_BUSY_SET(OFF);
 
-            // Take the first reading
-            printToUart2("State is idle? %d ?= %d\n", i2c1State, READ_IDLE);
-            startPressureRead();
-            printToUart2("State is start? %d ?= %d\n", i2c1State, READ_START);
+        while (i2c1State != READ_IDLE) {
+            // wait for initialization
         }
-        else {
-            printToUart2("Failed to initialize pressure\n\r");
-        }
+        printToUart2("Initialized.\r\n");
+        pressureInitialized = true;
+        LED_SENS_BUSY_SET(OFF);
+
+        printToUart2("Got first data Press=x%X,Temp=x%X\n",
+                currentPressure.shData, currentTemperature.shData);
+
+        // Start the next read REMOVE
+        //startPressureRead();
 }
 
 void startPressureRead (void) {
@@ -172,19 +168,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
             break;
         case READ_WAIT:
             if (!I2C1STATbits.ACKSTAT) {
-                //printToUart2("here2\n\r");
-                if (pressureInitialized) {
                     I2C1CONbits.RCEN = 1;
                     i2c1State = READ_BRDATA_HI;
-                }
-                else {
-                    // We are only requesting to start measurement,
-                    // so send a stop condition instead of reading data.
-                    i2c1State = READ_DONE;
-                    i2c1Stop();
-                    pressureInitialized = true;
-                    //printToUart2("Initialized!\n\r");
-                }
             }
             break;
         case READ_BRDATA_HI:
@@ -195,7 +180,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 // TODO handle statusValue
                 uint8_t statusValue = (readByte & 0xC0) >> 6;
                 readByte &= 0x3F;
-                currentPressure.chData[0] = readByte;
+                currentPressure.chData[1] = readByte;
 
 
                 //printToUart2("Got i2c BRHI=0x%X, STAT=0x%X\n",readByte,statusValue);
@@ -214,7 +199,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 //printToUart2("...");
                 // Read Bridge Data [7:0]
                 uint8_t readByte = (uint8_t)I2C1RCV;
-                currentPressure.chData[1] = readByte;
+                currentPressure.chData[0] = readByte;
 
                 //printToUart2("Got i2c BRLO=0x%X\n",readByte);
 
@@ -232,7 +217,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 //printToUart2("...");
                 // Read temperature data [10:3]
                 uint8_t readByte = (uint8_t)I2C1RCV;
-                currentTemperature.chData[0] = readByte;
+                currentTemperature.chData[1] = readByte;
 
                 // Generate an ack
                 I2C1CONbits.ACKDT = 0;
@@ -248,7 +233,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 // Read temperature data [2:0], mask last 5 off
                 uint8_t readByte = (uint8_t)I2C1RCV;
                 readByte &= 0xE0;
-                currentTemperature.chData[1] = readByte;
+                currentTemperature.chData[0] = readByte;
                 saveData();
 
                 // Generate an nack
@@ -256,11 +241,15 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 I2C1CONbits.ACKEN = 1;
 
                 i2c1State = READ_DONE;
-                i2c1Stop();
 
                 // DEBUG
-                printToUart2("P=x%X,T=x%X\n",
-                    currentPressure.shData, currentTemperature.shData);
+                //printToUart2("P=x%X,T=x%X\n",
+                //    currentPressure.shData, currentTemperature.shData);
+            }
+            break;
+        case READ_DONE:
+            if (!I2C1CONbits.ACKEN) {
+                i2c1Stop();
             }
             break;
         case READ_STOP:
