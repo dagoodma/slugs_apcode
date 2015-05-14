@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.213"
+    ComputedModelVersion    "1.214"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,9 +39,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 13 21:46:33 2015"
+  LastModifiedDate	  "Wed May 13 21:55:32 2015"
   RTWModifiedTimeStamp	  353454381
-  ModelVersionFormat	  "1.%<AutoIncrement:213>"
+  ModelVersionFormat	  "1.%<AutoIncrement:214>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -18778,7 +18778,7 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"Low Pass Filtering,Temperature\nCompensation and Calibration"
-		Location		[22, 207, 1265, 704]
+		Location		[9, 284, 1252, 781]
 		Open			on
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
