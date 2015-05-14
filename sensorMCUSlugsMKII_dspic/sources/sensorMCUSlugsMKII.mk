@@ -91,7 +91,7 @@ NOOP = 0
 #------------------------------ Tool Locations ---------------------------------
 #
 
-GCCPATH	= 
+GCCPATH	= C:\\PROGRA~2\\MICROC~1\\xc16\\v1.11\\bin\\
 
 CC   = $(GCCPATH)pic30-gcc 
 CPP  = $(GCCPATH)pic30-gcc

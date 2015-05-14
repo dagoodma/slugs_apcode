@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.211
+ * Model version                        : 1.213
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Tue May 12 21:45:37 2015
+ * Real-Time Workshop file generated on : Wed May 13 21:47:48 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Tue May 12 21:45:38 2015
+ * C source code generated on           : Wed May 13 21:47:48 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -560,7 +560,7 @@ Parameters_sensorMCUSlugsMKII sensorMCUSlugsMKII_P = {
   0.0001526F,                          /* Computed Parameter: Gains_Value_a
                                         * Referenced by: '<S154>/Gains'
                                         */
-  -3.5F,                               /* Computed Parameter: Bias_Value_c
+  -1.25F,                              /* Computed Parameter: Bias_Value_c
                                         * Referenced by: '<S154>/Bias'
                                         */
   3.17606163F,                         /* Computed Parameter: Gains_Value_k
