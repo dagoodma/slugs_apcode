@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.216"
+    ComputedModelVersion    "1.217"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,9 +39,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 13 22:10:54 2015"
+  LastModifiedDate	  "Wed May 13 22:16:05 2015"
   RTWModifiedTimeStamp	  353454381
-  ModelVersionFormat	  "1.%<AutoIncrement:216>"
+  ModelVersionFormat	  "1.%<AutoIncrement:217>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -13227,7 +13227,7 @@ Model {
       System {
 	Name			"Sensor Data"
 	Location		[398, 117, 1124, 601]
-	Open			on
+	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -13455,8 +13455,8 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Sensor Suite"
-	    Location		    [-154, 239, 1089, 672]
-	    Open		    on
+	    Location		    [-91, 351, 1152, 784]
+	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
 	    ScreenColor		    "white"
@@ -18778,8 +18778,8 @@ Model {
 	      MaskHideContents	      off
 	      System {
 		Name			"Low Pass Filtering,Temperature\nCompensation and Calibration"
-		Location		[9, 284, 1252, 781]
-		Open			on
+		Location		[-279, 286, 964, 783]
+		Open			off
 		ModelBrowserVisibility	off
 		ModelBrowserWidth	200
 		ScreenColor		"white"
@@ -21395,7 +21395,7 @@ Model {
 		  System {
 		    Name		    "Temperature\nUnit Conversion"
 		    Location		    [152, 159, 1186, 901]
-		    Open		    on
+		    Open		    off
 		    ModelBrowserVisibility  off
 		    ModelBrowserWidth	    200
 		    ScreenColor		    "white"
