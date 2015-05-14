@@ -3,11 +3,11 @@
  *
  * Real-Time Workshop code generated for Simulink model sensorMCUSlugsMKII.
  *
- * Model version                        : 1.213
+ * Model version                        : 1.215
  * Real-Time Workshop file version      : 8.1 (R2011b) 08-Jul-2011
- * Real-Time Workshop file generated on : Wed May 13 21:47:48 2015
+ * Real-Time Workshop file generated on : Wed May 13 22:04:34 2015
  * TLC version                          : 8.1 (Jul  9 2011)
- * C source code generated on           : Wed May 13 21:47:48 2015
+ * C source code generated on           : Wed May 13 22:04:34 2015
  *--------------------------------------------------------------
  *   Embedded Coder for Microchip dsPIC family.                 |
  *   Generate .c and .h files from your Matlab/simulink model   |
@@ -1359,15 +1359,18 @@ void sensorMCUSlugsMKII_step(void)
    *  Constant: '<S157>/Gains'
    *  Constant: '<S158>/Bias'
    *  Constant: '<S158>/Gains'
+   *  Constant: '<S158>/Gains1 (1 C to 0.1 C)'
    *  Product: '<S157>/Divide'
    *  Product: '<S158>/Divide'
+   *  Product: '<S158>/Divide1'
    *  Sum: '<S158>/Sum'
    */
   rtb_RhhcosphicoslambXe = ((real32_T)((real_T)
     sensorMCUSlugsMKII_P.Gains_Value_c *
     sensorMCUSlugsMKII_B.sf_EmbeddedMATLABFunction_b.y) +
-    sensorMCUSlugsMKII_P.Bias_Value_i) * sensorMCUSlugsMKII_P.Gains_Value_m +
-    sensorMCUSlugsMKII_P.Bias_Value_b;
+    sensorMCUSlugsMKII_P.Bias_Value_i) *
+    sensorMCUSlugsMKII_P.Gains11Cto01C_Value *
+    sensorMCUSlugsMKII_P.Gains_Value_m + sensorMCUSlugsMKII_P.Bias_Value_b;
 
   /* RelationalOperator: '<S171>/Compare' incorporates:
    *  Constant: '<S171>/Constant'

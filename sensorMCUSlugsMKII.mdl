@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.214"
+    ComputedModelVersion    "1.215"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -39,9 +39,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "dagoodma"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed May 13 21:55:32 2015"
+  LastModifiedDate	  "Wed May 13 22:03:24 2015"
   RTWModifiedTimeStamp	  353454381
-  ModelVersionFormat	  "1.%<AutoIncrement:214>"
+  ModelVersionFormat	  "1.%<AutoIncrement:215>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -1159,7 +1159,7 @@ Model {
   }
   System {
     Name		    "sensorMCUSlugsMKII"
-    Location		    [364, 91, 1401, 709]
+    Location		    [524, 180, 1561, 798]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -1173,7 +1173,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "25068"
+    SIDHighWatermark	    "25070"
     Block {
       BlockType		      Reference
       Name		      "Configure Model \nfor dsPIC"
@@ -13455,7 +13455,7 @@ Model {
 	  MaskHideContents	  off
 	  System {
 	    Name		    "Sensor Suite"
-	    Location		    [282, 154, 1525, 587]
+	    Location		    [-193, 207, 1050, 640]
 	    Open		    on
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -20453,7 +20453,7 @@ Model {
 		  System {
 		    Name		    "Pitot\nUnit Conversion (psi)"
 		    Location		    [205, 99, 1235, 664]
-		    Open		    on
+		    Open		    off
 		    ModelBrowserVisibility  off
 		    ModelBrowserWidth	    200
 		    ScreenColor		    "white"
@@ -21394,8 +21394,8 @@ Model {
 		  MaskIconUnits		  "autoscale"
 		  System {
 		    Name		    "Temperature\nUnit Conversion"
-		    Location		    [20, 480, 1054, 1222]
-		    Open		    off
+		    Location		    [152, 159, 1186, 901]
+		    Open		    on
 		    ModelBrowserVisibility  off
 		    ModelBrowserWidth	    200
 		    ScreenColor		    "white"
@@ -21436,11 +21436,31 @@ Model {
 		    SaturateOnIntegerOverflow off
 		    }
 		    Block {
+		    BlockType		    Product
+		    Name		    "Divide1"
+		    SID			    "25069"
+		    Ports		    [2, 1]
+		    Position		    [330, 127, 360, 158]
+		    ShowName		    off
+		    InputSameDT		    off
+		    OutDataTypeStr	    "single"
+		    RndMeth		    "Floor"
+		    SaturateOnIntegerOverflow off
+		    }
+		    Block {
 		    BlockType		    Constant
 		    Name		    "Gains"
 		    SID			    "24904"
 		    Position		    [20, 95, 115, 115]
 		    Value		    "0.977"
+		    OutDataTypeStr	    "single"
+		    }
+		    Block {
+		    BlockType		    Constant
+		    Name		    "Gains1 (1 C to 0.1 C)"
+		    SID			    "25070"
+		    Position		    [185, 80, 280, 100]
+		    Value		    "10"
 		    OutDataTypeStr	    "single"
 		    }
 		    Block {
@@ -21460,15 +21480,9 @@ Model {
 		    BlockType		    Outport
 		    Name		    "Comp"
 		    SID			    "24906"
-		    Position		    [315, 143, 345, 157]
+		    Position		    [400, 138, 430, 152]
 		    BackgroundColor	    "yellow"
 		    IconDisplay		    "Port number"
-		    }
-		    Line {
-		    SrcBlock		    "Sum"
-		    SrcPort		    1
-		    DstBlock		    "Comp"
-		    DstPort		    1
 		    }
 		    Line {
 		    SrcBlock		    "Divide"
@@ -21495,6 +21509,25 @@ Model {
 		    Points		    [70, 0]
 		    DstBlock		    "Sum"
 		    DstPort		    2
+		    }
+		    Line {
+		    SrcBlock		    "Gains1 (1 C to 0.1 C)"
+		    SrcPort		    1
+		    Points		    [0, 45]
+		    DstBlock		    "Divide1"
+		    DstPort		    1
+		    }
+		    Line {
+		    SrcBlock		    "Sum"
+		    SrcPort		    1
+		    DstBlock		    "Divide1"
+		    DstPort		    2
+		    }
+		    Line {
+		    SrcBlock		    "Divide1"
+		    SrcPort		    1
+		    DstBlock		    "Comp"
+		    DstPort		    1
 		    }
 		  }
 		}
