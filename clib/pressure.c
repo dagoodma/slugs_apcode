@@ -29,8 +29,8 @@ THE SOFTWARE.
 
 volatile unsigned char i2c1State;		// State Machine State
 
-// Declared global to avoid having them be static 
-// inside the interrupt
+bool pressureInitialized; // do we need this?
+
 tShortToChar currentPressure;		// placeholder for current pressure reading
 tShortToChar currentTemperature;	// placeholder for current temp reading
 
@@ -86,17 +86,38 @@ void pressureInit (void){
 	// Initialize the state machine
 	i2c1State = READ_IDLE;
 		
-	// Wait 5 mS
+	// Wait ~10 mS for device power on reset
+        LED_SENS_BUSY_SET(ON); // busy light on for init
 	dummyDelay();
 
         // Start reading pressure
         printToUart2("Starting Pressure I2C\n\r");
-        startPressureRead();
+        pressureInitialized = false;
+        i2c1Start();
+        
+        // Should take about 3ms for the device to be initialized
+        dummyDelay();
+        //dummyDelay();
+        //dummyDelay();
+        if (pressureInitialized) {
+            printToUart2("Initialized pressure\n\r");
+            LED_SENS_BUSY_SET(OFF);
+
+            // Take the first reading
+            printToUart2("State is idle? %d ?= %d\n", i2c1State, READ_IDLE);
+            startPressureRead();
+            printToUart2("State is start? %d ?= %d\n", i2c1State, READ_START);
+        }
+        else {
+            printToUart2("Failed to initialize pressure\n\r");
+        }
 }
 
 void startPressureRead (void) {
-    i2c1State = READ_IDLE;
-    i2c1Start();
+    if (pressureInitialized && i2c1State == READ_IDLE) {
+        i2c1Start();
+        LED_SENS_STATUS_SET(ON); // status light goes on when started, off when done
+    }
 }
 
 void saveData (void){
@@ -105,7 +126,7 @@ void saveData (void){
 }
 
 void getPressure (int16_t* pressureVals){
-    LED_SENS_BUSY_TOGGLE();
+    //printToUart2("Read pressure!\n\r");
     
     pressureVals[0] =  mlRawPressureData.press_diff1;
     pressureVals[1] =  mlRawPressureData.temperature;
@@ -117,11 +138,9 @@ void getPressure (int16_t* pressureVals){
 // ==============
 
 void i2c1Start(void){
-        //LED_SENS_BUSY_TOGGLE();
-
-	// Change the mode to start
 	i2c1State = READ_START;
-	// Start the bus
+	// Start the bus (set start enable bit)
+        // This will pull the SDA line low (clock is high), then start the clock
 	I2C1CONbits.SEN =1;  
 }
 
@@ -131,6 +150,7 @@ void i2c1Stop(void){
 	// Stop the bus
 	I2C1CONbits.PEN =1;  
 }
+
 void i2c1Write(unsigned char byte2write){
 	// Send the data
 	I2C1TRN = byte2write;
@@ -140,21 +160,31 @@ void i2c1Write(unsigned char byte2write){
 // =========================
 
 void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
-    LED_SENS_STATUS_TOGGLE();
     switch (i2c1State) {
         case READ_START:
             if (!I2C1CONbits.SEN) {
-                //I2C1CONbits.SEN = 1;
+                // Start enable bit is automatically cleared on completion.
+                // Now write the 8-bit read address to the bus
                 i2c1Write(PRESSURE_READ);
                 i2c1State = READ_WAIT;
+                //printToUart2("here1\n\r");
             }
             break;
         case READ_WAIT:
             if (!I2C1STATbits.ACKSTAT) {
-                //LED_SENS_STATUS_SET(ON);
-                I2C1CONbits.RCEN = 1;
-                i2c1State = READ_BRDATA_HI;
-                //byteCount = 0;
+                //printToUart2("here2\n\r");
+                if (pressureInitialized) {
+                    I2C1CONbits.RCEN = 1;
+                    i2c1State = READ_BRDATA_HI;
+                }
+                else {
+                    // We are only requesting to start measurement,
+                    // so send a stop condition instead of reading data.
+                    i2c1State = READ_DONE;
+                    i2c1Stop();
+                    pressureInitialized = true;
+                    //printToUart2("Initialized!\n\r");
+                }
             }
             break;
         case READ_BRDATA_HI:
@@ -229,13 +259,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _MI2C1Interrupt(void){
                 i2c1Stop();
 
                 // DEBUG
-                //printToUart2("Got press=0x%X, temp=0x%X\n",
-                //    currentPressure.shData, currentTemperature.shData);
+                printToUart2("P=x%X,T=x%X\n",
+                    currentPressure.shData, currentTemperature.shData);
             }
             break;
         case READ_STOP:
             if (!I2C1CONbits.PEN){
                 i2c1State = READ_IDLE;
+                LED_SENS_STATUS_SET(OFF);
             }
             break;
         default:
@@ -251,7 +282,7 @@ void dummyDelay (void) {
     // without the need of a timer
     // 5 milliseconds are expected for power-up
     // @ 40Mhz requires aprox 200,000 nops
-    for( i = 0; i < 20; i += 1 ){
+    for( i = 0; i < 40; i += 1 ){
             for( j = 0; j < 32700; j += 1 )
             {
                     Nop();
