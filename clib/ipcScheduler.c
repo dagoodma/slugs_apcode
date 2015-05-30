@@ -226,7 +226,8 @@ void scheduleData(unsigned char hilOn, unsigned char* dataOut) {
             // == Status text ==
             if (sendGpsOriginMessage) {
                 sprintf(mlStatustext.text,"Sensor origin: %.2f %.2f %.1f",
-                    mlGSLocationFloat.lat, mlGSLocationFloat.lon, mlGSLocationFloat.alt);
+                    (double)mlGSLocationFloat.lat, (double)mlGSLocationFloat.lon,
+                    (double)mlGSLocationFloat.alt);
                 mlStatustext.severity = MAV_SEVERITY_INFO;
                 bytes2Send += _prepareStatusTextMavlink(SLUGS_SENSOR_COMPID, SLUGS_SPI_CHANNEL, dataOut + 1 + bytes2Send);
                 sendGpsOriginMessage = false;
